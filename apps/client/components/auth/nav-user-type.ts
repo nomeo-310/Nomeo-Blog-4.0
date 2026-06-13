@@ -1,0 +1,30 @@
+export type userProps = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  role: string;
+  createdAt: Date;
+  providerId: string;
+  isOAuth: boolean;
+  username: string;
+  displayName: string;
+  avatar: string;
+  bio: string;
+  onboardingCompleted: boolean;
+  onboardingStep: number;
+  isCreator: boolean;
+  isAdmin: boolean;
+  creatorStatus: string | null;
+  becameCreatorAt: Date | null;
+  banStatus: string;
+  isBanned: boolean;
+  isShadowBanned: boolean;
+  freeReadsRemaining: number;
+  interests: string[];
+  creatorTopics: string[];
+  followersCount: number;
+  followingCount: number;
+  postsCount: number;
+  savedPostsCount: number;
+} | null

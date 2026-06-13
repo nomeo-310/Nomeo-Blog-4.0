@@ -1,0 +1,41 @@
+COOKIE POLICY
+
+Last updated: June 12, 2026
+
+
+1. WHAT ARE COOKIES?
+
+Cookies are small text files stored on your device when you visit a website. Similar technologies such as local storage and pixels work in comparable ways. We use the word "cookies" to refer to all of these.
+
+
+2. HOW WE USE COOKIES
+
+Nomeo uses cookies to keep you signed in and maintain your session securely; remember your preferences, such as theme and language; understand usage, so we can improve the Platform; and support core features, such as reading paid content and tracking reading time for creator earnings.
+
+
+3. TYPES OF COOKIES WE USE
+
+Essential cookies are required for the Platform to function, for example authentication and security. These cannot be switched off without breaking core features.
+
+Preference cookies remember your settings, such as appearance and notification choices.
+
+Analytics cookies help us understand how the Platform is used so we can improve it.
+
+Payment cookies are set by our payment processor (Paystack) to process subscriptions securely.
+
+We do not use cookies to sell your data or for third-party advertising.
+
+
+4. MANAGING COOKIES
+
+You can control non-essential cookies through our cookie settings or your browser settings. Most browsers let you block or delete cookies. Blocking essential cookies may prevent you from signing in or using key features.
+
+
+5. CHANGES
+
+We may update this Cookie Policy from time to time. Material changes will be communicated through the Platform.
+
+
+6. CONTACT
+
+Questions about cookies? Contact privacy@nomeo.com.

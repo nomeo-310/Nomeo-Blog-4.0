@@ -1,0 +1,84 @@
+DATA PROTECTION POLICY
+
+Last updated: June 12, 2026
+
+Nomeo ("we", "us", "our") is committed to protecting your personal data and respecting your privacy. This Data Protection Policy explains the principles we follow when handling your data and the rights you have. It works alongside our Privacy Policy, which describes in more detail what data we collect and why.
+
+This policy is reviewed periodically and applies to everyone who uses Nomeo.
+
+
+1. OUR COMMITMENT
+
+We treat the protection of your personal data as a core responsibility, not an afterthought. We handle your data lawfully, fairly, and transparently, and we only collect what we genuinely need to run the Platform and serve you.
+
+
+2. PRINCIPLES WE FOLLOW
+
+We process personal data according to these principles:
+
+Lawfulness, fairness, and transparency. We process data only where we have a valid legal basis, and we are clear about how and why we use it.
+
+Purpose limitation. We collect data for specified, legitimate purposes and do not use it in ways incompatible with those purposes.
+
+Data minimisation. We collect only the data we actually need. Sensitive details such as gender are optional, and you may choose not to provide them.
+
+Accuracy. We take reasonable steps to keep your data accurate and up to date, and you can correct it at any time in your settings.
+
+Storage limitation. We keep data only as long as necessary. When you delete your account, your data is recoverable for a limited period and is then deleted or anonymised, except where we must keep it for legal reasons.
+
+Integrity and confidentiality. We protect your data with appropriate security measures, including encryption in transit, hashed passwords, access controls, and audit logging.
+
+Accountability. We take responsibility for how we handle your data and can demonstrate our compliance.
+
+
+3. WHAT DATA WE PROTECT
+
+This policy covers all personal data we hold, including your account and profile details, optional sensitive data such as date of birth and gender, the content you create, your activity and reading history, payment and payout information, and communications with us. Full details are in our Privacy Policy.
+
+
+4. HOW WE KEEP YOUR DATA SAFE
+
+We use technical and organisational measures designed to protect your data against unauthorised access, loss, or misuse. These include encrypted connections, securely hashed passwords, restricted internal access on a need-to-know basis, monitoring and audit logs, and regular review of our security practices. While no system can be perfectly secure, we work continuously to reduce risk and respond quickly to any incident.
+
+
+5. SHARING AND THIRD PARTIES
+
+We do not sell your personal data. We share it only with trusted service providers who help us operate the Platform (such as hosting, email delivery, and payment processing), and only under agreements that require them to protect your data. We may also disclose data where the law requires it or to protect the rights and safety of our users and the public.
+
+
+6. INTERNATIONAL TRANSFERS
+
+Your data may be processed in countries other than your own. Where this happens, we apply appropriate safeguards to ensure your data remains protected to the standard described in this policy.
+
+
+7. YOUR RIGHTS
+
+Depending on where you live, you have rights over your personal data, including the right to access it, correct it, delete it, restrict or object to its use, receive a copy in a portable format, and withdraw consent where processing is based on consent. You also have the right to complain to your data protection authority. In Nigeria, this is the Nigeria Data Protection Commission (NDPC).
+
+You can exercise most of these rights directly in your account settings, or by contacting us at privacy@nomeo.com.
+
+
+8. DATA BREACHES
+
+If a security incident affects your personal data, we will act promptly to contain it and, where required by law, notify you and the relevant authorities without undue delay.
+
+
+9. CHILDREN
+
+Nomeo is not intended for children under 13. We do not knowingly collect data from children under that age. If we learn that we have, we will delete it.
+
+
+10. CHANGES TO THIS POLICY
+
+We may update this policy as the Platform and applicable laws evolve. If we make material changes, we will let you know through the Platform or by email. Continuing to use Nomeo after changes take effect means you accept the updated policy.
+
+
+11. CONTACT US
+
+If you have questions about how we protect your data, or wish to exercise your rights, contact us at:
+
+Nomeo Consults Inc.
+21 Akin Soname Street, Ojokoro New Town, Owutu Estate, Ikorodu, Lagos
+Email: privacy@nomeo.com
+
+This Data Protection Policy should be read together with our Privacy Policy and Terms of Service.

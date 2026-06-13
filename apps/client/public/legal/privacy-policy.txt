@@ -1,0 +1,122 @@
+PRIVACY POLICY
+
+Last updated: June 12, 2026
+
+
+1. INTRODUCTION
+
+This Privacy Policy explains how Nomeo ("we", "us", "our") collects, uses, shares, and protects your personal data when you use our website, apps, and services (the "Platform").
+
+Nomeo is operated by Nomeo Consults Inc. (the "data controller"), located at 21 Akin Soname Street, Ojokoro New Town, Owutu Estate, Ikorodu, Lagos. For privacy questions, contact privacy@nomeo.com.
+
+By using Nomeo, you agree to this Policy. If you do not agree, do not use the Platform.
+
+
+2. DATA WE COLLECT
+
+Information you provide:
+
+Account data such as your name, email address, password (stored only as a secure hash), or details from a sign-in provider such as Google.
+
+Profile data such as your username, display name, bio, profile and cover images, location, occupation, social links, and the interests or topics you select.
+
+Optional sensitive data such as pronouns, gender, and date of birth. You may choose not to provide gender (a "prefer not to say" option is available). Date of birth is used to verify you meet our minimum age requirement. We treat this data with additional care.
+
+Content such as posts, comments, lounge messages, topic suggestions, and other material you create.
+
+Payment data. When you subscribe, our payment processor collects your payment details. We receive limited information such as transaction status and the last digits of a card; we do not store full card numbers.
+
+Creator payout data. If you earn on the Platform, the payout details needed to pay you.
+
+Communications such as messages you send to support and your email preferences.
+
+Information we collect automatically:
+
+Usage data such as posts you read, reading time, interactions, and features you use. Reading time on paid content is used to calculate creator earnings.
+
+Device and log data such as IP address, browser type, device information, and timestamps.
+
+Cookies and similar technologies, used to keep you signed in, remember preferences, and understand usage.
+
+Information from third parties. If you sign in through a third-party provider, we receive basic profile information from them as permitted by your settings with that provider.
+
+
+3. HOW WE USE YOUR DATA
+
+We use your data to create and manage your account and profile; provide core features such as publishing, reading, comments, following, lounges, saving posts, and notifications; process subscriptions and payments, and calculate and pay creator earnings; personalise your experience, including suggesting posts, creators, and topics based on your interests and activity; send service communications and, where permitted, newsletters and updates you can opt out of; maintain safety and integrity through moderation, fraud and abuse detection, and enforcing our Terms; comply with legal obligations and resolve disputes; and improve and develop the Platform.
+
+
+4. LEGAL BASES FOR PROCESSING
+
+Where applicable law (such as the GDPR or Nigeria's NDPR) requires a legal basis, we rely on contract (to provide the Platform you signed up for), consent (for optional data such as gender, marketing emails, and non-essential cookies, which you may withdraw at any time), legitimate interests (to secure the Platform, prevent abuse, and improve our services, balanced against your rights), and legal obligation (to comply with applicable laws, including tax and record-keeping).
+
+
+5. HOW WE SHARE YOUR DATA
+
+We do not sell your personal data. We share it only as described here.
+
+Publicly: your username, display name, profile details you choose to make public, and content you publish are visible to others.
+
+Service providers: hosting, database, email delivery, analytics, and payment processors who process data on our behalf under contract.
+
+Payment processors: Paystack to handle subscriptions and payouts, under their own privacy terms.
+
+Legal and safety: where required by law, legal process, or to protect the rights, safety, and property of Nomeo, our users, or the public.
+
+Business transfers: in connection with a merger, acquisition, or sale of assets, subject to this Policy.
+
+
+6. EMAIL AND NEWSLETTERS
+
+Creators reach their followers through Nomeo's email systems; emails are sent from our infrastructure on a creator's behalf, not from the creator's personal mailbox. We may also send platform newsletters and admin communications. You can unsubscribe from non-essential emails at any time. Essential service emails such as security and billing cannot be opted out of while you hold an account.
+
+
+7. DATA RETENTION
+
+We keep your data for as long as your account is active and as needed to provide the Platform. When you delete your account, it may be recoverable for a limited period (currently 45 days), after which we delete or anonymise your personal data, except where we must retain it for legal, tax, accounting, fraud-prevention, or dispute-resolution purposes. Some records such as audit logs and transaction records are retained for defined periods to meet these obligations.
+
+
+8. COOKIES
+
+We use cookies and similar technologies to keep you signed in, remember your preferences, and analyse usage. You can control non-essential cookies through our cookie settings or your browser. Disabling some cookies may affect Platform functionality. See our Cookie Policy for details.
+
+
+9. YOUR RIGHTS
+
+Depending on your location, you may have the right to access the personal data we hold about you; correct inaccurate or incomplete data; delete your data, subject to legal exceptions; restrict or object to certain processing; receive your data in a portable format; withdraw consent at any time where processing is based on consent; and complain to your data protection authority. In Nigeria this is the Nigeria Data Protection Commission (NDPC); in the EU or UK, your local authority.
+
+To exercise these rights, contact privacy@nomeo.com. We may need to verify your identity. You can also manage much of your data directly in your account settings.
+
+
+10. CHILDREN'S PRIVACY
+
+Nomeo is not intended for children under 13, and we do not knowingly collect their data. If you believe a child under 13 has provided us data, contact privacy@nomeo.com and we will delete it. Where a higher age of digital consent applies in your country, that age governs the use of features requiring consent.
+
+
+11. INTERNATIONAL DATA TRANSFERS
+
+Your data may be processed in countries other than your own, including where our service providers operate. Where required, we use appropriate safeguards such as standard contractual clauses to protect your data during international transfers.
+
+
+12. SECURITY
+
+We use technical and organisational measures to protect your data, including encryption in transit, hashed passwords, access controls, and audit logging. No system is perfectly secure; we cannot guarantee absolute security. If a breach affects your data, we will notify you and the relevant authorities as required by law.
+
+
+13. THIRD-PARTY LINKS
+
+The Platform may contain links to third-party sites and services. We are not responsible for their privacy practices. Review their policies before providing data.
+
+
+14. CHANGES TO THIS POLICY
+
+We may update this Policy from time to time. For material changes, we will provide reasonable notice by email or in-app notice. Continued use after changes take effect means you accept the updated Policy.
+
+
+15. CONTACT
+
+For privacy questions or to exercise your rights:
+
+Nomeo Consults Inc.
+21 Akin Soname Street, Ojokoro New Town, Owutu Estate, Ikorodu, Lagos
+Privacy email: privacy@nomeo.com

@@ -1,0 +1,152 @@
+TERMS OF SERVICE
+
+Last updated: June 12, 2026
+
+
+1. INTRODUCTION
+
+Welcome to Nomeo ("Nomeo", "we", "us", or "our"). These Terms of Service ("Terms") govern your access to and use of the Nomeo website, applications, and services (together, the "Platform").
+
+By creating an account or using the Platform, you agree to be bound by these Terms. If you do not agree, do not use the Platform.
+
+Nomeo is operated by Nomeo Consults Inc., located at 21 Akin Soname Street, Ojokoro New Town, Owutu Estate, Ikorodu, Lagos. You can contact us at support@nomeo.com.
+
+
+2. ELIGIBILITY
+
+You must be at least 13 years old to use Nomeo. If you are under the age of majority in your country, you may only use the Platform with the involvement and consent of a parent or legal guardian.
+
+By using Nomeo you represent that you are at least 13 years old, that you have the legal capacity to enter into these Terms, that you are not barred from using the Platform under the laws of your country, and that all information you provide is accurate and kept up to date.
+
+We may refuse, suspend, or terminate accounts that do not meet these requirements.
+
+
+3. ACCOUNTS
+
+Registration. You create an account using an email address and password, or through a supported sign-in provider such as Google. You are responsible for keeping your login credentials secure and for all activity that occurs under your account.
+
+Profile. After signing up you complete an onboarding process where you choose whether to join as a reader or a creator, set a username, and provide profile details. You agree that your username and profile content do not impersonate others, infringe rights, or violate these Terms.
+
+Account security. Notify us immediately at support@nomeo.com if you suspect unauthorised access to your account. We are not liable for losses caused by unauthorised use of your account where you failed to maintain its security.
+
+
+4. ROLES ON THE PLATFORM
+
+Nomeo supports several roles. Readers can read posts, comment, follow creators, save posts, and subscribe. Creators can do everything a reader can, and may also publish posts, host a lounge, collaborate with other creators, and earn from the subscription revenue pool. Moderators, Administrators, and Super Administrators are internal roles assigned by Nomeo to operate, moderate, and manage the Platform.
+
+You may apply to upgrade from a reader to a creator at any time. Administrative roles are assigned by Nomeo only and cannot be self-selected.
+
+
+5. CONTENT
+
+Your content. You retain ownership of the posts, comments, messages, and other material you create on Nomeo ("Your Content"). By posting Your Content you grant Nomeo a worldwide, non-exclusive, royalty-free licence to host, store, reproduce, display, distribute, and promote Your Content for the purpose of operating, improving, and marketing the Platform. This licence ends when you delete Your Content, except for copies retained for legal, backup, or compliance purposes, and except where others have already shared or saved it.
+
+Your responsibilities. You are solely responsible for Your Content. You represent that you own it or have the rights to publish it, and that it does not violate these Terms or any law.
+
+Prohibited content. You must not post, share, or transmit content that is unlawful, defamatory, fraudulent, or deceptive; that infringes any intellectual property, privacy, or other right; that is hateful, harassing, threatening, or incites violence or discrimination; that is sexually explicit, or sexualises or endangers minors; that contains malware, spam, or attempts to compromise the Platform or its users; that impersonates any person or misrepresents your affiliation; or that violates the privacy of others or shares personal data without consent.
+
+Moderation. We may review, remove, restrict, hide, or otherwise act on any content that we reasonably believe violates these Terms, without prior notice. We may also warn, suspend, shadow-restrict, or ban accounts. We are not obligated to monitor content but may do so at our discretion.
+
+
+6. FREE AND PAID CONTENT
+
+Creators may publish posts as free or paid. Free posts are readable by anyone, including visitors without accounts. Paid posts require either an active subscription or available free-read credits.
+
+New accounts receive a number of complimentary free-read credits for paid posts. Once exhausted, an active subscription is required to continue reading paid content. Free-read credits have no cash value and cannot be transferred or redeemed.
+
+
+7. SUBSCRIPTIONS AND PAYMENTS
+
+Subscriptions. Nomeo offers paid subscription plans created and managed by Nomeo. By subscribing you authorise us, through our payment processor, to charge the applicable fee for your chosen plan on a recurring basis until you cancel.
+
+Billing. Subscriptions renew automatically at the end of each billing period unless cancelled before renewal. Prices are shown at the point of purchase. We may change prices, and will give reasonable notice before changes affect your renewals.
+
+Cancellation. You may cancel at any time. Cancellation stops future renewals; you retain access until the end of the current billing period. Except where required by law, payments are non-refundable.
+
+Payment processing. Payments are handled by third-party processors (Paystack). Your use of payment features is also subject to their terms. We do not store full card details.
+
+Taxes. You are responsible for any taxes applicable to your purchases, except taxes on our net income.
+
+
+8. CREATOR EARNINGS
+
+The revenue pool. Subscription revenue, after Nomeo's platform fee and applicable costs, forms a distributable pool. Each billing period, the pool is shared among creators based on the reading time their content attracted from subscribers, calculated using our then-current methodology.
+
+Eligibility and payouts. To receive earnings you must be an approved creator in good standing, comply with these Terms, and provide valid payout details. We may withhold, delay, or reverse payouts in cases of suspected fraud, policy violations, chargebacks, or legal requirement.
+
+Methodology and platform fee. The platform fee percentage and the earnings calculation methodology are set by Nomeo and may change. We will give reasonable notice of material changes. Earnings are estimates until finalised at the end of each period.
+
+Co-authored content. Where a post has multiple co-authors, earnings from that post are split among them according to the agreed split. You are responsible for any disputes among co-authors.
+
+Taxes on earnings. You are solely responsible for reporting and paying any taxes on earnings you receive from Nomeo.
+
+
+9. LOUNGES AND COMMUNITY FEATURES
+
+Creators may host lounges for discussion among their subscribers, and the Platform offers comments, following, topic suggestions, and other community features. All such interactions are subject to these Terms and our content rules. We may suspend or remove lounges, messages, or participants that violate these Terms.
+
+
+10. FOLLOWING AND CONNECTIONS
+
+Following another user may require their acceptance. You must not use following, messaging, or connection features to harass, spam, or abuse others.
+
+
+11. NEWSLETTERS AND COMMUNICATIONS
+
+By following a creator or subscribing to our newsletter, you may receive emails. Creators reach their followers through Nomeo's systems; creators cannot email you from outside the Platform via these features. You can unsubscribe from non-essential emails at any time using the link in each message or your settings. We may still send you essential service emails such as security or billing notices.
+
+
+12. INTELLECTUAL PROPERTY
+
+The Platform itself, including its software, design, logos, and trademarks, is owned by Nomeo or its licensors and protected by law. These Terms grant you no rights to our intellectual property except the limited right to use the Platform as intended.
+
+
+13. COPYRIGHT AND TAKEDOWNS
+
+We respect intellectual property rights. If you believe content on Nomeo infringes your copyright, contact us at support@nomeo.com with enough detail to identify the work and the allegedly infringing material. We may remove infringing content and terminate repeat infringers.
+
+
+14. TERMINATION
+
+You may stop using Nomeo and delete your account at any time. We may suspend or terminate your access if you violate these Terms, create risk or legal exposure, or for prolonged inactivity. On termination, your right to use the Platform ends. Some provisions survive termination, including those on content licences, earnings already owed or owed to us, disclaimers, and limitations of liability.
+
+
+15. ACCOUNT DELETION AND RECOVERY
+
+When you delete your account, it may be recoverable for a limited period (currently 45 days) before permanent removal. After that window, deletion is permanent and your content may be removed or anonymised, subject to our Privacy Policy and legal retention requirements.
+
+
+16. DISCLAIMERS
+
+The Platform is provided "as is" and "as available" without warranties of any kind, whether express or implied, including warranties of merchantability, fitness for a particular purpose, and non-infringement. We do not warrant that the Platform will be uninterrupted, secure, or error-free, or that content is accurate or reliable. Content published by creators and other users is their own and does not represent Nomeo.
+
+
+17. LIMITATION OF LIABILITY
+
+To the maximum extent permitted by law, Nomeo and its officers, employees, and agents will not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits, revenue, data, or goodwill, arising from your use of the Platform. Our total liability for any claim relating to the Platform will not exceed the greater of the amount you paid us in the 12 months before the claim, or ₦20,000.
+
+Some jurisdictions do not allow certain limitations, so some of the above may not apply to you.
+
+
+18. INDEMNIFICATION
+
+You agree to indemnify and hold harmless Nomeo from claims, damages, and expenses (including reasonable legal fees) arising from Your Content, your use of the Platform, or your violation of these Terms or any law or third-party right.
+
+
+19. CHANGES TO THESE TERMS
+
+We may update these Terms from time to time. If we make material changes, we will provide reasonable notice, for example by email or an in-app notice. Continued use of the Platform after changes take effect means you accept the updated Terms.
+
+
+20. GOVERNING LAW AND DISPUTES
+
+These Terms are governed by the laws of the Federal Republic of Nigeria, without regard to conflict-of-law rules. Disputes will be resolved in the courts of Lagos State, Nigeria, unless mandatory law provides otherwise.
+
+
+21. CONTACT
+
+Questions about these Terms? Contact us at:
+
+Nomeo Consults Inc.
+21 Akin Soname Street, Ojokoro New Town, Owutu Estate, Ikorodu, Lagos
+Email: support@nomeo.com
