@@ -17,7 +17,7 @@ const AppLayout = ({ children, isAuthenticated, user, unreadNotifications = 0 }:
     <div className="min-h-screen">
       <Navbar isAuthenticated={isAuthenticated} user={user} unreadNotifications={unreadNotifications}/>
 
-      <main className="mx-auto container px-4 sm:px-6">
+      <main className="container mx-auto px-4 sm:px-6">
         {children}
       </main>
       <Footer/>

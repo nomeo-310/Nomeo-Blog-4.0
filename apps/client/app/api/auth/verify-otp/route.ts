@@ -1,7 +1,7 @@
 //api/auth/verify-otp/route.ts
 import { NextRequest } from "next/server";
 import { verifyOTP } from "@/lib/otp";
-import { connectDB } from "@/lib/connect-to database";
+import { connectDB } from "@/lib/connect-to-database";
 
 export async function POST(req: NextRequest) {
   try {

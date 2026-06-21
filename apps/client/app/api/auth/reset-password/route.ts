@@ -2,7 +2,7 @@
 import { NextRequest } from "next/server";
 import mongoose from "mongoose";
 import { hashPassword } from "better-auth/crypto";
-import { connectDB } from "@/lib/connect-to database";
+import { connectDB } from "@/lib/connect-to-database";
 
 export async function POST(req: NextRequest) {
   try {

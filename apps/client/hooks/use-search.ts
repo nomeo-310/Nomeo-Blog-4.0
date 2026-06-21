@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { api } from "@/lib/axios";
 
 /**
  * useSearch
@@ -30,6 +30,9 @@ export interface SearchResult {
   category: string;
   preview: string;
   href: string;
+  /** author only */
+  userId?: string;
+  avatar?: string;
 }
 
 interface SearchResponse {
@@ -48,7 +51,7 @@ function useDebounced<T>(value: T, delay = 300): T {
 }
 
 async function fetchSearch(q: string, type: SearchType): Promise<SearchResponse> {
-  const { data } = await axios.get<SearchResponse>("/api/search", {
+  const { data } = await api.get<SearchResponse>("/api/search", {
     params: { q, type },
   });
   return data;

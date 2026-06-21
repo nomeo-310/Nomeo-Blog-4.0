@@ -2,8 +2,8 @@ import { NextRequest } from "next/server";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 import { headers } from "next/headers";
+import { connectDB } from "@/lib/connect-to-database";
 import { getAuth } from "@/lib/auth";
-import { connectDB } from "@/lib/connect-to database";
 
 /**
  * GET /api/search?q=...&type=all|story|author|tag|lounge&limit=20
@@ -32,6 +32,10 @@ interface SearchResult {
   category: string;
   preview: string;
   href: string;
+  /** author only — userId for ProfileConnectButton */
+  userId?: string;
+  /** author only — avatar URL for the preview card */
+  avatar?: string;
 }
 
 const VALID_TYPES: SearchType[] = ["all", "story", "author", "tag", "lounge"];
@@ -122,7 +126,7 @@ export async function GET(req: NextRequest) {
       const profiles = await db
         .collection("profiles")
         .find(authorFilter, {
-          projection: { username: 1, displayName: 1, bio: 1, followersCount: 1, creatorStatus: 1 },
+          projection: { userId: 1, username: 1, displayName: 1, bio: 1, followersCount: 1, creatorStatus: 1, profileImage: 1 },
         })
         .limit(perType)
         .toArray();
@@ -137,7 +141,9 @@ export async function GET(req: NextRequest) {
           subtitle: `${formatCount(followers)} followers${isCreator ? " • Creator" : ""}`,
           category: isCreator ? "Creator" : "Reader",
           preview: pr.bio || "",
-          href: `/${pr.username}`,
+          href: `/profile/${pr.username}`,
+          userId: String(pr.userId || pr._id),
+          avatar: String(pr.profileImage?.url || ""),
         });
       }
     }

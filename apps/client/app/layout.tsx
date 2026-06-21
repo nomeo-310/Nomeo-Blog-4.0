@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import { getCurrentUser, needsOnboarding } from "@/lib/session";
 import { getCuratedTopics } from "@/lib/get-curated-topics";
 import OnboardingGate from "@/components/auth/onboarding-gate";
+import { ConversationsPanel } from "@/components/pages/lounge/conversations-panel";
 
 interface CuratedTopic {
   slug: string;
@@ -111,8 +112,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   let defaults: OnboardingDefaults | undefined = undefined;
   let initialStepIndex: number = 0;
 
+  const [t, user] = await Promise.all([getCuratedTopics(), getCurrentUser()]);
+
   if (showOnboarding) {
-    const [t, user] = await Promise.all([getCuratedTopics(), getCurrentUser()]);
     topics = t;
     defaults = { username: user?.username, displayName: user?.displayName };
     initialStepIndex = user?.onboardingStep ?? 0;
@@ -137,6 +139,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           <QueryProvider>
             <Toaster position="top-center" richColors />
             <ModalProvider />
+            <ConversationsPanel currentUserId={user?.id} />
             <OnboardingGate
               needsOnboarding={showOnboarding}
               topics={topics}

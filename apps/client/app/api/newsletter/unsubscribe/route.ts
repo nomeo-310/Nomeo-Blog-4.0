@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import mongoose from "mongoose";
-import { connectDB } from "@/lib/connect-to database";
+import { connectDB } from "@/lib/connect-to-database";
 
 
 /**

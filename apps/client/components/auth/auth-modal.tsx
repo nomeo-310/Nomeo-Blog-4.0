@@ -11,6 +11,7 @@ import { Eye, EyeOff, Loader2, ArrowLeft, X } from "lucide-react";
 import { PasswordStrength, usePasswordValidation } from "@/components/ui/password-strength";
 import { useAuth, formatName, validateName, BLOCKED_ACCOUNT_MESSAGES } from "@/hooks/use-auth";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type AuthMode = "sign-in" | "sign-up" | "forgot-password";
 type AuthStep = "credentials" | "verify" | "reset-password-verify";
@@ -53,6 +54,9 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
   const auth = useAuth();
   const loading = auth.loading;
   const prevModeRef = useRef<AuthMode>(mode);
+
+
+  const router = useRouter();
 
   const clearErrors = () => {
     setEmailError(null);
@@ -197,7 +201,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
       if (res.success) {
         toast.success("Welcome back!");
         handleClose();
-        window.location.reload();
+        router.refresh();
         return;
       }
 
@@ -346,13 +350,31 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-primary/10" />
-          <div className="absolute inset-0 z-10 flex flex-col justify-end p-8">
-            <h2 className="font-heading text-3xl font-bold leading-tight text-white select-none">
-              {content.sideTitle}
-            </h2>
-            <p className="mt-2.5 max-w-xs text-sm leading-relaxed text-white/85 select-none">
-              {content.sideDesc}
-            </p>
+          <div className="absolute inset-0 z-10 flex flex-col justify-between p-8">
+            {/* Logo + wordmark — top-left */}
+            <div className="flex items-center gap-2.5">
+              <Image
+                src="/images/logo.webp"
+                alt="Nomeo"
+                width={32}
+                height={32}
+                className="h-8 w-8 rounded-lg object-contain"
+                priority
+              />
+              <span className="text-lg font-bold tracking-tight text-white">
+                Nomeo
+              </span>
+            </div>
+
+            {/* Tagline — bottom */}
+            <div>
+              <h2 className="font-heading text-3xl font-bold leading-tight text-white select-none">
+                {content.sideTitle}
+              </h2>
+              <p className="mt-2.5 max-w-xs text-sm leading-relaxed text-white/85 select-none">
+                {content.sideDesc}
+              </p>
+            </div>
           </div>
         </div>
 

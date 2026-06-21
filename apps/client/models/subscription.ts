@@ -34,7 +34,7 @@ export type SubscriptionStatus =
   | "trialing"    // free trial before first charge
   | "paused";     // paused by subscriber
 
-export type SubscriptionInterval = "monthly" | "yearly";
+export type SubscriptionInterval = "monthly" | "quarterly" | "biannually" | "yearly";
 
 export interface ISubscription extends Document {
   _id: mongoose.Types.ObjectId;

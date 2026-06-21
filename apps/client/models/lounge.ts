@@ -3,18 +3,28 @@ import mongoose, { Schema, Document } from "mongoose";
 /**
  * Lounge Model
  * ------------
- * A creator can optionally open a Lounge — a real-time discussion space
- * for their paid, accepted subscribers.
+ * A real-time discussion space. Two kinds:
  *
- * Access rules (enforced at the application layer):
- *   1. The reader must have an ACTIVE subscription to the creator
- *      (Subscription.status === "active" | "trialing").
- *   2. The creator must have explicitly accepted their membership request
- *      (LoungeMember.status === "accepted").
- *   3. The reader must not be in Lounge.bannedMembers.
+ *   kind "creator"  → owned by a creator, gated to their paid subscribers.
+ *       Access: active subscription to that creator + accepted membership +
+ *       not banned. This is the original, monetised lounge.
  *
- * A Lounge is created by the creator from the frontend — not auto-created.
- * Only creators (User.role === "creator") can own a lounge.
+ *   kind "platform" → owned by Nomeo (no creatorId), an OPEN lounge. Any
+ *       authenticated user — free readers included — can join. No subscription
+ *       required. Join is lightweight + auto-accepted (a LoungeMember record is
+ *       still created so bans, member counts, and last-read cursors work), but
+ *       there is no pending/accept step. Use these for a couple of community-
+ *       wide spaces (e.g. "Welcome", "Feedback").
+ *
+ * accessType captures the entry rule independently of ownership:
+ *   "subscribers"   → must hold an active subscription to the creator (creator kind)
+ *   "authenticated" → any logged-in user (platform kind)
+ *
+ * Common rules (both kinds): the user must not be in Lounge.bannedMembers, and
+ * the lounge must not be closed/suspended.
+ *
+ * A creator lounge is created by the creator from the frontend. Platform
+ * lounges are created by an admin (seeded or via the admin dashboard).
  *
  * Three schemas in this file:
  *   Lounge        →  room config and metadata
@@ -33,6 +43,8 @@ import mongoose, { Schema, Document } from "mongoose";
 /* ── Types ─────────────────────────────────────────────────────────────── */
 
 export type LoungeStatus        = "active" | "closed" | "suspended";
+export type LoungeKind          = "creator" | "platform";
+export type LoungeAccessType    = "subscribers" | "authenticated";
 export type LoungeMemberStatus  = "pending" | "accepted" | "declined" | "removed";
 export type LoungeMemberRole    = "member" | "moderator" | "creator";
 export type MessageDeliveryStatus = "sending" | "delivered" | "failed";
@@ -47,12 +59,28 @@ export type MessageReportReason =
 export interface ILounge extends Document {
   _id: mongoose.Types.ObjectId;
 
-  /** The creator (User.role === "creator") who owns this lounge */
-  creatorId: mongoose.Types.ObjectId;
+  /**
+   * The creator who owns this lounge. Set for kind "creator", absent for
+   * kind "platform" (Nomeo-owned open lounges).
+   */
+  creatorId?: mongoose.Types.ObjectId;
+
+  /** "creator" = subscriber-gated; "platform" = open, Nomeo-owned */
+  kind: LoungeKind;
+
+  /** Entry rule: "subscribers" (creator lounges) | "authenticated" (open) */
+  accessType: LoungeAccessType;
 
   name: string;
   description?: string;
-  coverImage?: string;
+  coverImage?: { secureUrl: string; publicId: string };
+
+  /**
+   * House rules / regulations set by the creator (or admin, for platform
+   * lounges). Shown on the lounge page and enforced socially by moderators.
+   * Each rule is a short line; keep the list focused.
+   */
+  rules: string[];
 
   status: LoungeStatus;
 
@@ -96,14 +124,42 @@ const LoungeSchema = new Schema<ILounge>(
     creatorId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
-      unique: true, // one lounge per creator
+      // Required only for creator lounges; platform lounges have none.
+      required: function (this: ILounge) {
+        return this.kind === "creator";
+      },
       index: true,
+    },
+
+    kind: {
+      type: String,
+      enum: ["creator", "platform"],
+      default: "creator",
+      required: true,
+      index: true,
+    },
+
+    accessType: {
+      type: String,
+      enum: ["subscribers", "authenticated"],
+      default: "subscribers",
+      required: true,
     },
 
     name:        { type: String, required: true, trim: true, maxlength: 100 },
     description: { type: String, maxlength: 500, trim: true },
-    coverImage:  { type: String },
+    coverImage: {
+      secureUrl: { type: String, default: "" },
+      publicId:  { type: String, default: "" },
+    },
+    rules: {
+      type: [{ type: String, trim: true, maxlength: 200 }],
+      default: [],
+      validate: {
+        validator: (v: string[]) => v.length <= 15,
+        message: "A lounge can have at most 15 rules.",
+      },
+    },
 
     status: {
       type: String,
@@ -133,6 +189,15 @@ const LoungeSchema = new Schema<ILounge>(
   { timestamps: true, collection: "lounges" }
 );
 
+/**
+ * One lounge per creator — but only enforced when creatorId is set, so any
+ * number of platform lounges (which have no creatorId) can coexist.
+ */
+LoungeSchema.index(
+  { creatorId: 1 },
+  { unique: true, partialFilterExpression: { creatorId: { $exists: true } } }
+);
+
 export const Lounge =
   mongoose.models.Lounge ?? mongoose.model<ILounge>("Lounge", LoungeSchema);
 
@@ -160,9 +225,11 @@ export interface ILoungeMember extends Document {
 
   /**
    * Back-reference to the active Subscription that qualifies this member.
-   * If the subscription expires, the member loses access even if accepted.
+   * Set for creator-lounge members (if the subscription expires, the member
+   * loses access even if accepted). Absent for platform/open-lounge members,
+   * who join without a subscription.
    */
-  subscriptionId: mongoose.Types.ObjectId;
+  subscriptionId?: mongoose.Types.ObjectId;
 
   status: LoungeMemberStatus;
 
@@ -212,7 +279,8 @@ const LoungeMemberSchema = new Schema<ILoungeMember>(
     subscriptionId: {
       type: Schema.Types.ObjectId,
       ref: "Subscription",
-      required: true,
+      // Required only for creator-lounge members; open lounges have none.
+      required: false,
     },
 
     status: {

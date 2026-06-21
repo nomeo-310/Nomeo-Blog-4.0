@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { connectDB } from "./connect-to database";
+import { connectDB } from "./connect-to-database";
 
 /**
  * getCuratedTopics

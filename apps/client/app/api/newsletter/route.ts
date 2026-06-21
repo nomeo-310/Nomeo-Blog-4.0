@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import crypto from "crypto";
 import mongoose from "mongoose";
-import { connectDB } from "@/lib/connect-to database";
+import { connectDB } from "@/lib/connect-to-database";
 import { mailService } from "@/services/email-services";
 
 /**

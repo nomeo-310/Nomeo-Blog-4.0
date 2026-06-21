@@ -4,10 +4,10 @@ import { headers } from "next/headers";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 import { Profile } from "@/models/profile";
-import { Notification } from "@/models/notification";
+import { createNotification } from "@/lib/create-notification";
 import { isDuplicateKeyError } from "@/lib/username";
 import { getAuth } from "@/lib/auth";
-import { connectDB } from "@/lib/connect-to database";
+import { connectDB } from "@/lib/connect-to-database";
 
 /**
  * Onboarding Service
@@ -21,34 +21,11 @@ import { connectDB } from "@/lib/connect-to database";
  *   3. completeOnboarding() saves those choices and — if they chose "writer" —
  *      upgrades User.role to "creator" and activates the creator profile.
  *
- * Why update the user document directly:
- *   Better Auth has no reliable server API for mutating custom additionalFields
- *   like `role`, and `role` is `input: false` so the client can never set it.
- *   We update the Better Auth user collection through the shared mongoose
- *   connection — the same collection the mongodbAdapter uses.
- *
- * Ordering & safety:
- *   - Profile.updateOne runs FIRST. It carries the schema validation
- *     (username uniqueness, enum checks). If it fails, we throw before
- *     touching the role — so the user is never left half-upgraded.
- *   - Only after the profile succeeds do we flip the role.
- *   - The role can only ever become "creator". Admin roles
- *     (moderator/admin/super_admin) are impossible to self-assign.
- *   - The session is verified server-side; a user can only onboard themselves.
- *
- * Images:
- *   - profileImage / coverImage are stored as OBJECTS on the Profile
- *     ({ url, publicId, ... }) so the publicId is available for delete/replace.
- *   - The profile image URL is ALSO mirrored onto the Better Auth user as a
- *     plain STRING (user.avatar + user.image) for quick reads and Better Auth
- *     compatibility.
- *
- * IMPORTANT — session refresh:
- *   The role changes in the DB immediately, but the user's existing session
- *   cookie still says "user" until it refreshes. After this returns, the
- *   client should do a full-page navigation (or re-fetch the session) so the
- *   new "creator" role propagates. Don't rely on the in-memory session being
- *   updated synchronously.
+ * Notifications on completion:
+ *   - Everyone gets a friendly "you're all set" completion notification
+ *     (system_announcement), sent via createNotification so the real-time bell
+ *     updates instantly.
+ *   - Writers ALSO get the creator_upgrade_successful notification.
  */
 
 export type SignupIntent = "reader" | "writer";
@@ -63,24 +40,17 @@ export interface CloudinaryImageInput {
 
 export interface CompleteOnboardingInput {
   intent: SignupIntent;
-  /** Optional: let the user choose their own handle during onboarding */
   username?: string;
-  /** Name shown on posts and profile — distinct from the @handle */
   displayName?: string;
   pronouns?: string;
   gender?: Gender;
-  /** ISO date string from the form, e.g. "1998-04-12" */
   dateOfBirth?: string;
   bio?: string;
   location?: string;
   occupation?: string;
-  /** Reader interests — Topic slugs chosen from the curated picker */
   interests?: string[];
-  /** Creator's declared topics — Topic slugs (only used when intent is "writer") */
   creatorTopics?: string[];
-  /** Uploaded profile picture (Cloudinary). Stored as object on Profile; URL mirrored to user.avatar/image. */
   profileImage?: CloudinaryImageInput;
-  /** Uploaded cover image (Cloudinary) — writers. Stored as object on Profile. */
   coverImage?: CloudinaryImageInput;
 }
 
@@ -91,7 +61,6 @@ export interface OnboardingResult {
 
 /** Returns the Better Auth user collection (matches the mongodbAdapter). */
 function userCollection() {
-  // Better Auth's mongodbAdapter uses the singular "user" collection by default.
   return mongoose.connection.db!.collection("user");
 }
 
@@ -101,7 +70,6 @@ export async function completeOnboarding(
   await connectDB();
   const auth = await getAuth();
 
-  // Verify the caller is authenticated — they can only onboard themselves
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) {
     throw new Error("UNAUTHORIZED");
@@ -128,14 +96,13 @@ export async function completeOnboarding(
   if (input.profileImage) profileUpdate.profileImage = input.profileImage;
   if (input.coverImage)   profileUpdate.coverImage = input.coverImage;
 
-  // Date of birth — validate the 13+ age requirement before saving
   if (input.dateOfBirth) {
     const dob = new Date(input.dateOfBirth);
     if (Number.isNaN(dob.getTime())) {
       throw new Error("INVALID_DATE_OF_BIRTH");
     }
     if (ageFromDate(dob) < 13) {
-      throw new Error("UNDER_MINIMUM_AGE"); // platform requires 13+
+      throw new Error("UNDER_MINIMUM_AGE");
     }
     profileUpdate.dateOfBirth = dob;
   }
@@ -161,9 +128,6 @@ export async function completeOnboarding(
   }
 
   // ── 1b. Mirror the avatar URL onto the Better Auth user ────────────────
-  // user.avatar / user.image are STRINGS (Better Auth shape). The Profile
-  // keeps the full object (with publicId) for management; the user keeps the
-  // plain URL for quick reads and Better Auth compatibility.
   if (input.profileImage?.url) {
     await userCollection().updateOne(
       { _id: new ObjectId(userId) },
@@ -178,12 +142,19 @@ export async function completeOnboarding(
       { $set: { role: "creator", updatedAt: now } }
     );
 
-    await Notification.create({
+    await createNotification({
       recipientId: userId,
       type: "creator_upgrade_successful",
       message:
         "You're now a creator on Nomeo! You can publish posts, build a following, and earn from the subscription pool. Write your first post to get started.",
-      isRead: false,
+    });
+  } else {
+    // Reader completion — a friendly "you're all set" note (real-time bell).
+    await createNotification({
+      recipientId: userId,
+      type: "system_announcement",
+      message:
+        "You're all set! Start following writers, save posts you love, and join the conversation in the lounges.",
     });
   }
 
@@ -191,11 +162,7 @@ export async function completeOnboarding(
 }
 
 /**
- * Standalone role upgrade — for readers who later decide to become creators
- * (the "Become a creator" button in account settings).
- *
- * Same security guarantees: only ever upgrades to "creator", session-verified,
- * and admin roles are blocked from this path.
+ * Standalone role upgrade — for readers who later decide to become creators.
  */
 export async function upgradeToCreator(): Promise<{
   success: true;
@@ -210,12 +177,10 @@ export async function upgradeToCreator(): Promise<{
     throw new Error("UNAUTHORIZED");
   }
 
-  // Already a creator? Nothing to do.
   if (session.user.role === "creator") {
     return { success: true, role: "creator", alreadyCreator: true };
   }
 
-  // Admin roles must not pass through the creator path
   if (["moderator", "admin", "super_admin"].includes(session.user.role as string)) {
     throw new Error("ADMIN_CANNOT_BECOME_CREATOR");
   }
@@ -223,7 +188,6 @@ export async function upgradeToCreator(): Promise<{
   const userId = session.user.id;
   const now = new Date();
 
-  // Profile first, then role — same ordering guarantee as onboarding
   await Profile.updateOne(
     { userId },
     { $set: { creatorStatus: "active", becameCreatorAt: now } }
@@ -234,21 +198,16 @@ export async function upgradeToCreator(): Promise<{
     { $set: { role: "creator", updatedAt: now } }
   );
 
-  await Notification.create({
+  await createNotification({
     recipientId: userId,
     type: "creator_upgrade_successful",
     message:
       "You're now a creator on Nomeo! You can publish posts, build a following, and earn from the subscription pool.",
-    isRead: false,
   });
 
   return { success: true, role: "creator", alreadyCreator: false };
 }
 
-/**
- * Compute age in whole years from a date of birth.
- * Enforces the platform's 13+ minimum age requirement.
- */
 function ageFromDate(dob: Date): number {
   const now = new Date();
   let age = now.getFullYear() - dob.getFullYear();

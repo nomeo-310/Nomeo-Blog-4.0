@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
-import { connectDB } from "./connect-to database";
+import { connectDB } from "./connect-to-database";
 
 /**
  * Session & current-user helpers.

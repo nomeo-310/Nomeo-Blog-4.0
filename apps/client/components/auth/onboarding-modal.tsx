@@ -7,11 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { Loader2, ArrowLeft, Check, BookOpen, PenLine, CalendarIcon, ChevronDown } from "lucide-react";
+import { Loader2, ArrowLeft, Check, BookOpen, PenLine, CalendarIcon, ChevronDown, Sparkles } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { SignupIntent } from "@/types/onboarding-types";
 import ImageCropper, { UploadedImage } from "./image-cropper";
+import BioBuilderDialog from "./bio-builder-dialog";
 import { completeOnboarding } from "@/services/onboarding-service";
 
 const CLOUDINARY_PRESET_PROFILE = "nomeo_blogs_profile"; // unsigned preset for avatars
@@ -26,6 +27,11 @@ const CLOUDINARY_PRESET_COVER = "nomeo_blogs_cover";     // unsigned preset for 
  *   3. details   — gender, date of birth, bio, location, occupation (optional)
  *   4. interests — topic slugs (everyone) + creator topics (writers only)
  *   5. done      — welcome
+ *
+ * The bio field on the details step has a "Help me write it" button that opens
+ * BioBuilderDialog — a local, template-based bio generator (no AI/API). It
+ * drafts a few options from the user's answers + chosen style; picking one
+ * fills the textarea, still fully editable.
  *
  * Non-dismissable: no close button, no escape, no outside-click. It closes only
  * after completeOnboarding() succeeds, followed by a full navigation so the
@@ -67,6 +73,7 @@ export default function OnboardingModal({ isOpen, onComplete, topics, initialSte
   const [dateOfBirth, setDateOfBirth] = useState<Date | undefined>(undefined);
   const [dobOpen, setDobOpen] = useState(false);
   const [bio, setBio] = useState("");
+  const [bioBuilderOpen, setBioBuilderOpen] = useState(false);
   const [location, setLocation] = useState("");
   const [occupation, setOccupation] = useState("");
   const [interests, setInterests] = useState<string[]>([]);
@@ -476,15 +483,28 @@ export default function OnboardingModal({ isOpen, onComplete, topics, initialSte
                     <Field label="Occupation (optional)">
                       <Input value={occupation} onChange={(e) => setOccupation(e.target.value)} placeholder="Software engineer" className="h-10 md:h-11" />
                     </Field>
+
+                    {/* Short bio — with the "Help me write it" assistant */}
                     <Field label="Short bio (optional)">
+                      <div className="mb-1.5 flex items-center justify-end">
+                        <button
+                          type="button"
+                          onClick={() => setBioBuilderOpen(true)}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
+                        >
+                          <Sparkles className="h-3.5 w-3.5" />
+                          Help me write it
+                        </button>
+                      </div>
                       <textarea
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
-                        maxLength={200}
-                        rows={3}
+                        maxLength={1000}
+                        rows={4}
                         placeholder="A sentence or two about you."
                         className="w-full resize-none rounded-lg border border-border bg-background px-3 py-2 text-sm"
                       />
+                      <p className="mt-1 text-right text-xs text-muted-foreground">{bio.length}/1000</p>
                     </Field>
                   </div>
                 )}
@@ -539,6 +559,21 @@ export default function OnboardingModal({ isOpen, onComplete, topics, initialSte
           )}
         </div>
       </div>
+
+      {/* Bio builder — modal over the onboarding modal */}
+      <BioBuilderDialog
+        open={bioBuilderOpen}
+        onClose={() => setBioBuilderOpen(false)}
+        onPick={(generated) => setBio(generated)}
+        defaults={{
+          occupation: occupation.trim() || undefined,
+          // map selected interest slugs to their human labels for a better draft
+          interests: interests
+            .map((slug) => topics.find((t) => t.slug === slug)?.label)
+            .filter((x): x is string => Boolean(x)),
+          intent: intent ?? undefined,
+        }}
+      />
     </Modal>
   );
 }

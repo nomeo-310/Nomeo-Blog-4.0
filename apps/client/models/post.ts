@@ -93,7 +93,7 @@ export interface IPost extends Document {
   slug:       string;
   excerpt?:   string;
   content:    string;
-  coverImage?: string;
+  coverImage?: { secureUrl: string; publicId: string };
 
   tags:         string[];   // Topic slugs (see topic.ts) — normalised on publish
   category?:    string;
@@ -207,7 +207,10 @@ const PostSchema = new Schema<IPost>(
     slug:       { type: String, required: true, trim: true, lowercase: true, maxlength: 350 },
     excerpt:    { type: String, maxlength: 500 },
     content:    { type: String, required: true },
-    coverImage: { type: String },
+    coverImage: {
+      secureUrl: { type: String, default: "" },
+      publicId:  { type: String, default: "" },
+    },
 
     tags:        { type: [String], default: [], index: true },
     category:    { type: String, trim: true, index: true },
@@ -272,7 +275,7 @@ export interface IPostSeries extends Document {
   creatorId:    mongoose.Types.ObjectId;
   title:        string;
   description?: string;
-  coverImage?:  string;
+  coverImage?: { secureUrl: string; publicId: string };
   isPublished:  boolean;
   postIds:      mongoose.Types.ObjectId[];
   postsCount:   number;
@@ -285,7 +288,10 @@ const PostSeriesSchema = new Schema<IPostSeries>(
     creatorId:   { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
     title:       { type: String, required: true, trim: true, maxlength: 200 },
     description: { type: String, maxlength: 1000 },
-    coverImage:  { type: String },
+    coverImage: {
+      secureUrl: { type: String, default: "" },
+      publicId:  { type: String, default: "" },
+    },
     isPublished: { type: Boolean, default: false },
     postIds:     { type: [{ type: Schema.Types.ObjectId, ref: "Post" }], default: [] },
     postsCount:  { type: Number, default: 0, min: 0 },

@@ -212,7 +212,7 @@ const ProfileSchema = new Schema<IProfile>(
     },
     dateOfBirth: { type: Date },
 
-    bio:         { type: String, maxlength: 200, trim: true },
+    bio:         { type: String, maxlength: 500, trim: true },
     about:       { type: String, maxlength: 5000, trim: true },
     profileImage: {
       type: {

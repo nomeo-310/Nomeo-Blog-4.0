@@ -37,7 +37,7 @@ export default function FaqPage() {
 
   return (
     <div className="w-full bg-background">
-      <div className="px-4 sm:px-6">
+      <div>
         {/* ── Header ──────────────────────────────────────────────────── */}
         <header className="mx-auto max-w-4xl pt-16 pb-10 text-center md:pt-24 md:pb-14">
           <p className="text-xs font-semibold uppercase tracking-widest text-primary">Help center</p>
@@ -87,7 +87,7 @@ export default function FaqPage() {
                   <p className="mt-1 text-sm text-muted-foreground">{active.description}</p>
                 )}
               </div>
-              <div className="divide-y divide-border rounded-2xl border border-border bg-card">
+              <div className="divide-y divide-border rounded-2xl border border-border bg-card overflow-hidden">
                 {active.items.map((item, i) => (
                   <AccordionItem
                     key={`${active.id}-${i}`}

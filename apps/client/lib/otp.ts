@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { User } from "@/models/user";
-import { connectDB } from "./connect-to database";
+import { connectDB } from "./connect-to-database";
 import { Otp, OtpPurpose } from "@/models/otp";
 import { mailService } from "@/services/email-services";
 

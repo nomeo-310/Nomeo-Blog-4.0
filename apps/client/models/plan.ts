@@ -21,7 +21,7 @@ import mongoose, { Schema, Document } from "mongoose";
  */
 
 export type PlanStatus   = "active" | "archived" | "draft";
-export type PlanInterval = "monthly" | "yearly";
+export type PlanInterval = "monthly" | "quarterly" | "biannually" | "yearly";
 
 export interface IPlanFeature {
   /** Short label shown in the features list e.g. "Unlimited paid post access" */
@@ -114,7 +114,7 @@ const PlanSchema = new Schema<IPlan>(
 
     interval: {
       type: String,
-      enum: ["monthly", "yearly"],
+      enum: ["monthly", "quarterly", "biannually", "yearly"],
       required: true,
     },
 
