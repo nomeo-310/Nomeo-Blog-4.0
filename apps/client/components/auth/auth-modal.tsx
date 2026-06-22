@@ -12,6 +12,7 @@ import { PasswordStrength, usePasswordValidation } from "@/components/ui/passwor
 import { useAuth, formatName, validateName, BLOCKED_ACCOUNT_MESSAGES } from "@/hooks/use-auth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useRedirectAfterLogin } from "@/hooks/use-redirect-after-login";
 
 type AuthMode = "sign-in" | "sign-up" | "forgot-password";
 type AuthStep = "credentials" | "verify" | "reset-password-verify";
@@ -57,6 +58,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
 
 
   const router = useRouter();
+  const redirectAfterLogin = useRedirectAfterLogin();
 
   const clearErrors = () => {
     setEmailError(null);
@@ -201,7 +203,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
       if (res.success) {
         toast.success("Welcome back!");
         handleClose();
-        router.refresh();
+        if (!redirectAfterLogin()) router.refresh();
         return;
       }
 

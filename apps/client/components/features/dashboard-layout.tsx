@@ -15,6 +15,7 @@ import { authClient } from "@/lib/authClient";
 import { teardownRealtime } from "@/lib/ably-registry";
 import { signOut } from "@/lib/authClient";
 import { useQueryClient } from "@tanstack/react-query";
+import { ThemeToggle } from "../ui/theme-toggle";
 
 type NavItem  = { href: string; label: string; icon: React.ElementType };
 type NavGroup = { group: string; items: NavItem[] };
@@ -335,6 +336,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </Link>
             )}
 
+            <ThemeToggle/>
+
             <Link
               href="/dashboard/notifications"
               className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -406,9 +409,7 @@ function titleCase(s: string) {
 
 /* ── TopBarUserMenu ─────────────────────────────────────────────────────── */
 
-function TopBarUserMenu({
-  user, initials, onSignOut,
-}: {
+function TopBarUserMenu({ user, initials, onSignOut }: {
   user: { name?: string | null; email?: string | null; image?: string | null } | null | undefined;
   initials: string;
   onSignOut: () => void;
@@ -483,9 +484,7 @@ function TopBarUserMenu({
   );
 }
 
-function DropdownItem({
-  href, icon, children, onClick,
-}: {
+function DropdownItem({ href, icon, children, onClick }: {
   href: string; icon: React.ReactNode; children: React.ReactNode; onClick?: () => void;
 }) {
   return (

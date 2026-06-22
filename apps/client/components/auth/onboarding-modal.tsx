@@ -14,6 +14,7 @@ import { SignupIntent } from "@/types/onboarding-types";
 import ImageCropper, { UploadedImage } from "./image-cropper";
 import BioBuilderDialog from "./bio-builder-dialog";
 import { completeOnboarding } from "@/services/onboarding-service";
+import { useRedirectAfterLogin } from "@/hooks/use-redirect-after-login";
 
 const CLOUDINARY_PRESET_PROFILE = "nomeo_blogs_profile"; // unsigned preset for avatars
 const CLOUDINARY_PRESET_COVER = "nomeo_blogs_cover";     // unsigned preset for covers
@@ -89,6 +90,8 @@ export default function OnboardingModal({ isOpen, onComplete, topics, initialSte
 
   const isWriter = intent === "writer";
   const totalSteps = STEP_ORDER.length;
+
+  const redirectAfterLogin = useRedirectAfterLogin();
 
   const content = useMemo(() => {
     const map: Record<Step, { image: string; sideTitle: string; sideDesc: string; eyebrow: string; title: string; desc: string }> = {
@@ -213,7 +216,9 @@ export default function OnboardingModal({ isOpen, onComplete, topics, initialSte
       if (res?.success) {
         toast.success(isWriter ? "Your creator space is ready!" : "You're all set!");
         onComplete();
-        window.location.assign(isWriter ? "/dashboard" : "/");
+        if (!redirectAfterLogin) {
+          window.location.assign(isWriter ? "/dashboard" : "/");
+        }
       } else {
         setError("Something went wrong. Try again.");
       }

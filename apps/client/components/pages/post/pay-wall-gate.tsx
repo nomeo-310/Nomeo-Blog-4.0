@@ -1,5 +1,6 @@
 "use client"
 
+import { saveRedirectIntent } from "@/lib/redirect-storage";
 import { useAuthModal } from "@/stores/modal-store";
 import { Lock } from "lucide-react";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import Link from "next/link";
 
 function PaywallGate({ needsMembership, isGuest, freeReadsRemaining }: { needsMembership: boolean; isGuest: boolean; freeReadsRemaining: number }) {
   const { open, setMode } = useAuthModal();
+
   return (
     <div className="mt-8">
       {/* Blurred preview */}
@@ -53,10 +55,10 @@ function PaywallGate({ needsMembership, isGuest, freeReadsRemaining }: { needsMe
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           {isGuest ? (
             <>
-              <button onClick={() => {setMode('sign-in'); open();}} className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90">
+              <button onClick={() => {saveRedirectIntent(); setMode('sign-in'); open();}} className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90">
                 Sign in
               </button>
-              <button onClick={() => {setMode('sign-up'); open();}}  className="rounded-full border border-border bg-card px-6 py-2.5 text-sm font-semibold text-foreground hover:bg-accent">
+              <button onClick={() => {saveRedirectIntent(); setMode('sign-up'); open();}}  className="rounded-full border border-border bg-card px-6 py-2.5 text-sm font-semibold text-foreground hover:bg-accent">
                 Create account — free
               </button>
             </>

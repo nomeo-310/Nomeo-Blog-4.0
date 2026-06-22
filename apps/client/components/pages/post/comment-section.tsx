@@ -7,6 +7,7 @@ import { api } from "@/lib/axios";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { useAuthModal } from "@/stores/modal-store";
+import { saveRedirectIntent } from "@/lib/redirect-storage";
 
 /**
  * CommentSection — threaded comments on a post.
@@ -218,7 +219,7 @@ export function CommentSection({ postSlug, isSignedIn, currentUserId, currentUse
       ) : (
         <div className="mb-8 flex items-center gap-3 rounded-2xl border border-dashed border-border bg-muted/20 px-5 py-4">
           <MessageCircle className="h-5 w-5 text-muted-foreground/50" />
-          <button onClick={() => {setMode('sign-in'); open();}} className="text-sm text-muted-foreground">
+          <button onClick={() => {saveRedirectIntent(); setMode('sign-in'); open();}} className="text-sm text-muted-foreground">
             <span className="font-semibold text-primary hover:underline">Sign in</span>
             {" "}to join the conversation.
           </button>

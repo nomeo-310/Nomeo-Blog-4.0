@@ -2,29 +2,13 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Search, FileText, User, Hash, ChevronRight, CornerDownLeft,
-  X, TrendingUp, ChevronLeft, ArrowUp, Users, Loader2,
-} from "lucide-react";
+import { Search, FileText, User, Hash, ChevronRight, CornerDownLeft, X, ChevronLeft, ArrowUp, Users, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSearch, type SearchType, type SearchResult } from "@/hooks/use-search";
 import { ProfileConnectButton } from "@/components/ui/profile-connect-button";
 import { authClient } from "@/lib/authClient";
-
-/**
- * SearchPage — spotlight search for Nomeo.
- *
- * Changes from previous version:
- *   • Result items and preview CTA button now navigate using item.href
- *   • Author preview shows avatar, bio, followers + ProfileConnectButton
- *     so the viewer can follow/connect directly from the search result
- *   • Author href fixed to /profile/[username]
- */
-
-const SUGGESTIONS = [
-  "Long-form writing", "Design systems", "The creator economy",
-  "ui-design", "Productivity", "Web architecture", "creative-writing",
-];
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/axios";
 
 type FilterKey = SearchType;
 
@@ -32,24 +16,38 @@ const FILTERS: { key: FilterKey; label: string }[] = [
   { key: "all",    label: "All"     },
   { key: "story",  label: "Posts"   },
   { key: "author", label: "Writers" },
-  { key: "tag",    label: "Topics"  },
+  { key: "tag",    label: "Tags"    },
   { key: "lounge", label: "Lounges" },
 ];
+
+/** Fetch top tags from the DB-cached endpoint */
+async function fetchTrendingTags(): Promise<string[]> {
+  const { data } = await api.get("/api/search/trending-tags");
+  return data.tags ?? [];
+}
 
 export default function SearchPage() {
   const router  = useRouter();
   const { data: session } = authClient.useSession();
   const isSignedIn = !!session?.user;
 
-  const [query,            setQuery]            = useState("");
-  const [filter,           setFilter]           = useState<FilterKey>("all");
-  const [selectedId,       setSelectedId]       = useState<string | null>(null);
+  const [query,             setQuery]             = useState("");
+  const [filter,            setFilter]            = useState<FilterKey>("all");
+  const [selectedId,        setSelectedId]        = useState<string | null>(null);
   const [mobileShowPreview, setMobileShowPreview] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const isActive = query.trim().length > 0;
 
   const { results, counts, isFetching, isError } = useSearch(query, filter);
+
+  // Fetch trending tags — cached server-side for 10 min, re-fetched client-side every 10 min too
+  const { data: trendingTags = [], isLoading: tagsLoading } = useQuery({
+    queryKey:  ["trending-tags"],
+    queryFn:   fetchTrendingTags,
+    staleTime: 10 * 60 * 1000,  // match server-side TTL
+    gcTime:    15 * 60 * 1000,
+  });
 
   useEffect(() => { inputRef.current?.focus(); }, []);
 
@@ -79,9 +77,9 @@ export default function SearchPage() {
     const cls = cn("h-4 w-4", active ? "text-current" : "text-muted-foreground");
     switch (type) {
       case "story":  return <FileText className={cls} />;
-      case "author": return <User    className={cls} />;
-      case "lounge": return <Users   className={cls} />;
-      default:       return <Hash    className={cls} />;
+      case "author": return <User     className={cls} />;
+      case "lounge": return <Users    className={cls} />;
+      default:       return <Hash     className={cls} />;
     }
   };
 
@@ -168,22 +166,41 @@ export default function SearchPage() {
           </div>
         )}
 
-        {/* Suggestions (idle) */}
+        {/* ── Popular topics (idle state) ─────────────────────────────── */}
         <div className={cn(
           "flex flex-col items-center gap-3 max-w-2xl overflow-hidden transition-all duration-500 ease-out",
-          isActive ? "max-h-0 opacity-0" : "max-h-60 opacity-100"
+          isActive ? "max-h-0 opacity-0" : "max-h-72 opacity-100"
         )}>
-          <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground select-none">
-            <TrendingUp className="h-3.5 w-3.5" /><span>Trending searches</span>
+          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-muted-foreground select-none">
+            <Hash className="h-3.5 w-3.5" />
+            <span>Popular topics</span>
           </div>
-          <div className="flex flex-wrap justify-center gap-1.5 md:gap-2 max-w-md md:max-w-none">
-            {SUGGESTIONS.map(s => (
-              <button key={s} type="button" onClick={() => { setQuery(s); inputRef.current?.focus(); }}
-                className="rounded-full border border-border bg-card px-3 py-1 md:px-3.5 md:py-1.5 text-xs md:text-sm text-foreground transition-colors hover:bg-accent">
-                {s}
-              </button>
-            ))}
-          </div>
+
+          {tagsLoading ? (
+            /* Skeleton pills while fetching */
+            <div className="flex flex-wrap justify-center gap-1.5 md:gap-2">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i}
+                  className="h-7 rounded-full bg-muted animate-pulse"
+                  style={{ width: `${60 + (i * 11) % 50}px` }}
+                />
+              ))}
+            </div>
+          ) : trendingTags.length > 0 ? (
+            <div className="flex flex-wrap justify-center gap-1.5 md:gap-2 max-w-md md:max-w-none">
+              {trendingTags.map(tag => (
+                <button key={tag} type="button"
+                  onClick={() => { setQuery(tag); setFilter("tag"); inputRef.current?.focus(); }}
+                  className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1 md:px-3.5 md:py-1.5 text-xs md:text-sm text-foreground transition-colors hover:bg-accent hover:border-primary/30">
+                  <Hash className="h-3 w-3 text-primary shrink-0" />
+                  {tag}
+                </button>
+              ))}
+            </div>
+          ) : (
+            /* Fallback if no tags yet */
+            <p className="text-xs text-muted-foreground">No topics yet — check back once posts are published.</p>
+          )}
         </div>
 
         {/* Results */}
@@ -201,7 +218,7 @@ export default function SearchPage() {
                 <p className="text-sm font-medium text-foreground">No matches for &ldquo;{query}&rdquo;</p>
                 <p className="text-xs text-muted-foreground mt-1">
                   {filter === "all"
-                    ? "Try a topic like 'ui-design' or a writer's name."
+                    ? "Try a tag like 'design' or a writer's name."
                     : "Nothing in this filter — try 'All' or another scope."}
                 </p>
               </div>
@@ -280,7 +297,6 @@ export default function SearchPage() {
                     {/* ── Author-specific preview ── */}
                     {activeItem.type === "author" ? (
                       <div className="flex flex-col gap-4">
-                        {/* Avatar + name + follow button */}
                         <div className="flex items-center gap-3">
                           {activeItem.avatar ? (
                             // eslint-disable-next-line @next/next/no-img-element
@@ -299,7 +315,6 @@ export default function SearchPage() {
                           </div>
                         </div>
 
-                        {/* Bio */}
                         {activeItem.preview && (
                           <p className="text-xs md:text-sm text-card-foreground/90 leading-relaxed">
                             {activeItem.preview}
@@ -308,7 +323,6 @@ export default function SearchPage() {
 
                         <hr className="border-border" />
 
-                        {/* Connect button — only when signed in and userId is present */}
                         {isSignedIn && activeItem.userId ? (
                           <ProfileConnectButton
                             targetUserId={activeItem.userId}
@@ -322,14 +336,12 @@ export default function SearchPage() {
                           </button>
                         ) : null}
 
-                        {/* View profile link */}
                         <button type="button" onClick={() => navigateTo(activeItem)}
                           className="w-full flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground hover:bg-accent transition-colors">
                           View full profile <ChevronRight className="h-4 w-4" />
                         </button>
                       </div>
                     ) : (
-                      /* ── Default preview (story / tag / lounge) ── */
                       <div className="flex flex-col flex-1 gap-3">
                         <div>
                           <h3 className="text-base md:text-xl font-heading font-bold text-card-foreground tracking-tight leading-snug">

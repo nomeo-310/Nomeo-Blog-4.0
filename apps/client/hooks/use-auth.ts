@@ -2,6 +2,7 @@
 
 import { authClient } from "@/lib/authClient";
 import { useState, useCallback } from "react";
+import { peekRedirectIntent } from "@/lib/redirect-storage";
 
 /**
  * useAuth
@@ -144,7 +145,8 @@ export function useAuth() {
     setError(null);
     try {
       // Redirects away — resolves only if it fails to start.
-      await authClient.signIn.social({ provider: "google", callbackURL });
+      const redirect = peekRedirectIntent()?.path ?? callbackURL;
+      await authClient.signIn.social({ provider: "google", callbackURL : redirect });
       return { success: true };
     } catch {
       const msg = "Could not connect to Google. Try again.";

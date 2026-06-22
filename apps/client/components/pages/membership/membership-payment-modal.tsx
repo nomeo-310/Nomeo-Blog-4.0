@@ -170,7 +170,7 @@ export default function MembershipPaymentModal({ plan, userEmail, userName, onCl
           so its form floats over the dim instead of a white page. */}
       <div
         className={cn(
-          "w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl sm:p-7",
+          "w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-xl sm:p-7",
           paystackOpen && "invisible"
         )}
       >

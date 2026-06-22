@@ -124,15 +124,6 @@ function ProfileSettings() {
   const fileInputRef  = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
 
-  // ── Sync local image + form state from server data ───────────────────────
-  // IMPORTANT: keyed off `dataUpdatedAt`, not a one-time "initialised" boolean.
-  // React Query bumps dataUpdatedAt on every successful fetch — including the
-  // background refetch triggered by invalidateQueries(["profile"]) after a
-  // save. A boolean guard that flips once and never resets means this sync
-  // only ever runs on first mount; any later refetch (after saving a new
-  // cover/avatar, or on a second tab) is silently ignored and the UI keeps
-  // showing whatever was set locally before — which looks like "stale data"
-  // even though the server and the React Query cache are both already correct.
   const lastSyncedAt = useRef(0);
   if (profile && dataUpdatedAt !== lastSyncedAt.current) {
     lastSyncedAt.current = dataUpdatedAt;
@@ -216,7 +207,7 @@ function ProfileSettings() {
   if (isLoading) return <SettingsSkeleton />;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_380px] 2xl:grid-cols-[1fr_440px]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_minmax(340px,480px)] xl:grid-cols-[1fr_minmax(380px,500px)] 2xl:grid-cols-[1fr_minmax(380px,550px)]">
 
       {/* ── LEFT ─────────────────────────────────────────────────────── */}
       <div className="space-y-5">
@@ -410,7 +401,7 @@ function NotificationSettings() {
   const { data: settings, isLoading } = useQuery({
     queryKey: ["settings"],
     queryFn:  fetchSettings,
-    staleTime: 60_000,
+    staleTime: 0,
   });
 
   const [localPrefs, setLocalPrefs] = useState<Record<string, boolean> | null>(null);
@@ -467,7 +458,7 @@ function NotificationSettings() {
   if (isLoading) return <SettingsSkeleton />;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_380px] 2xl:grid-cols-[1fr_440px]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_minmax(340px,480px)] xl:grid-cols-[1fr_minmax(380px,500px)] 2xl:grid-cols-[1fr_minmax(380px,550px)]">
       <div className="space-y-5">
         {groups.map((group) => (
           <div key={group.label} className="rounded-2xl border border-border bg-card p-5 space-y-3">
@@ -522,7 +513,7 @@ function AppearanceSettings() {
   const { data: settings, isLoading } = useQuery({
     queryKey: ["settings"],
     queryFn:  fetchSettings,
-    staleTime: 60_000,
+    staleTime: 0,
   });
 
   type Theme    = "light" | "dark" | "system";
@@ -552,7 +543,7 @@ function AppearanceSettings() {
   if (isLoading) return <SettingsSkeleton />;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_380px] 2xl:grid-cols-[1fr_440px]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_minmax(340px,480px)] xl:grid-cols-[1fr_minmax(380px,500px)] 2xl:grid-cols-[1fr_minmax(380px,550px)]">
       <div className="space-y-5">
         <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
           <p className="text-sm font-semibold text-foreground">Theme</p>
@@ -652,12 +643,6 @@ function AccountSettings() {
     if (strength.score < 2)            { toast.error("Please choose a stronger password."); return; }
     setSaving(true);
     try {
-      // Custom endpoint, scoped to the authenticated session — see
-      // app/api/account/change-password/route.ts. It revokes every
-      // session for this account, including the one making this request,
-      // so we sign out client-side too and send the user home rather
-      // than leaving them on a page whose session is already dead.
-      // Login is a modal, not a route, so there's no /login page to push to.
       await api.post("/api/account/change-password", {
         currentPassword: pwForm.current,
         newPassword: pwForm.next,
@@ -675,7 +660,7 @@ function AccountSettings() {
   if (isLoading) return <SettingsSkeleton />;
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_380px] 2xl:grid-cols-[1fr_440px]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_minmax(340px,480px)] xl:grid-cols-[1fr_minmax(380px,500px)] 2xl:grid-cols-[1fr_minmax(380px,550px)]">
       <div className="space-y-5">
         <div className="rounded-2xl border border-border bg-card p-5">
           <p className="text-sm font-semibold text-foreground">Email address</p>
@@ -814,14 +799,12 @@ function AccountSettings() {
           <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Security tips</p>
           <ul className="space-y-2.5 text-xs text-muted-foreground">
             {isOAuth ? (
-              // OAuth users can't change their password here
               <>
                 <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Your account is secured through {provider === "google" ? "Google" : provider}. No password is stored on Nomeo.</li>
                 <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Keep your {provider === "google" ? "Google" : provider} account secure — it controls access to Nomeo.</li>
                 <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Enable two-factor authentication on your {provider === "google" ? "Google" : provider} account for extra protection.</li>
               </>
             ) : (
-              // Credential users
               <>
                 <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Use a unique password not shared with any other account.</li>
                 <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Include uppercase letters, numbers and symbols.</li>
@@ -848,7 +831,6 @@ function CreatorApplicationSection() {
     sampleContent:  "",
   });
 
-  // Fetch current application status
   const { data: appData, isLoading: checking } = useQuery({
     queryKey: ["creator-application"],
     queryFn: async () => {
@@ -888,7 +870,6 @@ function CreatorApplicationSection() {
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm(p => ({ ...p, [k]: e.target.value }));
 
-  // ── Status states ─────────────────────────────────────────────────────
   if (checking) {
     return (
       <div className="rounded-2xl border border-border bg-card p-5 animate-pulse">
@@ -956,7 +937,6 @@ function CreatorApplicationSection() {
     );
   }
 
-  // ── No application yet ─────────────────────────────────────────────────
   return (
     <div className="rounded-2xl border border-border bg-card p-5">
       <button

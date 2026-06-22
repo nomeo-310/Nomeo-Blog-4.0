@@ -148,27 +148,62 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // ── Topics (tags) ─────────────────────────────────────────────────
+    // ── Topics / Tags ─────────────────────────────────────────────────
+    // Tags are stored as a plain string array on each Post document.
+    // Searching by tag returns the actual posts that carry that tag so
+    // the user can open them directly via their slug — not abstract
+    // topic cards that link to /topic/{tag} (a page that doesn't exist).
+    //
+    // Result type is "story" (same shape as the story search) so the
+    // preview panel and "Read full story" CTA work identically.
     if (want("tag")) {
-      const topics = await db
-        .collection("topics")
+      const taggedPosts = await db
+        .collection("posts")
         .find(
-          { status: "active", $or: [{ label: rx }, { slug: rx }, { aliases: rx }] },
-          { projection: { slug: 1, label: 1, description: 1, postsCount: 1 } }
+          { status: "published", isRemoved: { $ne: true }, tags: rx },
+          {
+            projection: {
+              title: 1, slug: 1, excerpt: 1,
+              readingTime: 1, authorId: 1, publishedAt: 1, tags: 1,
+            },
+          }
         )
-        .sort({ postsCount: -1 })
+        .sort({ publishedAt: -1 })
         .limit(perType)
         .toArray();
 
-      for (const t of topics) {
+      // Resolve author names in one batch
+      const tagAuthorIds = [...new Set(taggedPosts.map((p) => p.authorId).filter(Boolean))];
+      const tagAuthors = tagAuthorIds.length
+        ? await db
+            .collection("profiles")
+            .find({ userId: { $in: tagAuthorIds } }, { projection: { userId: 1, displayName: 1, username: 1 } })
+            .toArray()
+        : [];
+      const tagNameByUser = new Map(tagAuthors.map((a) => [String(a.userId), a.displayName || a.username || "Unknown"]));
+
+      for (const p of taggedPosts) {
+        const author  = tagNameByUser.get(String(p.authorId)) || "Unknown";
+        const mins    = p.readingTime ? `${p.readingTime} min read` : "";
+        // Show which matching tags the post carries so the user understands why it appeared
+        const matchingTags = (Array.isArray(p.tags) ? p.tags : [])
+          .filter((t: string) => rx.test(t))
+          .slice(0, 3)
+          .map((t: string) => `#${t}`)
+          .join("  ");
         results.push({
-          id: String(t._id),
-          type: "tag",
-          title: t.slug,
-          subtitle: `${formatCount(t.postsCount ?? 0)} stories`,
-          category: "Topic",
-          preview: t.description || "",
-          href: `/topic/${t.slug}`,
+          id:       `tag-post-${String(p._id)}`,
+          type:     "story",
+          title:    p.title,
+          subtitle: `by ${author}${mins ? ` • ${mins}` : ""}`,
+          category: "Story",
+          preview:  p.excerpt || "",
+          href:     `/post/${p.slug}`,
+          // Reuse the subtitle slot in the UI to hint which tag matched
+          // (the UI renders item.subtitle, so we append the tags there)
+          ...(matchingTags && {
+            subtitle: `by ${author}${mins ? ` • ${mins}` : ""} • ${matchingTags}`,
+          }),
         });
       }
     }
@@ -211,7 +246,9 @@ export async function GET(req: NextRequest) {
       const [story, author, tag, lounge] = await Promise.all([
         db.collection("posts").countDocuments({ status: "published", $or: [{ title: rx }, { excerpt: rx }] }),
         db.collection("profiles").countDocuments(authorCountFilter),
-        db.collection("topics").countDocuments({ status: "active", $or: [{ label: rx }, { slug: rx }, { aliases: rx }] }),
+        // Count distinct tags matching the query across published posts —
+        // approximated as the number of posts that have at least one matching tag
+        db.collection("posts").countDocuments({ status: "published", isRemoved: { $ne: true }, tags: rx }),
         db.collection("lounges").countDocuments({ status: "active", $or: [{ name: rx }, { description: rx }] }),
       ]);
       counts = { all: story + author + tag + lounge, story, author, tag, lounge };

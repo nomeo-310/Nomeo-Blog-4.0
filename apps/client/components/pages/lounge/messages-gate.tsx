@@ -4,6 +4,7 @@
 import { useRouter } from "next/navigation";
 import { MessageCircle, Lock, Loader2 } from "lucide-react";
 import { useAuthModal } from "@/stores/modal-store";
+import { saveRedirectIntent } from "@/lib/redirect-storage";
 
 /**
  * MessagesGate — guards the messages surfaces.
@@ -58,7 +59,7 @@ export function MessagesGate({
           Your conversations are private. Sign in to read and reply to your messages.
         </p>
         <button
-          onClick={() => { setMode("sign-in"); openAuth(); }}
+          onClick={() => { saveRedirectIntent(); setMode("sign-in"); openAuth(); }}
           className="mt-6 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"
         >
           Sign in

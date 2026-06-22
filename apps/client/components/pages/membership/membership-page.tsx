@@ -10,6 +10,7 @@ import { PlanOption, usePlans } from "@/hooks/use-plans";
 import { useSubscription } from "@/hooks/use-subscription";
 import MembershipPaymentModal from "./membership-payment-modal";
 import { Skeleton } from "@/components/ui/skeleton";
+import { saveRedirectIntent } from "@/lib/redirect-storage";
 
 /**
  * MembershipPage — Nomeo.
@@ -44,6 +45,7 @@ export default function MembershipPage() {
 
   const handleSubscribe = (plan: PlanOption) => {
     if (!isLoggedIn) {
+      saveRedirectIntent();
       setMode("sign-in");
       openAuth();
       return;
