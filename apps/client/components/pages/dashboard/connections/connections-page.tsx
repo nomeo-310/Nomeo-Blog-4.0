@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Users, MessageCircle, Search, UserCheck, UserPlus } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { UserMultiple02Icon, Message01Icon, Search01Icon, UserCheck02Icon, UserAdd02Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 import { api } from "@/lib/axios";
 import { useOpenDM } from "@/hooks/use-open-dm";
@@ -74,25 +75,25 @@ export default function ConnectionsPage() {
           <TabBtn
             active={tab === "following"}
             onClick={() => { setTab("following"); setQuery(""); }}
-            icon={<UserPlus className="h-3.5 w-3.5" />}
+            icon={<HugeiconsIcon icon={UserAdd02Icon} className="h-3.5 w-3.5" />}
             label="Following"
           />
           <TabBtn
             active={tab === "followers"}
             onClick={() => { setTab("followers"); setQuery(""); }}
-            icon={<UserCheck className="h-3.5 w-3.5" />}
+            icon={<HugeiconsIcon icon={UserCheck02Icon} className="h-3.5 w-3.5" />}
             label="Followers"
           />
         </div>
 
         {/* Search */}
-        <div className="relative w-full sm:w-64">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="relative w-full sm:w-80">
+          <HugeiconsIcon icon={Search01Icon} className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={`Search ${tab}…`}
-            className="w-full rounded-xl border border-border bg-background py-2.5 pl-9 pr-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-full border border-border bg-background py-2.5 pl-9 pr-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
       </div>
@@ -175,7 +176,7 @@ function ConnectionCard({ person, tab, onMessage, messaging }: {
           className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-40"
           title="Message"
         >
-          <MessageCircle className="h-4 w-4" />
+          <HugeiconsIcon icon={Message01Icon} className="h-4 w-4" />
         </button>
       )}
     </div>
@@ -188,7 +189,7 @@ function EmptyState({ tab, query }: { tab: Tab; query: string }) {
   if (query) {
     return (
       <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
-        <Search className="h-8 w-8 text-muted-foreground/30" />
+        <HugeiconsIcon icon={Search01Icon} className="h-8 w-8 text-muted-foreground/30" />
         <h3 className="mt-4 font-heading text-base font-bold text-foreground">No matches</h3>
         <p className="mt-2 text-sm text-muted-foreground">Try a different name or username.</p>
       </div>
@@ -196,7 +197,7 @@ function EmptyState({ tab, query }: { tab: Tab; query: string }) {
   }
   return (
     <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
-      <Users className="h-8 w-8 text-muted-foreground/30" />
+      <HugeiconsIcon icon={UserMultiple02Icon} className="h-8 w-8 text-muted-foreground/30" />
       <h3 className="mt-4 font-heading text-base font-bold text-foreground">
         {tab === "following" ? "Not following anyone yet" : "No followers yet"}
       </h3>
@@ -216,12 +217,7 @@ function EmptyState({ tab, query }: { tab: Tab; query: string }) {
 
 /* ── Tab button ─────────────────────────────────────────────────────────── */
 
-function TabBtn({ active, onClick, icon, label }: {
-  active: boolean;
-  onClick: () => void;
-  icon: React.ReactNode;
-  label: string;
-}) {
+function TabBtn({ active, onClick, icon, label }: { active: boolean; onClick: () => void; icon: React.ReactNode; label: string }) {
   return (
     <button
       onClick={onClick}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import mongoose from "mongoose";
-import { Clock, Eye, Lock, PenLine, ArrowRight,MessageCircle, Heart, Bookmark } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Clock03Icon, ViewIcon, CircleLock02Icon, Edit01Icon, ArrowRight02Icon, Message01Icon, FavouriteIcon, Bookmark01Icon } from "@hugeicons/core-free-icons";
 import { connectDB } from "@/lib/connect-to-database";
 import { BlogSection } from "./blog-section";
 
@@ -126,7 +127,7 @@ function HeroPost({ post }: { post: HomePost }) {
         />
       ) : (
         <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
-          <PenLine className="h-16 w-16 text-primary/20" />
+          <HugeiconsIcon icon={Edit01Icon} className="h-16 w-16 text-primary/20" />
         </div>
       )}
 
@@ -161,7 +162,7 @@ function HeroPost({ post }: { post: HomePost }) {
               </span>
             )}
             <span className="text-xs font-medium text-white">{post.author.name}</span>
-            <ArrowRight className="h-3 w-3 text-white/60" />
+            <HugeiconsIcon icon={ArrowRight02Icon} className="h-3 w-3 text-white/60" />
           </Link>
         </div>
       )}
@@ -188,7 +189,7 @@ function HeroPost({ post }: { post: HomePost }) {
             {/* Date */}
             {post.publishedAt && (
               <span className="flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5" />
+                <HugeiconsIcon icon={Clock03Icon} className="h-3.5 w-3.5" />
                 {formatDate(post.publishedAt)}
               </span>
             )}
@@ -204,20 +205,20 @@ function HeroPost({ post }: { post: HomePost }) {
 
             {/* Stats — views, likes, comments, saves */}
             <span className="flex items-center gap-1.5">
-              <Eye className="h-3.5 w-3.5" />
+              <HugeiconsIcon icon={ViewIcon} className="h-3.5 w-3.5" />
               {formatCount(post.viewsCount)}
             </span>
             <span className="flex items-center gap-1.5">
-              <Heart className="h-3.5 w-3.5" />
+              <HugeiconsIcon icon={FavouriteIcon} className="h-3.5 w-3.5" />
               {formatCount(post.likesCount)}
             </span>
             <span className="flex items-center gap-1.5">
-              <MessageCircle className="h-3.5 w-3.5" />
+              <HugeiconsIcon icon={Message01Icon} className="h-3.5 w-3.5" />
               {formatCount(post.commentsCount)}
             </span>
             {post.savesCount > 0 && (
               <span className="flex items-center gap-1.5">
-                <Bookmark className="h-3.5 w-3.5" />
+                <HugeiconsIcon icon={Bookmark01Icon} className="h-3.5 w-3.5" />
                 {formatCount(post.savesCount)}
               </span>
             )}
@@ -226,7 +227,7 @@ function HeroPost({ post }: { post: HomePost }) {
               <>
                 <span className="h-1 w-1 rounded-full bg-white/30" />
                 <span className="inline-flex items-center gap-1 rounded-full bg-primary/80 px-2 py-0.5 text-[11px] font-semibold text-white">
-                  <Lock className="h-3 w-3" /> Members
+                  <HugeiconsIcon icon={CircleLock02Icon} className="h-3 w-3" /> Members
                 </span>
               </>
             )}
@@ -246,7 +247,7 @@ function EmptyHero({ user }: { user?: any }) {
       </div>
       <div className="relative z-10 max-w-2xl px-6 text-center">
         <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 ring-4 ring-primary/20">
-          <PenLine className="h-12 w-12 text-primary/60" />
+          <HugeiconsIcon icon={Edit01Icon} className="h-12 w-12 text-primary/60" />
         </div>
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary/60">Welcome to Nomeo</p>
         <h1 className="mt-4 font-heading text-4xl font-bold text-foreground sm:text-5xl md:text-6xl">
@@ -259,12 +260,12 @@ function EmptyHero({ user }: { user?: any }) {
           {user?.role === "creator" && (
             <Link href="/dashboard/posts/new"
               className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
-              <PenLine className="h-4 w-4" /> Write your first story
+              <HugeiconsIcon icon={Edit01Icon} className="h-4 w-4" /> Write your first story
             </Link>
           )}
           <Link href="/about"
             className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground hover:bg-accent">
-            Learn more <ArrowRight className="h-4 w-4" />
+            Learn more <HugeiconsIcon icon={ArrowRight02Icon} className="h-4 w-4" />
           </Link>
         </div>
       </div>
@@ -283,7 +284,7 @@ function AdvertCTA({ totalPosts, lounges }: { totalPosts: number; lounges: HomeL
           <div className="flex flex-col justify-between p-8 sm:p-12">
             <div>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
-                <MessageCircle className="h-3 w-3" /> Live now
+                <HugeiconsIcon icon={Message01Icon} className="h-3 w-3" /> Live now
               </span>
               <h3 className="mt-5 font-heading text-3xl font-bold leading-snug tracking-tight text-foreground sm:text-4xl">
                 The conversation doesn&apos;t stop at the last paragraph.
@@ -316,7 +317,7 @@ function AdvertCTA({ totalPosts, lounges }: { totalPosts: number; lounges: HomeL
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/lounges"
                 className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90">
-                Explore lounges <ArrowRight className="h-4 w-4" />
+                Explore lounges <HugeiconsIcon icon={ArrowRight02Icon} className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -326,7 +327,7 @@ function AdvertCTA({ totalPosts, lounges }: { totalPosts: number; lounges: HomeL
             {lounges.length === 0 ? (
               <div className="flex h-full items-center justify-center py-12 text-center">
                 <div>
-                  <MessageCircle className="mx-auto h-8 w-8 text-muted-foreground/30" />
+                  <HugeiconsIcon icon={Message01Icon} className="mx-auto h-8 w-8 text-muted-foreground/30" />
                   <p className="mt-3 text-sm text-muted-foreground">Lounges opening soon.</p>
                 </div>
               </div>
@@ -344,11 +345,11 @@ function AdvertCTA({ totalPosts, lounges }: { totalPosts: number; lounges: HomeL
                         <span>{l.messagesCount.toLocaleString()} messages</span>
                       </div>
                     </div>
-                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground/40 group-hover:text-primary" />
+                    <HugeiconsIcon icon={ArrowRight02Icon} className="mt-1 h-4 w-4 shrink-0 text-muted-foreground/40 group-hover:text-primary" />
                   </Link>
                 ))}
                 <Link href="/lounges" className="flex w-full items-center justify-center gap-1 pt-2 text-sm font-semibold text-primary hover:underline">
-                  See all lounges <ArrowRight className="h-3.5 w-3.5" />
+                  See all lounges <HugeiconsIcon icon={ArrowRight02Icon} className="h-3.5 w-3.5" />
                 </Link>
               </div>
             )}

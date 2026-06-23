@@ -2,10 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import {
-  Sparkles, Check, RefreshCw, ChevronDown,
-  ChevronRight, ArrowLeft,
-} from "lucide-react";
+import { Sparkles, Check, RefreshCw, ChevronDown, ChevronRight, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

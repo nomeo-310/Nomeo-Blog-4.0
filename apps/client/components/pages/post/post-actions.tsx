@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Heart, Bookmark, Share2, Check, MessageCircle, X, Link2 } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { FavouriteIcon, Bookmark01Icon, Share08Icon, Tick02Icon, Message01Icon, Cancel01Icon, Link05Icon } from "@hugeicons/core-free-icons";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
 import { cn } from "@/lib/utils";
@@ -103,18 +104,18 @@ export function PostActions({ postSlug, postTitle, coverImage, initialLiked, ini
       )}>
         <FloatButton onClick={toggleLike} active={liked} disabled={liking}
           title={liked ? "Unlike" : "Like"} activeClass="text-rose-500 bg-rose-50 dark:bg-rose-950/40">
-          <Heart className={cn("h-5 w-5", liked && "fill-current")} />
+          <HugeiconsIcon icon={FavouriteIcon} className={cn("h-5 w-5", liked && "fill-current")} />
           <span className="text-xs font-medium">{formatCount(likes)}</span>
         </FloatButton>
 
         <FloatButton onClick={toggleSave} active={saved} disabled={saving}
           title={saved ? "Unsave" : "Save"} activeClass="text-primary bg-primary/10">
-          <Bookmark className={cn("h-5 w-5", saved && "fill-current")} />
+          <HugeiconsIcon icon={Bookmark01Icon} className={cn("h-5 w-5", saved && "fill-current")} />
           <span className="text-xs font-medium">{formatCount(saves)}</span>
         </FloatButton>
 
         <FloatButton onClick={scrollToComments} active={false} title="Comments" activeClass="">
-          <MessageCircle className="h-5 w-5" />
+          <HugeiconsIcon icon={Message01Icon} className="h-5 w-5" />
           <span className="text-xs font-medium">{formatCount(commentsCount)}</span>
         </FloatButton>
 
@@ -122,7 +123,7 @@ export function PostActions({ postSlug, postTitle, coverImage, initialLiked, ini
 
         <FloatButton onClick={() => setShareOpen(true)} active={false}
           title="Share" activeClass="text-primary bg-primary/10">
-          <Share2 className="h-5 w-5" />
+          <HugeiconsIcon icon={Share08Icon} className="h-5 w-5" />
         </FloatButton>
       </div>
 
@@ -135,7 +136,7 @@ export function PostActions({ postSlug, postTitle, coverImage, initialLiked, ini
               liked ? "bg-rose-50 text-rose-500 dark:bg-rose-950/40 dark:text-rose-400"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
             )}>
-            <Heart className={cn("h-4 w-4", liked && "fill-current")} />
+            <HugeiconsIcon icon={FavouriteIcon} className={cn("h-4 w-4", liked && "fill-current")} />
             <span>{formatCount(likes)}</span>
           </button>
 
@@ -145,14 +146,14 @@ export function PostActions({ postSlug, postTitle, coverImage, initialLiked, ini
               saved ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
             )}>
-            <Bookmark className={cn("h-4 w-4", saved && "fill-current")} />
+            <HugeiconsIcon icon={Bookmark01Icon} className={cn("h-4 w-4", saved && "fill-current")} />
             <span>{formatCount(saves)}</span>
           </button>
         </div>
 
         <button onClick={() => setShareOpen(true)}
           className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
-          <Share2 className="h-4 w-4" />
+          <HugeiconsIcon icon={Share08Icon} className="h-4 w-4" />
           Share
         </button>
       </div>
@@ -274,7 +275,7 @@ function ShareModal({title, coverImage, onClose, copied, setCopied }: {
             <p className="font-heading text-base font-bold text-foreground">Share this post</p>
             <button onClick={onClose}
               className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground">
-              <X className="h-4 w-4" />
+              <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
             </button>
           </div>
 
@@ -285,7 +286,7 @@ function ShareModal({title, coverImage, onClose, copied, setCopied }: {
               <img src={coverImage} alt="" className="h-14 w-14 shrink-0 rounded-lg object-cover" />
             ) : (
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                <Share2 className="h-5 w-5 text-primary" />
+                <HugeiconsIcon icon={Share08Icon} className="h-5 w-5 text-primary" />
               </div>
             )}
             <p className="line-clamp-2 text-sm font-medium leading-snug text-foreground">{title}</p>
@@ -316,7 +317,7 @@ function ShareModal({title, coverImage, onClose, copied, setCopied }: {
               Or copy link
             </p>
             <div className="flex items-center gap-2 rounded-xl border border-border bg-background px-3.5 py-2.5">
-              <Link2 className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <HugeiconsIcon icon={Link05Icon} className="h-4 w-4 shrink-0 text-muted-foreground" />
               <span className="flex-1 truncate text-sm text-muted-foreground">{url}</span>
               <button
                 onClick={copyLink}
@@ -327,7 +328,7 @@ function ShareModal({title, coverImage, onClose, copied, setCopied }: {
                     : "bg-primary/10 text-primary hover:bg-primary/20"
                 )}
               >
-                {copied ? <span className="flex items-center gap-1"><Check className="h-3 w-3" />Copied</span> : "Copy"}
+                {copied ? <span className="flex items-center gap-1"><HugeiconsIcon icon={Tick02Icon} className="h-3 w-3" />Copied</span> : "Copy"}
               </button>
             </div>
           </div>

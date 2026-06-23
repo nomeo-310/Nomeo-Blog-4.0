@@ -2,9 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import {
-  ArrowLeft, Send, Users, Lock, Globe, X, MessageCircle, Pencil, Trash2, LogOut, Check, CheckSquare,
-} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useLounge } from "@/hooks/use-lounge";
@@ -12,6 +9,8 @@ import { useLoungeChat, type ChatMessage } from "@/hooks/use-lounge-chat";
 import { authClient } from "@/lib/authClient";
 import { UserActionPopover } from "./user-action-popover";
 import { useAuthModal } from "@/stores/modal-store";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { UserMultiple02Icon, ArrowLeft02Icon, SentIcon, CircleLock02Icon, Globe02Icon, Cancel01Icon, Message01Icon, PencilEdit01Icon, Delete03Icon, CheckmarkCircle02Icon, CheckmarkSquare02Icon, ArrowRight02Icon } from "@hugeicons/core-free-icons";
 
 /**
  * LoungeRoomPage — a single lounge's live chat.
@@ -202,19 +201,19 @@ function LiveRoom({
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-border px-4 py-3">
         <button onClick={() => router.push("/lounges")} aria-label="Back" className="rounded-full p-1.5 text-muted-foreground hover:bg-accent">
-          <ArrowLeft className="h-5 w-5" />
+          <HugeiconsIcon icon={ArrowLeft02Icon} className="h-5 w-5" />
         </button>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <h1 className="truncate font-heading text-base font-bold text-foreground">{lounge.name}</h1>
             <span className={cn("inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
               lounge.kind === "platform" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground")}>
-              {lounge.kind === "platform" ? <Globe className="h-2.5 w-2.5" /> : <Lock className="h-2.5 w-2.5" />}
+              {lounge.kind === "platform" ? <HugeiconsIcon icon={Globe02Icon} className="h-2.5 w-2.5" /> : <HugeiconsIcon icon={CircleLock02Icon} className="h-2.5 w-2.5" />}
               {lounge.kind === "platform" ? "Open" : "Members"}
             </span>
           </div>
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1"><Users className="h-3 w-3" />{members.length} online</span>
+            <span className="inline-flex items-center gap-1"><HugeiconsIcon icon={UserMultiple02Icon} className="h-3 w-3" />{members.length} online</span>
             <span className={cn("inline-flex items-center gap-1", status === "connected" ? "text-primary" : "")}>
               <span className={cn("h-1.5 w-1.5 rounded-full", status === "connected" ? "bg-primary" : "bg-muted-foreground/40")} />
               {status === "connected" ? "Live" : status === "connecting" ? "Connecting…" : "Offline"}
@@ -223,9 +222,9 @@ function LiveRoom({
         </div>
         <button
           onClick={() => setConfirmLeave(true)}
-          className="inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-destructive"
+          className="inline-flex items-center gap-1 rounded-full border border-border px-4 py-2 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-destructive"
         >
-          <LogOut className="h-3.5 w-3.5" /> Leave
+          Leave <HugeiconsIcon icon={ArrowRight02Icon} className="h-3.5 w-3.5" />
         </button>
       </div>
 
@@ -236,7 +235,7 @@ function LiveRoom({
           {selectMode && (
             <div className="flex items-center justify-between border-b border-border bg-accent/30 px-4 py-2">
               <button onClick={exitSelect} className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground">
-                <X className="h-4 w-4" /> Cancel
+                <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" /> Cancel
               </button>
               <span className="text-sm font-medium text-foreground">{selected.size} selected</span>
               <button
@@ -244,7 +243,7 @@ function LiveRoom({
                 disabled={selected.size === 0}
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-destructive hover:underline disabled:opacity-40"
               >
-                <Trash2 className="h-4 w-4" /> Delete
+                <HugeiconsIcon icon={Delete03Icon} className="h-4 w-4" /> Delete
               </button>
             </div>
           )}
@@ -264,7 +263,7 @@ function LiveRoom({
 
             {messages.length === 0 ? (
               <div className="flex h-full min-h-[400px] flex-col items-center justify-center text-center">
-                <MessageCircle className="h-9 w-9 text-muted-foreground/30" />
+                <HugeiconsIcon icon={Message01Icon} className="h-9 w-9 text-muted-foreground/30" />
                 <p className="mt-3 text-sm text-muted-foreground">No messages yet. Say hello 👋</p>
               </div>
             ) : (
@@ -335,7 +334,7 @@ function LiveRoom({
                 />
                 <button onClick={submit} disabled={!draft.trim()} aria-label="Send"
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40">
-                  <Send className="h-4 w-4" />
+                  <HugeiconsIcon icon={SentIcon} className="h-4 w-4" />
                 </button>
               </div>
             ) : (
@@ -463,10 +462,7 @@ function LiveRoom({
 
 /* ── Message bubble with Mobile-Safe Integrated Actions ─────────────────── */
 
-function MessageBubble({
-  message, mine, showAuthor, groupPosition, tightTop, onEdit, onDelete,
-  selectMode, selected, onToggleSelect, onStartSelect, onAvatarClick,
-}: {
+function MessageBubble({ message, mine, showAuthor, groupPosition, tightTop, onEdit, onDelete, selectMode, selected, onToggleSelect, onStartSelect, onAvatarClick }: {
   message: ChatMessage;
   mine: boolean;
   showAuthor: boolean;
@@ -511,7 +507,7 @@ function MessageBubble({
           {selectable && (
             <span className={cn("flex h-4 w-4 items-center justify-center rounded border",
               selected ? "border-primary bg-primary text-primary-foreground" : "border-muted-foreground/40")}>
-              {selected && <Check className="h-3 w-3" />}
+              {selected && <HugeiconsIcon icon={CheckmarkCircle02Icon} className="h-3 w-3" />}
             </span>
           )}
         </div>
@@ -585,13 +581,11 @@ function MessageBubble({
       </div>
     </div>
   );
-}
+};
 
 /* ── Message actions: one inline icon pill, same on all breakpoints ─────── */
 
-function MessageActions({
-  onEdit, onDelete, onStartSelect,
-}: {
+function MessageActions({ onEdit, onDelete, onStartSelect }: {
   onEdit: () => void;
   onDelete: () => void;
   onStartSelect: () => void;
@@ -599,13 +593,13 @@ function MessageActions({
   return (
     <div className="flex items-center gap-0.5 rounded-full border border-border bg-background p-1 shadow-sm">
       <button onClick={(e) => { e.stopPropagation(); onEdit(); }} className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground active:bg-accent" aria-label="Edit">
-        <Pencil className="h-3 w-3" />
+        <HugeiconsIcon icon={PencilEdit01Icon} className="h-3 w-3" />
       </button>
       <button onClick={(e) => { e.stopPropagation(); onDelete(); }} className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-destructive active:bg-accent" aria-label="Delete">
-        <Trash2 className="h-3 w-3" />
+        <HugeiconsIcon icon={Delete03Icon} className="h-3 w-3" />
       </button>
       <button onClick={(e) => { e.stopPropagation(); onStartSelect(); }} className="rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground active:bg-accent" aria-label="Select">
-        <CheckSquare className="h-3 w-3" />
+        <HugeiconsIcon icon={CheckmarkSquare02Icon} className="h-3 w-3" />
       </button>
     </div>
   );
@@ -634,12 +628,12 @@ function AccessGate({ lounge, reason }: { lounge: NonNullable<ReturnType<typeof 
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-              <Lock className="h-4 w-4 text-primary" />
+              <HugeiconsIcon icon={CircleLock02Icon} className="h-4 w-4 text-primary" />
             </span>
             <h3 className="font-heading text-base font-bold text-card-foreground">{lounge.name}</h3>
           </div>
           <button onClick={dismiss} aria-label="Close" className="rounded-full p-1 text-muted-foreground hover:bg-accent">
-            <X className="h-5 w-5" />
+            <HugeiconsIcon icon={Cancel01Icon} className="h-5 w-5" />
           </button>
         </div>
 

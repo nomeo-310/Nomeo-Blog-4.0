@@ -1,11 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import mongoose from "mongoose";
-import {
-  MapPin, Briefcase, Globe, Clock, Eye, PenLine,
-  Users, MessageCircle, Lock, Sparkles, CalendarDays,
-  Heart, Bookmark,
-} from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Location01Icon, Briefcase07Icon, Globe02Icon, Clock03Icon, ViewIcon, Edit01Icon, UserMultiple02Icon, Message01Icon, CircleLock02Icon, Sparkles, Calendar03Icon, FavouriteIcon, Bookmark01Icon } from "@hugeicons/core-free-icons";
 import { CiTwitter as Twitter, CiInstagram as Instagram, CiLinkedin as Linkedin } from "react-icons/ci";
 import { SiGithub as Github } from "react-icons/si";
 import { connectDB } from "@/lib/connect-to-database";
@@ -177,7 +174,7 @@ export default async function ProfilePage({ username, viewer }: {
                   {profile.pronouns && <span className="text-sm text-white/70">{profile.pronouns}</span>}
                   {profile.isCreator && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-primary/80 px-2.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur">
-                      <Sparkles className="h-3 w-3" /> Creator
+                      <HugeiconsIcon icon={Sparkles} className="h-3 w-3" /> Creator
                     </span>
                   )}
                 </div>
@@ -214,19 +211,19 @@ export default async function ProfilePage({ username, viewer }: {
           )}
           <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
             {profile.occupation && (
-              <span className="inline-flex items-center gap-1.5"><Briefcase className="h-3.5 w-3.5" />{profile.occupation}</span>
+              <span className="inline-flex items-center gap-1.5"><HugeiconsIcon icon={Briefcase07Icon} className="h-3.5 w-3.5" />{profile.occupation}</span>
             )}
             {profile.location && (
-              <span className="inline-flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" />{profile.location}</span>
+              <span className="inline-flex items-center gap-1.5"><HugeiconsIcon icon={Location01Icon} className="h-3.5 w-3.5" />{profile.location}</span>
             )}
             <span className="inline-flex items-center gap-1.5">
-              <CalendarDays className="h-3.5 w-3.5" />Joined {formatDate(profile.joinedAt)}
+              <HugeiconsIcon icon={Calendar03Icon} className="h-3.5 w-3.5" />Joined {formatDate(profile.joinedAt)}
             </span>
           </div>
 
           {hasSocialLinks && (
             <div className="mt-3 flex flex-wrap items-center gap-2">
-              {profile.socialLinks.website  && <SocialLink href={profile.socialLinks.website} icon={<Globe className="h-3.5 w-3.5" />} label="Website" />}
+              {profile.socialLinks.website  && <SocialLink href={profile.socialLinks.website} icon={<HugeiconsIcon icon={Globe02Icon} className="h-3.5 w-3.5" />} label="Website" />}
               {profile.socialLinks.twitter  && <SocialLink href={`https://twitter.com/${profile.socialLinks.twitter}`} icon={<Twitter className="h-3.5 w-3.5" />} label="Twitter" />}
               {profile.socialLinks.linkedin && <SocialLink href={profile.socialLinks.linkedin} icon={<Linkedin className="h-3.5 w-3.5" />} label="LinkedIn" />}
               {profile.socialLinks.github   && <SocialLink href={`https://github.com/${profile.socialLinks.github}`} icon={<Github className="h-3.5 w-3.5" />} label="GitHub" />}
@@ -252,7 +249,7 @@ export default async function ProfilePage({ username, viewer }: {
             <Link href={`/lounges/${lounge.id}`}
               className="group flex flex-col gap-4 rounded-2xl border border-primary/20 bg-primary/[0.03] p-5 transition-all hover:border-primary/40 hover:shadow-md sm:flex-row sm:items-center">
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Lock className="h-5 w-5" />
+                <HugeiconsIcon icon={CircleLock02Icon} className="h-5 w-5" />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="font-heading font-bold text-foreground group-hover:text-primary">{lounge.name}</p>
@@ -260,8 +257,8 @@ export default async function ProfilePage({ username, viewer }: {
                   <p className="mt-0.5 line-clamp-1 text-sm text-muted-foreground">{lounge.description}</p>
                 )}
                 <div className="mt-2 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-                  <span className="inline-flex items-center gap-1"><Users className="h-3 w-3" />{lounge.membersCount.toLocaleString()} members</span>
-                  <span className="inline-flex items-center gap-1"><MessageCircle className="h-3 w-3" />{lounge.messagesCount.toLocaleString()} messages</span>
+                  <span className="inline-flex items-center gap-1"><HugeiconsIcon icon={UserMultiple02Icon} className="h-3 w-3" />{lounge.membersCount.toLocaleString()} members</span>
+                  <span className="inline-flex items-center gap-1"><HugeiconsIcon icon={Message01Icon} className="h-3 w-3" />{lounge.messagesCount.toLocaleString()} messages</span>
                 </div>
               </div>
               {lounge.members.length > 0 && (
@@ -306,12 +303,12 @@ export default async function ProfilePage({ username, viewer }: {
         {profile.isCreator && (
           <PostsSection
             title="Writing"
-            icon={<PenLine className="h-5 w-5" />}
+            icon={<HugeiconsIcon icon={Edit01Icon} className="h-5 w-5" />}
             posts={posts}
             totalCount={profile.postsCount}
             viewMoreHref={isSelf ? "/dashboard/posts" : "/"}
             viewMoreLabel={isSelf ? "View all posts" : "Explore more writing"}
-            emptyIcon={<PenLine className="mx-auto h-9 w-9 text-muted-foreground/30" />}
+            emptyIcon={<HugeiconsIcon icon={Edit01Icon} className="mx-auto h-9 w-9 text-muted-foreground/30" />}
             emptyTitle="No posts yet"
             emptyDesc={isSelf ? "Your published posts will appear here." : `${profile.displayName} hasn't published yet.`}
           />
@@ -322,22 +319,22 @@ export default async function ProfilePage({ username, viewer }: {
           <div className="space-y-10 mt-10">
             <PostsSection
               title="Posts you liked"
-              icon={<Heart className="h-5 w-5 text-rose-500" />}
+              icon={<HugeiconsIcon icon={FavouriteIcon} className="h-5 w-5 text-rose-500" />}
               posts={likedPosts}
               viewMoreHref="/dashboard/liked"
               viewMoreLabel="View all liked posts"
-              emptyIcon={<Heart className="mx-auto h-8 w-8 text-muted-foreground/30" />}
+              emptyIcon={<HugeiconsIcon icon={FavouriteIcon} className="mx-auto h-8 w-8 text-muted-foreground/30" />}
               emptyTitle="No liked posts yet"
               emptyDesc="Posts you like will appear here."
               mt={false}
             />
             <PostsSection
               title="Saved posts"
-              icon={<Bookmark className="h-5 w-5 text-primary" />}
+              icon={<HugeiconsIcon icon={Bookmark01Icon} className="h-5 w-5 text-primary" />}
               posts={savedPosts}
               viewMoreHref="/dashboard/saved"
               viewMoreLabel="View all saved posts"
-              emptyIcon={<Bookmark className="mx-auto h-8 w-8 text-muted-foreground/30" />}
+              emptyIcon={<HugeiconsIcon icon={Bookmark01Icon} className="mx-auto h-8 w-8 text-muted-foreground/30" />}
               emptyTitle="No saved posts yet"
               emptyDesc="Posts you save will appear here."
               mt={false}
@@ -600,12 +597,12 @@ function ProfilePostCard({ post }: { post: ProfilePost }) {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-            <PenLine className="h-8 w-8 text-primary/30" />
+            <HugeiconsIcon icon={Edit01Icon} className="h-8 w-8 text-primary/30" />
           </div>
         )}
         {post.access === "paid" && (
           <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-semibold text-foreground backdrop-blur">
-            <Lock className="h-3 w-3 text-primary" /> Members
+            <HugeiconsIcon icon={CircleLock02Icon} className="h-3 w-3 text-primary" /> Members
           </span>
         )}
       </Link>
@@ -628,9 +625,9 @@ function ProfilePostCard({ post }: { post: ProfilePost }) {
         <div className="mt-auto flex items-center gap-3 pt-4 text-xs text-muted-foreground">
           {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
           {post.readingTime && (
-            <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3" />{post.readingTime} min</span>
+            <span className="inline-flex items-center gap-1"><HugeiconsIcon icon={Sparkles} className="h-3 w-3" />{post.readingTime} min</span>
           )}
-          <span className="ml-auto inline-flex items-center gap-1"><Eye className="h-3 w-3" />{formatCount(post.viewsCount)}</span>
+          <span className="ml-auto inline-flex items-center gap-1"><HugeiconsIcon icon={ViewIcon} className="h-3 w-3" />{formatCount(post.viewsCount)}</span>
         </div>
       </div>
     </article>

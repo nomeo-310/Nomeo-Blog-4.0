@@ -2,7 +2,9 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Image, X, Plus, Save, Send, Lock, Globe, Loader2, AlertCircle, Mail, Users, BookOpen, Search, UserPlus, Check } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ImageAdd01Icon, Cancel01Icon, SaveIcon, SentIcon, CircleLock02Icon, AlertCircle, Mail01Icon, UserMultiple02Icon, BookOpen01Icon, Search01Icon, UserAdd02Icon, Tick02Icon, Globe02Icon, Add01Icon, CancelIcon } from "@hugeicons/core-free-icons";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
 import { cn } from "@/lib/utils";
@@ -10,10 +12,7 @@ import { PostEditor } from "./post-editor";
 import ImageCropper from "@/components/auth/image-cropper";
 import Modal from "@/components/ui/modal";
 import { deleteImage } from "@/lib/delete-images";
-import {
-  Select, SelectContent, SelectItem,
-  SelectTrigger, SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const CLOUDINARY_PRESET_COVER = "nomeo_blogs_cover";
 
@@ -230,12 +229,12 @@ export default function NewPostPage() {
         <div className="flex items-center gap-2">
           <button onClick={handleDraftClick} disabled={saving}
             className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-accent disabled:opacity-60">
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={SaveIcon} className="h-4 w-4" />}
             Save draft
           </button>
           <button onClick={handlePublishClick} disabled={saving}
             className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60">
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={SentIcon} className="h-4 w-4" />}
             Publish
           </button>
         </div>
@@ -260,7 +259,7 @@ export default function NewPostPage() {
             </button>
             <button onClick={removeCoverImage}
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur hover:bg-white/30">
-              <X className="h-4 w-4" />
+              <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -268,7 +267,7 @@ export default function NewPostPage() {
         <button onClick={() => coverInputRef.current?.click()}
           className="flex w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-border bg-muted/20 text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
           style={{ aspectRatio: "16/6" }}>
-          <Image className="h-9 w-9" />
+          <HugeiconsIcon icon={ImageAdd01Icon} className="h-9 w-9" />
           <div className="text-center">
             <p className="text-sm font-semibold">Add a cover image</p>
             <p className="mt-1 text-xs">Recommended: 1600 × 600px · JPG or PNG</p>
@@ -339,7 +338,7 @@ export default function NewPostPage() {
                 placeholder="e.g. tech, culture…"
                 className="min-w-0 flex-1 rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground/60" />
               <button onClick={addTag} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground hover:opacity-90">
-                <Plus className="h-4 w-4" />
+                <HugeiconsIcon icon={Add01Icon} className="h-4 w-4" />
               </button>
             </div>
             {tags.length > 0 && (
@@ -347,7 +346,9 @@ export default function NewPostPage() {
                 {tags.map((t) => (
                   <span key={t} className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
                     #{t}
-                    <button onClick={() => removeTag(t)} className="ml-0.5 rounded-full hover:text-destructive"><X className="h-3 w-3" /></button>
+                    <button onClick={() => removeTag(t)} className="ml-0.5 rounded-full hover:text-destructive">
+                      <HugeiconsIcon icon={Cancel01Icon} className="h-3 w-3" />
+                    </button>
                   </span>
                 ))}
               </div>
@@ -362,12 +363,12 @@ export default function NewPostPage() {
               <button onClick={() => setAccess("free")}
                 className={cn("flex flex-1 items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition-colors",
                   access === "free" ? "border-primary bg-primary/10 text-primary" : "border-border bg-background text-muted-foreground hover:border-primary/30 hover:text-foreground")}>
-                <Globe className="h-4 w-4" /> Free
+                <HugeiconsIcon icon={Globe02Icon} className="h-4 w-4" /> Free
               </button>
               <button onClick={() => setAccess("paid")}
                 className={cn("flex flex-1 items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-semibold transition-colors",
                   access === "paid" ? "border-primary bg-primary/10 text-primary" : "border-border bg-background text-muted-foreground hover:border-primary/30 hover:text-foreground")}>
-                <Lock className="h-4 w-4" /> Members only
+                <HugeiconsIcon icon={CircleLock02Icon} className="h-4 w-4" /> Members only
               </button>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
@@ -379,7 +380,7 @@ export default function NewPostPage() {
           <div className="rounded-2xl border border-border bg-card p-4">
             <div className="mb-1.5 flex items-center justify-between gap-2">
               <label className="text-sm font-semibold text-foreground">
-                <BookOpen className="mr-1.5 inline h-4 w-4 text-muted-foreground" />
+                <HugeiconsIcon icon={BookOpen01Icon} className="mr-1.5 inline h-4 w-4 text-muted-foreground" />
                 Series
               </label>
               <button onClick={() => setNewSeriesModal(true)}
@@ -417,7 +418,7 @@ export default function NewPostPage() {
           {/* ── Co-authors ─────────────────────────────────────────── */}
           <div className="rounded-2xl border border-border bg-card p-4">
             <label className="mb-1.5 block text-sm font-semibold text-foreground">
-              <UserPlus className="mr-1.5 inline h-4 w-4 text-muted-foreground" />
+              <HugeiconsIcon icon={UserAdd02Icon} className="mr-1.5 inline h-4 w-4 text-muted-foreground" />
               Co-authors
             </label>
             <p className="mb-3 text-xs text-muted-foreground">
@@ -426,7 +427,7 @@ export default function NewPostPage() {
 
             {/* Search */}
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <HugeiconsIcon icon={Search01Icon} className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input value={caQuery} onChange={(e) => setCaQuery(e.target.value)}
                 placeholder="Search by name or @username…"
                 className="w-full rounded-xl border border-border bg-background py-2.5 pl-9 pr-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 placeholder:text-muted-foreground/60" />
@@ -450,7 +451,7 @@ export default function NewPostPage() {
                       <p className="truncate text-sm font-semibold text-foreground">{u.name}</p>
                       <p className="text-xs text-muted-foreground">@{u.username}</p>
                     </div>
-                    <Plus className="ml-auto h-4 w-4 shrink-0 text-primary" />
+                    <HugeiconsIcon icon={Add01Icon} className="ml-auto h-4 w-4 shrink-0 text-primary" />
                   </button>
                 ))}
               </div>
@@ -471,7 +472,7 @@ export default function NewPostPage() {
                       </div>
                       <button onClick={() => removeCoAuthor(ca.userId)}
                         className="ml-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-destructive">
-                        <X className="h-3.5 w-3.5" />
+                        <HugeiconsIcon icon={CancelIcon} className="h-3.5 w-3.5" />
                       </button>
                     </div>
                     <div className="mt-2 flex flex-wrap items-center gap-3">
@@ -490,7 +491,7 @@ export default function NewPostPage() {
                           onClick={() => updateCoAuthor(ca.userId, { showOnByline: !ca.showOnByline })}
                           className={cn("flex h-4 w-4 items-center justify-center rounded border transition-colors",
                             ca.showOnByline ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background")}>
-                          {ca.showOnByline && <Check className="h-3 w-3" />}
+                          {ca.showOnByline && <HugeiconsIcon icon={Tick02Icon} className="h-3 w-3" />}
                         </button>
                         Show on byline
                       </label>
@@ -554,13 +555,13 @@ export default function NewPostPage() {
             </button>
             <button onClick={() => save("published", false)} disabled={saving}
               className="inline-flex items-center justify-center gap-2 rounded-full border border-primary px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary/5 disabled:opacity-60">
-              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={SentIcon} className="h-4 w-4" />}
               Publish
             </button>
             {followerCount !== null && followerCount > 0 && (
               <button onClick={() => save("published", true)} disabled={saving}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60">
-                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={Mail01Icon} className="h-4 w-4" />}
                 Publish + Email followers
               </button>
             )}
@@ -580,10 +581,10 @@ export default function NewPostPage() {
             <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
               {category && <span className="rounded-full bg-primary/10 px-2.5 py-1 font-semibold text-primary">{category}</span>}
               {tags.slice(0, 3).map((t) => <span key={t} className="rounded-full bg-muted px-2.5 py-1 text-muted-foreground">#{t}</span>)}
-              {seriesId && <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-muted-foreground"><BookOpen className="h-3 w-3" />{series.find((s) => s.id === seriesId)?.title}</span>}
+              {seriesId && <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-muted-foreground"><HugeiconsIcon icon={BookOpen01Icon} className="h-3 w-3" />{series.find((s) => s.id === seriesId)?.title}</span>}
               <span className={cn("inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-semibold",
                 access === "paid" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground")}>
-                {access === "paid" ? <><Lock className="h-3 w-3" /> Members only</> : <><Globe className="h-3 w-3" /> Free</>}
+                {access === "paid" ? <><HugeiconsIcon icon={CircleLock02Icon} className="h-3 w-3" /> Members only</> : <><HugeiconsIcon icon={Globe02Icon} className="h-3 w-3" /> Free</>}
               </span>
             </div>
             {coAuthors.length > 0 && (
@@ -600,7 +601,7 @@ export default function NewPostPage() {
           {followerCount !== null && followerCount > 0 && (
             <div className="flex items-start gap-3 rounded-xl border border-border bg-muted/20 p-4">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <Users className="h-4 w-4" />
+                <HugeiconsIcon icon={UserMultiple02Icon} className="h-4 w-4" />
               </div>
               <div>
                 <p className="text-sm font-semibold text-foreground">
@@ -628,7 +629,7 @@ export default function NewPostPage() {
 function FieldError({ msg }: { msg: string }) {
   return (
     <p className="mt-1 flex items-center gap-1 text-xs text-destructive">
-      <AlertCircle className="h-3.5 w-3.5" />{msg}
+      <HugeiconsIcon icon={AlertCircle} className="h-3.5 w-3.5" />{msg}
     </p>
   );
 }

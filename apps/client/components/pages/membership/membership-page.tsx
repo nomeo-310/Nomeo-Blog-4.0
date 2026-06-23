@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Sparkles } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { CheckmarkCircle02Icon, Sparkles } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/authClient";
 import { useAuthModal } from "@/stores/modal-store";
@@ -146,7 +147,7 @@ export default function MembershipPage() {
                       </h2>
                       {selectedPlan.isHighlighted && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
-                          <Sparkles className="h-3 w-3" /> Best value
+                          <HugeiconsIcon icon={Sparkles} className="h-3 w-3" /> Best value
                         </span>
                       )}
                     </div>
@@ -171,7 +172,7 @@ export default function MembershipPage() {
                 <div className="mt-8 grid gap-3 sm:grid-cols-2">
                   {selectedPlan.features.map((f, i) => (
                     <div key={i} className="flex items-start gap-3 text-sm">
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                      <HugeiconsIcon icon={CheckmarkCircle02Icon} className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                       <span className={cn(f.isHighlighted ? "text-card-foreground" : "text-muted-foreground")}>
                         {f.label}
                       </span>
@@ -186,7 +187,7 @@ export default function MembershipPage() {
                     disabled={!selectedPlan.isPurchasable}
                     className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-8"
                   >
-                    <Sparkles className="h-4 w-4" />
+                    <HugeiconsIcon icon={Sparkles} className="h-4 w-4" />
                     {!isLoggedIn
                       ? "Sign in to subscribe"
                       : isActive
@@ -242,7 +243,7 @@ function PlanCard({ plan, selected, onSelect }: { plan: PlanOption; selected: bo
           <p className="font-heading text-base font-bold text-card-foreground">{plan.name}</p>
           {plan.isHighlighted && (
             <span className="inline-flex items-center gap-0.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold text-primary">
-              <Sparkles className="h-2.5 w-2.5" /> Best
+              <HugeiconsIcon icon={Sparkles} className="h-2.5 w-2.5" /> Best
             </span>
           )}
         </div>
@@ -277,7 +278,7 @@ function PlanPill({ plan, selected, onSelect }: { plan: PlanOption; selected: bo
     >
       <span>{plan.name}</span>
       {plan.isHighlighted && (
-        <Sparkles className={cn("h-3 w-3", selected ? "text-primary-foreground" : "text-primary")} />
+        <HugeiconsIcon icon={Sparkles} className={cn("h-3 w-3", selected ? "text-primary-foreground" : "text-primary")} />
       )}
       <span className={cn("text-xs", selected ? "text-primary-foreground/80" : "text-muted-foreground")}>
         {plan.priceFormatted}

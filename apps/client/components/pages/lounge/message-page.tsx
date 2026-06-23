@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Search, MessageCircle, PenSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useConversations, type ConversationListItem } from "@/hooks/use-conversations";
 import { usePresence } from "@/hooks/use-presence";
 import { ConversationPane } from "./conversation-pane";
 import { MessagesGate } from "./messages-gate";
 import { authClient } from "@/lib/authClient";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Search01Icon, Message01Icon, Edit01Icon } from "@hugeicons/core-free-icons";
 
 /**
  * MessagesPage — unified two-pane DM view.
@@ -56,12 +57,12 @@ export default function MessagesPage() {
               </h1>
             </div>
             <div className="relative mt-4">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <HugeiconsIcon icon={Search01Icon} className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search"
-                className="w-full rounded-xl border border-border bg-background py-2.5 pl-9 pr-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full rounded-full border border-border bg-background py-2.5 pl-9 pr-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
           </div>
@@ -189,7 +190,7 @@ function ConversationRow({
 function EmptyList({ query }: { query: string }) {
   return (
     <div className="flex flex-col items-center px-4 py-16 text-center">
-      <MessageCircle className="h-9 w-9 text-muted-foreground/30" />
+      <HugeiconsIcon icon={Message01Icon} className="h-9 w-9 text-muted-foreground/30" />
       <p className="mt-3 text-sm font-medium text-foreground">{query ? "No matches" : "No messages yet"}</p>
       {!query && <p className="mt-1 text-xs text-muted-foreground">Connect with someone to start a chat.</p>}
     </div>
@@ -200,7 +201,7 @@ function EmptyChat({ hasConversations }: { hasConversations: boolean }) {
   return (
     <div className="flex h-full flex-col items-center justify-center px-6 text-center">
       <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/5">
-        <PenSquare className="h-7 w-7 text-primary/50" />
+        <HugeiconsIcon icon={Edit01Icon} className="h-7 w-7 text-primary/50" />
       </span>
       <p className="mt-5 font-heading text-base font-bold text-foreground">
         {hasConversations ? "Select a conversation" : "Your messages live here"}

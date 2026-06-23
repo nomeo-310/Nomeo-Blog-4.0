@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import {
-  MessageCircle, Users, PenLine, Lock, ArrowRight, Sparkles,
-  Heart, Globe, MapPin,
-} from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Message01Icon, UserMultiple02Icon, PencilEdit01Icon, CircleLock02Icon, ArrowRight02Icon, SparklesIcon, FavouriteIcon, Globe02Icon, Location01Icon } from "@hugeicons/core-free-icons"
 
 /**
  * AboutPage — Nomeo.
@@ -42,7 +40,7 @@ export default function AboutPage() {
               href="/lounges"
               className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
             >
-              Explore the lounges <ArrowRight className="h-4 w-4" />
+              Explore the lounges <HugeiconsIcon icon={ArrowRight02Icon} className="h-4 w-4" />
             </Link>
             <Link
               href="/"
@@ -131,9 +129,9 @@ export default function AboutPage() {
               label="For readers"
               title="Find the voices, join the room."
               points={[
-                { icon: <Heart className="h-4 w-4" />, text: "Follow writers you love and keep up with every new piece." },
-                { icon: <Users className="h-4 w-4" />, text: "Connect with other readers and message them directly." },
-                { icon: <MessageCircle className="h-4 w-4" />, text: "Step into lounges and talk about the ideas that move you." },
+                { icon: <HugeiconsIcon icon={FavouriteIcon} className="h-4 w-4" />, text: "Follow writers you love and keep up with every new piece." },
+                { icon: <HugeiconsIcon icon={UserMultiple02Icon} className="h-4 w-4" />, text: "Connect with other readers and message them directly." },
+                { icon: <HugeiconsIcon icon={Message01Icon} className="h-4 w-4" />, text: "Step into lounges and talk about the ideas that move you." },
               ]}
             />
           </div>
@@ -142,9 +140,9 @@ export default function AboutPage() {
               label="For writers"
               title="Publish, gather, and grow your circle."
               points={[
-                { icon: <PenLine className="h-4 w-4" />, text: "Write and publish to readers who actually show up." },
-                { icon: <Lock className="h-4 w-4" />, text: "Run members-only lounges and choose who joins the conversation." },
-                { icon: <Sparkles className="h-4 w-4" />, text: "Turn readers into a community that sticks around." },
+                { icon: <HugeiconsIcon icon={PencilEdit01Icon} className="h-4 w-4" />, text: "Write and publish to readers who actually show up." },
+                { icon: <HugeiconsIcon icon={CircleLock02Icon} className="h-4 w-4" />, text: "Run members-only lounges and choose who joins the conversation." },
+                { icon: <HugeiconsIcon icon={SparklesIcon} className="h-4 w-4" />, text: "Turn readers into a community that sticks around." },
               ]}
               accent
             />
@@ -161,9 +159,9 @@ export default function AboutPage() {
         </div>
         <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}>
           {[
-            { icon: <MessageCircle className="h-5 w-5" />, title: "Conversation is part of the work", body: "A piece of writing is the start of something, not the end. The talk it sparks is worth keeping." },
-            { icon: <Heart className="h-5 w-5" />, title: "Writers come first", body: "The people who make the work should own their audience and the rooms they build around it." },
-            { icon: <Globe className="h-5 w-5" />, title: "Built for everywhere", body: "From Lagos to anywhere — good writing and real conversation don't need a passport." },
+            { icon: <HugeiconsIcon icon={Message01Icon} className="h-5 w-5" />, title: "Conversation is part of the work", body: "A piece of writing is the start of something, not the end. The talk it sparks is worth keeping." },
+            { icon: <HugeiconsIcon icon={FavouriteIcon} className="h-5 w-5" />, title: "Writers come first", body: "The people who make the work should own their audience and the rooms they build around it." },
+            { icon: <HugeiconsIcon icon={Globe02Icon} className="h-5 w-5" />, title: "Built for everywhere", body: "From Lagos to anywhere — good writing and real conversation don't need a passport." },
           ].map((b, i) => (
             <div key={b.title} className="h-full">
               <Belief icon={b.icon} title={b.title} body={b.body} />
@@ -176,7 +174,7 @@ export default function AboutPage() {
       <section className="mx-auto max-w-7xl px-4 py-20">
         <div className="mb-3 text-center">
           <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-primary">
-            <MapPin className="h-3.5 w-3.5" />
+            <HugeiconsIcon icon={Location01Icon} className="h-3.5 w-3.5" />
             Made in Lagos
           </span>
         </div>
@@ -228,7 +226,7 @@ export default function AboutPage() {
                 href="/lounges"
                 className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
               >
-                Browse lounges <ArrowRight className="h-4 w-4" />
+                Browse lounges <HugeiconsIcon icon={ArrowRight02Icon} className="h-4 w-4" />
               </Link>
               <Link
                 href="/"

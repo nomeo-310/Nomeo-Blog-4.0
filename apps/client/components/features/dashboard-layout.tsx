@@ -4,12 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard, FileText, MessageSquare, Bookmark,
-  Heart, DollarSign, Users, Settings, ChevronLeft,
-  ChevronRight, Menu, X, Sparkles, Bell, LogOut,
-  UserCircle, Link2, ArrowLeft,
-} from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Message01Icon, DashboardSquare03Icon, Files02Icon, Bookmark01Icon, FavouriteIcon, MoneyBag01Icon, UserMultiple02Icon, Settings01Icon, ArrowRight01Icon, ArrowLeft01Icon, Menu02Icon, Cancel01Icon, SparklesIcon, Notification02Icon, User03Icon, Link05Icon, ArrowLeft02Icon, Add01Icon, CreditCard } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/authClient";
 import { teardownRealtime } from "@/lib/ably-registry";
@@ -17,17 +13,17 @@ import { signOut } from "@/lib/authClient";
 import { useQueryClient } from "@tanstack/react-query";
 import { ThemeToggle } from "../ui/theme-toggle";
 
-type NavItem  = { href: string; label: string; icon: React.ElementType };
+type NavItem  = { href: string; label: string; icon: any };
 type NavGroup = { group: string; items: NavItem[] };
 
 const CREATOR_GROUPS: NavGroup[] = [
   {
     group: "Create",
     items: [
-      { href: "/dashboard/posts",       label: "Posts",       icon: FileText      },
-      { href: "/dashboard/lounges",     label: "Lounges",     icon: MessageSquare },
-      { href: "/dashboard/earnings",    label: "Earnings",    icon: DollarSign    },
-      { href: "/dashboard/subscribers", label: "Subscribers", icon: Users         },
+      { href: "/dashboard/posts",       label: "Posts",       icon: Files02Icon      },
+      { href: "/dashboard/lounges",     label: "Lounges",     icon: Message01Icon },
+      { href: "/dashboard/earnings",    label: "Earnings",    icon: MoneyBag01Icon   },
+      { href: "/dashboard/subscribers", label: "Subscribers", icon: UserMultiple02Icon   },
     ],
   },
 ];
@@ -36,18 +32,19 @@ const SHARED_GROUPS: NavGroup[] = [
   {
     group: "Activity",
     items: [
-      { href: "/dashboard",               label: "Overview",      icon: LayoutDashboard },
-      { href: "/dashboard/saved",         label: "Saved posts",   icon: Bookmark        },
-      { href: "/dashboard/liked",         label: "Liked posts",   icon: Heart           },
-      { href: "/dashboard/connections",   label: "Connections",   icon: Link2           },
-      { href: "/dashboard/notifications", label: "Notifications", icon: Bell            },
+      { href: "/dashboard",               label: "Overview",      icon: DashboardSquare03Icon },
+      { href: "/dashboard/saved",         label: "Saved posts",   icon: Bookmark01Icon },
+      { href: "/dashboard/liked",         label: "Liked posts",   icon: FavouriteIcon },
+      { href: "/dashboard/connections",   label: "Connections",   icon: Link05Icon },
+      { href: "/dashboard/notifications", label: "Notifications", icon: Notification02Icon  },
+      { href: "/dashboard/payments",      label: "Payments",      icon: CreditCard }
     ],
   },
   {
     group: "Account",
     items: [
-      { href: "/dashboard/profile",  label: "My profile", icon: UserCircle },
-      { href: "/dashboard/settings", label: "Settings",   icon: Settings   },
+      { href: "/dashboard/profile",  label: "My profile", icon: User03Icon },
+      { href: "/dashboard/settings", label: "Settings",   icon: Settings01Icon   },
     ],
   },
 ];
@@ -175,7 +172,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent lg:hidden"
               aria-label="Close menu"
             >
-              <X className="h-4 w-4" />
+              <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
             </button>
           )}
         </div>
@@ -219,7 +216,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       )}
 
                       {/* Icon — slightly larger, always coloured when active */}
-                      <item.icon
+                      <HugeiconsIcon icon={item.icon}
                         className={cn(
                           "h-[18px] w-[18px] shrink-0 transition-colors",
                           active ? "text-primary" : "text-muted-foreground"
@@ -287,7 +284,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               collapsed && "lg:w-auto lg:justify-center lg:px-0 lg:py-3"
             )}
           >
-            <LogOut className="h-[18px] w-[18px] shrink-0" />
             {!collapsed && "Sign out"}
           </button>
         </div>
@@ -299,8 +295,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed
-            ? <ChevronRight className="h-3.5 w-3.5" />
-            : <ChevronLeft  className="h-3.5 w-3.5" />}
+            ? <HugeiconsIcon icon={ArrowRight01Icon} className="h-3.5 w-3.5" />
+            : <HugeiconsIcon icon={ArrowLeft01Icon}  className="h-3.5 w-3.5" />}
         </button>
       </aside>
 
@@ -319,7 +315,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               className="flex h-9 w-9 items-center justify-center rounded-xl text-muted-foreground hover:bg-accent hover:text-foreground lg:hidden"
               aria-label="Open menu"
             >
-              <Menu className="h-5 w-5" />
+              <HugeiconsIcon icon={Menu02Icon} className="h-5 w-5" />
             </button>
 
             <Breadcrumb pathname={pathname} />
@@ -329,9 +325,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {isCreator && (
               <Link
                 href="/dashboard/posts/new"
-                className="hidden items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90 sm:inline-flex"
+                className="hidden items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90 sm:inline-flex"
               >
-                <Sparkles className="h-3.5 w-3.5" />
+                <HugeiconsIcon icon={Add01Icon} className="h-3.5 w-3.5" />
                 New post
               </Link>
             )}
@@ -343,7 +339,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
               aria-label="Notifications"
             >
-              <Bell className="h-4 w-4" />
+              <HugeiconsIcon icon={Notification02Icon} className="h-4 w-4" />
             </Link>
 
             <TopBarUserMenu
@@ -386,7 +382,7 @@ function Breadcrumb({ pathname }: { pathname: string }) {
     <nav aria-label="Breadcrumb" className="hidden items-center gap-1 lg:flex">
       {crumbs.map((crumb, i) => (
         <span key={crumb.href} className="flex items-center gap-1">
-          {i > 0 && <ChevronRight className="h-3.5 w-3.5 shrink-0 text-muted-foreground/40" />}
+          {i > 0 && <HugeiconsIcon icon={ArrowRight01Icon} className="h-3.5 w-3.5 shrink-0 text-muted-foreground/40" />}
           {crumb.current ? (
             <span className="text-sm font-semibold text-foreground">{crumb.label}</span>
           ) : (
@@ -459,13 +455,13 @@ function TopBarUserMenu({ user, initials, onSignOut }: {
             </div>
           )}
           <div className="py-1.5">
-            <DropdownItem href="/dashboard/profile" icon={<UserCircle className="h-4 w-4" />} onClick={() => setOpen(false)}>
+            <DropdownItem href="/dashboard/profile" icon={<HugeiconsIcon icon={User03Icon} className="h-4 w-4" />} onClick={() => setOpen(false)}>
               My profile
             </DropdownItem>
-            <DropdownItem href="/dashboard/settings" icon={<Settings className="h-4 w-4" />} onClick={() => setOpen(false)}>
+            <DropdownItem href="/dashboard/settings" icon={<HugeiconsIcon icon={Settings01Icon} className="h-4 w-4" />} onClick={() => setOpen(false)}>
               Settings
             </DropdownItem>
-            <DropdownItem href="/" icon={<ArrowLeft className="h-4 w-4" />} onClick={() => setOpen(false)}>
+            <DropdownItem href="/" icon={<HugeiconsIcon icon={ArrowLeft02Icon} className="h-4 w-4" />} onClick={() => setOpen(false)}>
               Back to Nomeo
             </DropdownItem>
           </div>
@@ -474,7 +470,6 @@ function TopBarUserMenu({ user, initials, onSignOut }: {
               onClick={() => { setOpen(false); onSignOut(); }}
               className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-destructive transition-colors hover:bg-destructive/5"
             >
-              <LogOut className="h-4 w-4" />
               Sign out
             </button>
           </div>

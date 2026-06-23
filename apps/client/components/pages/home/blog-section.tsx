@@ -3,12 +3,11 @@
 import { useState, useRef, useEffect, useTransition, useCallback } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
-import {
-  Clock, Eye, Lock, PenLine, ChevronLeft, ChevronRight,
-  Flame, Search, X, Loader2,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Clock03Icon, ViewIcon, CircleLock02Icon, Edit01Icon, Fire02Icon, Cancel01Icon, Search01Icon } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { PaginationWithInfo } from "@/components/ui/pagination";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 /**
  * BlogSection — client component for the blog discovery section.
@@ -258,7 +257,7 @@ export function BlogSection({
           )}>
             {loading
               ? <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" />
-              : <Search className="h-4 w-4 shrink-0 text-muted-foreground" />}
+              : <HugeiconsIcon icon={Search01Icon} className="h-4 w-4 shrink-0 text-muted-foreground" />}
             <input
               type="text"
               value={query}
@@ -268,7 +267,7 @@ export function BlogSection({
             />
             {query && (
               <button onClick={clearSearch} className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-accent hover:text-foreground">
-                <X className="h-3 w-3" />
+                <HugeiconsIcon icon={Cancel01Icon} className="h-3 w-3" />
               </button>
             )}
           </div>
@@ -295,7 +294,7 @@ export function BlogSection({
             onClick={() => handleSort("trending")}
             className={cn("inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-semibold transition-colors",
               sort === "trending" ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent hover:text-foreground")}>
-            <Flame className="h-3 w-3" /> Trending
+            <HugeiconsIcon icon={Fire02Icon} className="h-4 w-4" /> Trending
           </button>
         </div>
       </div>
@@ -331,7 +330,7 @@ export function BlogSection({
       {/* No results message */}
       {noResults && (
         <div className="mt-12 flex flex-col items-center rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
-          <Search className="h-8 w-8 text-muted-foreground/30" />
+          <HugeiconsIcon icon={Search01Icon} className="h-8 w-8 text-muted-foreground/30" />
           <h3 className="mt-4 font-heading text-base font-bold text-foreground">
             {query
               ? `No posts match "${query}"`
@@ -403,7 +402,7 @@ function PostCard({ post }: { post: Post }) {
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-            <PenLine className="h-8 w-8 text-primary/20" />
+            <HugeiconsIcon icon={Edit01Icon} className="h-8 w-8 text-primary/20" />
           </div>
         )}
         {(post.category || post.tags[0]) && (
@@ -413,7 +412,7 @@ function PostCard({ post }: { post: Post }) {
         )}
         {post.access === "paid" && (
           <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary/90 px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
-            <Lock className="h-3 w-3" /> Members
+            <HugeiconsIcon icon={CircleLock02Icon} className="h-4 w-4" /> Members
           </span>
         )}
       </Link>
@@ -422,11 +421,11 @@ function PostCard({ post }: { post: Post }) {
           {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
           {post.readingTime && (
             <><span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
-            <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{post.readingTime} mins</span></>
+            <span className="flex items-center gap-1"><HugeiconsIcon icon={Clock03Icon} className="h-3 w-3" />{post.readingTime} mins</span></>
           )}
           {!post.readingTime && post.viewsCount > 0 && (
             <><span className="h-1 w-1 rounded-full bg-muted-foreground/40" />
-            <span className="flex items-center gap-1"><Eye className="h-3 w-3" />{formatCount(post.viewsCount)}</span></>
+            <span className="flex items-center gap-1"><HugeiconsIcon icon={ViewIcon} className="h-3 w-3" />{formatCount(post.viewsCount)}</span></>
           )}
         </div>
         <Link href={`/post/${post.slug}`} className="mt-2 block">

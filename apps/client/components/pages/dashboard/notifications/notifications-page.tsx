@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Bell, Check, CheckCheck, Filter } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Notification02Icon, FilterHorizontalIcon, Tick02Icon, TickDouble02Icon } from "@hugeicons/core-free-icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
 import { toast } from "sonner";
@@ -103,14 +104,14 @@ export default function NotificationsPage() {
             onClick={markAllRead}
             className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
           >
-            <CheckCheck className="h-4 w-4" /> Mark all read
+            <HugeiconsIcon icon={TickDouble02Icon} className="h-4 w-4" /> Mark all read
           </button>
         )}
       </div>
 
       {/* Filter tabs */}
       <div className="flex items-center gap-1 overflow-x-auto pb-1">
-        <Filter className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+        <HugeiconsIcon icon={FilterHorizontalIcon} className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
         <div className="flex gap-1 pl-1">
           {FILTER_GROUPS.map((g) => (
             <button
@@ -138,7 +139,7 @@ export default function NotificationsPage() {
         </div>
       ) : notifications.length === 0 ? (
         <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
-          <Bell className="h-8 w-8 text-muted-foreground/30" />
+          <HugeiconsIcon icon={Notification02Icon} className="h-8 w-8 text-muted-foreground/30" />
           <h3 className="mt-4 font-heading text-base font-bold text-foreground">
             {filter === "all" ? "No notifications yet" : `No ${FILTER_GROUPS.find((g) => g.key === filter)?.label.toLowerCase()} notifications`}
           </h3>
@@ -181,7 +182,7 @@ export default function NotificationsPage() {
                     title="Mark as read"
                     className="shrink-0 rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground"
                   >
-                    <Check className="h-3.5 w-3.5" />
+                    <HugeiconsIcon icon={Tick02Icon} className="h-3.5 w-3.5" />
                   </button>
                 )}
               </div>

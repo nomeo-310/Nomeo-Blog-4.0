@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { Payment, PaymentGatewayStatus } from "@/models/payment";
 import { getCurrentUser } from "@/lib/session";
 import { connectDB } from "@/lib/connect-to-database";
+import { Plan } from "@/models/plan";
 
 /**
  * GET /api/payments
@@ -47,7 +48,7 @@ export async function GET(req: NextRequest) {
         .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(limit)
-        .populate("planId", "name interval")
+        .populate({ path: "planId", model: Plan, select: "name interval"})
         .lean(),
       Payment.countDocuments(query),
     ]);

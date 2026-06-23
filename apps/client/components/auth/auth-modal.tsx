@@ -37,7 +37,6 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
   const [resendCooldown, setResendCooldown] = useState(0);
   const [resending, setResending] = useState(false);
 
-  // Validation errors
   const [emailError, setEmailError] = useState<string | null>(null);
   const [fullNameError, setFullNameError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -51,11 +50,9 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
 
   const { isValid: isPasswordSecure } = usePasswordValidation(password);
 
-  // All network calls + their loading/error come from the hook
   const auth = useAuth();
   const loading = auth.loading;
   const prevModeRef = useRef<AuthMode>(mode);
-
 
   const router = useRouter();
   const redirectAfterLogin = useRedirectAfterLogin();
@@ -69,18 +66,15 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
     setGeneralError(null);
   };
 
-  // Reset state when the MODE changes (not on step changes — that would wipe
-  // the OTP the moment we navigate to the verify step).
   useEffect(() => {
     const prevMode = prevModeRef.current;
-    if (prevMode === mode) return; // step changed, not mode — do nothing
+    if (prevMode === mode) return;
     prevModeRef.current = mode;
 
     clearErrors();
     setOtp("");
-    setStep("credentials"); // any mode switch returns to the first step
+    setStep("credentials");
 
-    // Exiting sign-up entirely → clear everything
     if (prevMode === "sign-up" && mode !== "sign-up") {
       setEmail("");
       setFullName("");
@@ -95,21 +89,18 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
     }
   }, [mode]);
 
-  // Tick the resend cooldown down to zero
   useEffect(() => {
     if (resendCooldown <= 0) return;
     const id = setInterval(() => setResendCooldown((s) => Math.max(0, s - 1)), 1000);
     return () => clearInterval(id);
   }, [resendCooldown]);
 
-  // Start a 45s cooldown whenever we land on an OTP step (a code was just sent)
   useEffect(() => {
     if (step === "verify" || step === "reset-password-verify") {
       setResendCooldown(45);
     }
   }, [step]);
 
-  /* ── Per-mode copy + imagery ────────────────────────────────────── */
   const content = useMemo(() => {
     const map = {
       "sign-in": {
@@ -162,7 +153,6 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  /* ── Credentials submit (sign-in / sign-up / forgot) ────────────── */
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     clearErrors();
@@ -178,7 +168,6 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
     if (!isForgot) {
       if (!password) return setPasswordError("Password is required.");
       if (isSignUp && !isPasswordSecure) return setPasswordError("Password doesn't meet the requirements.");
-      // Confirm password is required on sign-up
       if (isSignUp) {
         if (!confirmPassword) return setConfirmPasswordError("Please confirm your password.");
         if (password !== confirmPassword) return setConfirmPasswordError("Passwords do not match.");
@@ -207,14 +196,12 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
         return;
       }
 
-      // Unverified email → send a code and route to the verify step
       if (res.code === "EMAIL_NOT_VERIFIED") {
         await auth.sendOtp(email, "email_verification");
         setStep("verify");
         return;
       }
 
-      // Blocked accounts (banned / suspended) → friendly message
       if (res.status === 403) {
         setGeneralError(
           BLOCKED_ACCOUNT_MESSAGES[res.error ?? ""] ||
@@ -227,7 +214,6 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
     }
   };
 
-  /* ── Reset-password submit (OTP + new password) ─────────────────── */
   const handlePasswordResetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearErrors();
@@ -241,9 +227,6 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
     const res = await auth.resetPassword({ email, otp, newPassword: password });
     if (res.success) {
       toast.success("Password updated. Please sign in with your new password.");
-      // Deliberately NOT auto-logging in — the user proves the new password
-      // works by signing in. Refresh to clear any stale state, and signal the
-      // app (via a URL flag) to reopen the sign-in modal after the reload.
       const url = new URL(window.location.href);
       url.searchParams.set("auth", "sign-in");
       window.location.assign(url.toString());
@@ -252,7 +235,6 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
     }
   };
 
-  /* ── Sign-up email verification ─────────────────────────────────── */
   const handleVerifySignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     clearErrors();
@@ -261,16 +243,12 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
 
     const res = await auth.verifyOtp(email, otp, "email_verification");
     if (res.success) {
-      // Silently sign the user in with the credentials they just registered.
-      // password is still in state from the sign-up step.
       const signedIn = await auth.signIn({ email, password });
       if (signedIn.success) {
         toast.success("Welcome to Nomeo!");
         handleClose();
-        // Full navigation so the new session is picked up everywhere.
         window.location.assign("/onboarding");
       } else {
-        // Verified but auto sign-in failed (rare) — send them to sign in manually.
         toast.success("Email verified. Please sign in.");
         onSwitchMode("sign-in");
       }
@@ -286,7 +264,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
     const purpose = step === "reset-password-verify" ? "password_reset" : "email_verification";
     const res =
       step === "reset-password-verify"
-        ? await auth.forgotPassword(email) // re-sends the reset code
+        ? await auth.forgotPassword(email)
         : await auth.sendOtp(email, purpose);
     if (res.success) {
       setResendCooldown(45);
@@ -296,7 +274,6 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
     setResending(false);
   };
 
-  /** Shared resend row, used by both OTP steps */
   const ResendRow = () => (
     <p className="text-center text-sm text-muted-foreground">
       Didn't get the code?{" "}
@@ -328,8 +305,20 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
       customHeaderClassName="hidden"
       maxHeight
     >
-      <div className="relative grid h-[580px] lg:h-[600px] xl:h-[650px] max-h-[85vh] grid-cols-1 md:grid-cols-2 overflow-hidden rounded-lg">
-        {/* Floating close button — sits over the panels, top-right */}
+      {/*
+        Height strategy:
+        - h-[90vh] as the standard height across all screens — gives enough
+          vertical space on small laptops (13-14") while staying comfortable
+          on larger ones (16"+).
+        - min-h-0 so the flex children can shrink properly inside.
+        - overflow-hidden on the wrapper, overflow-y-auto on the right panel
+          only — so the left image panel never scrolls.
+        - rounded-2xl for consistent rounding that shows on all screen sizes
+          (rounded-lg was being clipped by the modal container on smaller screens).
+      */}
+      <div className="relative grid h-[90vh] grid-cols-1 md:grid-cols-2 overflow-hidden rounded-2xl">
+
+        {/* Floating close button */}
         <button
           type="button"
           onClick={handleClose}
@@ -340,8 +329,8 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
           <X className="h-5 w-5" />
         </button>
 
-        {/* ── Left panel ──────────────────────────────────────────── */}
-        <div className="relative hidden h-full w-full overflow-hidden rounded-l-lg md:block">
+        {/* ── Left panel — image + overlay ─────────────────────────── */}
+        <div className="relative hidden h-full w-full overflow-hidden rounded-l-2xl md:block">
           <Image
             key={content.image}
             src={content.image}
@@ -353,7 +342,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
           />
           <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-primary/10" />
           <div className="absolute inset-0 z-10 flex flex-col justify-between p-8">
-            {/* Logo + wordmark — top-left */}
+            {/* Logo + wordmark */}
             <div className="flex items-center gap-2.5">
               <Image
                 src="/images/logo.webp"
@@ -363,12 +352,9 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
                 className="h-8 w-8 rounded-lg object-contain"
                 priority
               />
-              <span className="text-lg font-bold tracking-tight text-white">
-                Nomeo
-              </span>
+              <span className="text-lg font-bold tracking-tight text-white">Nomeo</span>
             </div>
-
-            {/* Tagline — bottom */}
+            {/* Tagline */}
             <div>
               <h2 className="font-heading text-3xl font-bold leading-tight text-white select-none">
                 {content.sideTitle}
@@ -380,11 +366,13 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
           </div>
         </div>
 
-        {/* ── Right panel ─────────────────────────────────────────── */}
-        <div className="flex h-full flex-col justify-start overflow-y-auto rounded-lg bg-card px-6 py-10 sm:px-10 md:rounded-l-none custom-scrollbar">
+        {/* ── Right panel — scrollable only when content overflows ─── */}
+        <div className="flex h-full flex-col overflow-y-auto rounded-2xl bg-card px-6 py-10 sm:px-10 md:rounded-l-none custom-scrollbar">
+          <div className="flex flex-1 flex-col justify-center">
+
           {/* CREDENTIALS STEP */}
           {step === "credentials" && (
-            <div className="my-auto w-full">
+            <div className="w-full">
               {isForgot && (
                 <button
                   type="button"
@@ -566,7 +554,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
 
           {/* RESET-PASSWORD VERIFY STEP */}
           {step === "reset-password-verify" && (
-            <div className="my-auto w-full">
+            <div className="w-full">
               <button
                 type="button"
                 onClick={() => setStep("credentials")}
@@ -656,7 +644,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
 
           {/* SIGN-UP VERIFY STEP */}
           {step === "verify" && (
-            <form onSubmit={handleVerifySignUp} noValidate className="my-auto w-full space-y-5">
+            <form onSubmit={handleVerifySignUp} noValidate className="w-full space-y-5">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-primary">Step 2 of 2</p>
                 <h1 className="mt-1 font-heading text-3xl font-bold tracking-tight text-card-foreground">Verify your email.</h1>
@@ -698,6 +686,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
               <ResendRow />
             </form>
           )}
+          </div>{/* end flex-1 justify-center */}
         </div>
       </div>
     </Modal>

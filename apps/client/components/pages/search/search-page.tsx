@@ -2,7 +2,9 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Search, FileText, User, Hash, ChevronRight, CornerDownLeft, X, ChevronLeft, ArrowUp, Users, Loader2 } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Search01Icon, File01Icon, User03Icon, HashtagIcon, ArrowRight01Icon, Cancel01Icon, ArrowLeft01Icon, ArrowUp02Icon, UserMultiple02Icon } from "@hugeicons/core-free-icons";
+import { CornerDownLeft, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSearch, type SearchType, type SearchResult } from "@/hooks/use-search";
 import { ProfileConnectButton } from "@/components/ui/profile-connect-button";
@@ -76,10 +78,10 @@ export default function SearchPage() {
   const getIcon = (type: string, active: boolean) => {
     const cls = cn("h-4 w-4", active ? "text-current" : "text-muted-foreground");
     switch (type) {
-      case "story":  return <FileText className={cls} />;
-      case "author": return <User     className={cls} />;
-      case "lounge": return <Users    className={cls} />;
-      default:       return <Hash     className={cls} />;
+      case "story":  return <HugeiconsIcon icon={File01Icon} className={cls} />;
+      case "author": return <HugeiconsIcon icon={User03Icon} className={cls} />;
+      case "lounge": return <HugeiconsIcon icon={UserMultiple02Icon}    className={cls} />;
+      default:       return <HugeiconsIcon icon={HashtagIcon}      className={cls} />;
     }
   };
 
@@ -115,7 +117,7 @@ export default function SearchPage() {
           <div className="flex items-center px-4 py-2.5 md:px-5 md:py-3 gap-3">
             {isFetching
               ? <Loader2 className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground shrink-0 animate-spin" />
-              : <Search  className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground shrink-0" />}
+              : <HugeiconsIcon icon={Search01Icon}   className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground shrink-0" />}
             <input
               ref={inputRef}
               type="text"
@@ -130,7 +132,7 @@ export default function SearchPage() {
               <button type="button" onClick={() => { setQuery(""); inputRef.current?.focus(); }}
                 aria-label="Clear search"
                 className="p-1 rounded-full hover:bg-accent text-muted-foreground transition-colors shrink-0">
-                <X className="h-4 w-4" />
+                <HugeiconsIcon icon={Cancel01Icon}  className="h-4 w-4" />
               </button>
             )}
             <button type="button" onClick={handleSubmit} disabled={!isActive} aria-label="Search"
@@ -138,7 +140,7 @@ export default function SearchPage() {
                 "flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all",
                 isActive ? "bg-primary text-primary-foreground hover:opacity-90 active:scale-95" : "bg-muted text-muted-foreground/50 cursor-not-allowed"
               )}>
-              <ArrowUp className="h-4 w-4" />
+              <HugeiconsIcon icon={ArrowUp02Icon}  className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -172,7 +174,7 @@ export default function SearchPage() {
           isActive ? "max-h-0 opacity-0" : "max-h-72 opacity-100"
         )}>
           <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-muted-foreground select-none">
-            <Hash className="h-3.5 w-3.5" />
+            <HugeiconsIcon icon={HashtagIcon}  className="h-3.5 w-3.5" />
             <span>Popular topics</span>
           </div>
 
@@ -192,7 +194,7 @@ export default function SearchPage() {
                 <button key={tag} type="button"
                   onClick={() => { setQuery(tag); setFilter("tag"); inputRef.current?.focus(); }}
                   className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1 md:px-3.5 md:py-1.5 text-xs md:text-sm text-foreground transition-colors hover:bg-accent hover:border-primary/30">
-                  <Hash className="h-3 w-3 text-primary shrink-0" />
+                  <HugeiconsIcon icon={HashtagIcon}  className="h-3 w-3 text-primary shrink-0" />
                   {tag}
                 </button>
               ))}
@@ -264,7 +266,7 @@ export default function SearchPage() {
                             {item.subtitle}
                           </p>
                         </div>
-                        <ChevronRight className={cn(
+                        <HugeiconsIcon icon={ArrowRight01Icon}  className={cn(
                           "h-4 w-4 shrink-0 self-center transition-transform",
                           active ? "text-primary md:text-white rotate-90 md:rotate-0" : "text-muted-foreground/40 group-hover:translate-x-0.5"
                         )} />
@@ -283,7 +285,7 @@ export default function SearchPage() {
                     {/* Mobile back */}
                     <button type="button" onClick={() => setMobileShowPreview(false)}
                       className="flex md:hidden items-center gap-1 text-xs font-semibold text-primary active:opacity-70">
-                      <ChevronLeft className="h-4 w-4" /> Back to results
+                      <HugeiconsIcon icon={ArrowLeft01Icon}  className="h-4 w-4" /> Back to results
                     </button>
 
                     {/* Type badge */}
@@ -338,7 +340,7 @@ export default function SearchPage() {
 
                         <button type="button" onClick={() => navigateTo(activeItem)}
                           className="w-full flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground hover:bg-accent transition-colors">
-                          View full profile <ChevronRight className="h-4 w-4" />
+                          View full profile <HugeiconsIcon icon={ArrowRight01Icon}  className="h-4 w-4" />
                         </button>
                       </div>
                     ) : (
@@ -355,7 +357,7 @@ export default function SearchPage() {
                         </p>
                         <button type="button" onClick={() => navigateTo(activeItem)}
                           className="w-full flex items-center justify-center gap-2 px-4 py-2 md:py-2.5 bg-primary hover:opacity-90 active:scale-[0.99] text-primary-foreground text-xs md:text-sm font-semibold rounded-lg transition-all">
-                          {ctaLabel(activeItem.type)} <ChevronRight className="h-4 w-4" />
+                          {ctaLabel(activeItem.type)} <HugeiconsIcon icon={ArrowRight01Icon}  className="h-4 w-4" />
                         </button>
                       </div>
                     )}

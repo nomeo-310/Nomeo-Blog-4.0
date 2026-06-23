@@ -2,10 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Users, MessageCircle, ScrollText, Lock, Globe, X, Search,
-  Mail, Clock, Check, LogIn, ArrowLeft,
-} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/authClient";
 import { saveRedirectIntent } from "@/lib/redirect-storage";
@@ -14,6 +10,8 @@ import { useRequestJoin } from "@/hooks/use-request-join";
 import { useConversationsPanel } from "@/stores/conversations-panel-store";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaginationWithInfo } from "@/components/ui/pagination";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { UserMultiple02Icon, Message01Icon, CircleLock02Icon, Globe02Icon as GlobeIcon, Cancel01Icon, Search01Icon, Mail01Icon, ArrowLeft02Icon, Clock2Icon, CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
 
 const PAGE_SIZE = 12;
 
@@ -67,7 +65,7 @@ export default function LoungesPage() {
           onClick={openMessages}
           className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-accent"
         >
-          <Mail className="h-4 w-4 text-primary" />
+          <HugeiconsIcon icon={Mail01Icon} className="h-4 w-4 text-primary" />
           Messages
         </button>
       </div>
@@ -86,7 +84,7 @@ export default function LoungesPage() {
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl pb-12">
           <div className="flex h-12 w-full items-center gap-2 rounded-full border border-input bg-background px-4 ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-            <Search className="h-5 w-5 shrink-0 text-muted-foreground" />
+            <HugeiconsIcon icon={Search01Icon} className="h-5 w-5 shrink-0 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search lounges by name or description..."
@@ -97,7 +95,7 @@ export default function LoungesPage() {
             {searchInput && (
               <button onClick={() => setSearchInput("")} aria-label="Clear search"
                 className="shrink-0 rounded-full p-1 text-muted-foreground hover:bg-accent hover:text-foreground">
-                <X className="h-4 w-4" />
+                <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
               </button>
             )}
           </div>
@@ -111,7 +109,7 @@ export default function LoungesPage() {
               {platformLounges.length > 0 && (
                 <section className="w-full">
                   <div className="mb-5 flex items-center gap-2">
-                    <Globe className="h-4 w-4 text-primary" />
+                    <HugeiconsIcon icon={GlobeIcon} className="h-4 w-4 text-primary" />
                     <h2 className="font-heading text-lg font-bold text-foreground">Open to everyone</h2>
                     <span className="ml-2 text-xs text-muted-foreground">({platformTotal})</span>
                   </div>
@@ -129,7 +127,7 @@ export default function LoungesPage() {
               {creatorLounges.length > 0 && (
                 <section className="mt-14 w-full">
                   <div className="mb-5 flex items-center gap-2">
-                    <Lock className="h-4 w-4 text-primary" />
+                    <HugeiconsIcon icon={GlobeIcon} className="h-4 w-4 text-primary" />
                     <h2 className="font-heading text-lg font-bold text-foreground">Members-only lounges</h2>
                     <span className="ml-2 text-xs text-muted-foreground">({creatorTotal})</span>
                   </div>
@@ -147,7 +145,7 @@ export default function LoungesPage() {
 
             {!hasAnyLounges && debouncedQuery && (
               <div className="mx-auto flex max-w-md flex-col items-center py-20 text-center">
-                <Search className="h-10 w-10 text-muted-foreground/40" />
+                <HugeiconsIcon icon={Search01Icon} className="h-10 w-10 text-muted-foreground/40" />
                 <p className="mt-4 text-sm text-muted-foreground">
                   No lounges match &quot;{debouncedQuery}&quot;. Try a different search term.
                 </p>
@@ -155,7 +153,7 @@ export default function LoungesPage() {
             )}
             {!hasAnyLounges && !debouncedQuery && (
               <div className="mx-auto flex max-w-md flex-col items-center py-20 text-center">
-                <MessageCircle className="h-10 w-10 text-muted-foreground/40" />
+                <HugeiconsIcon icon={Message01Icon} className="h-10 w-10 text-muted-foreground/40" />
                 <p className="mt-4 text-sm text-muted-foreground">No lounges are open yet. Check back soon.</p>
               </div>
             )}
@@ -194,7 +192,7 @@ export default function LoungesPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <Lock className="h-6 w-6 text-primary" />
+              <HugeiconsIcon icon={CircleLock02Icon} className="h-6 w-6 text-primary" />
             </div>
 
             <h2 className="font-heading text-xl font-bold text-foreground">
@@ -217,14 +215,13 @@ export default function LoungesPage() {
                 }}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
               >
-                <LogIn className="h-4 w-4" />
                 Sign in / Create account
               </button>
               <button
                 onClick={() => setGatedLounge(null)}
                 className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card py-3 text-sm font-semibold text-foreground transition-colors hover:bg-accent"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <HugeiconsIcon icon={ArrowLeft02Icon} className="h-4 w-4" />
                 Back to lounges
               </button>
             </div>
@@ -249,14 +246,14 @@ function LoungeCard({ lounge, onOpen, onRules, onGate }: {
           <img src={lounge.coverImage.secureUrl} alt="" className="h-full w-full object-cover transition-transform group-hover:scale-105" />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/15 to-primary/5">
-            <MessageCircle className="h-7 w-7 text-primary/40" />
+            <HugeiconsIcon icon={Message01Icon} className="h-7 w-7 text-primary/40" />
           </div>
         )}
         <span className={cn(
           "absolute left-3 top-3 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold backdrop-blur",
           isOpen ? "bg-background/80 text-primary" : "bg-background/80 text-foreground"
         )}>
-          {isOpen ? <Globe className="h-2.5 w-2.5" /> : <Lock className="h-2.5 w-2.5" />}
+          {isOpen ? <HugeiconsIcon icon={GlobeIcon} className="h-2.5 w-2.5" /> : <HugeiconsIcon icon={CircleLock02Icon} className="h-2.5 w-2.5" />}
           {isOpen ? "Open" : "Members"}
         </span>
       </button>
@@ -295,12 +292,11 @@ function LoungeCard({ lounge, onOpen, onRules, onGate }: {
         )}
         <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1"><Users className="h-3.5 w-3.5" />{lounge.membersCount.toLocaleString()}</span>
-            <span className="inline-flex items-center gap-1"><MessageCircle className="h-3.5 w-3.5" />{lounge.messagesCount.toLocaleString()}</span>
+            <span className="inline-flex items-center gap-1"><HugeiconsIcon icon={UserMultiple02Icon} className="h-3.5 w-3.5" />{lounge.membersCount.toLocaleString()}</span>
+            <span className="inline-flex items-center gap-1"><HugeiconsIcon icon={Message01Icon} className="h-3.5 w-3.5" />{lounge.messagesCount.toLocaleString()}</span>
           </div>
           {lounge.rules.length > 0 && (
             <button onClick={onRules} className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
-              <ScrollText className="h-3.5 w-3.5" />
               Rules
             </button>
           )}
@@ -329,7 +325,7 @@ function MembersCta({ lounge, onOpen, onGate }: {
     return (
       <button onClick={onOpen}
         className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-2.5 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90">
-        <Check className="h-3.5 w-3.5" /> Open your lounge
+        <HugeiconsIcon icon={CheckmarkCircle02Icon} className="h-3.5 w-3.5" /> Open your lounge
       </button>
     );
   }
@@ -337,21 +333,21 @@ function MembersCta({ lounge, onOpen, onGate }: {
     return (
       <button onClick={onOpen}
         className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-2.5 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90">
-        <Check className="h-3.5 w-3.5" /> Open lounge
+        <HugeiconsIcon icon={CheckmarkCircle02Icon} className="h-3.5 w-3.5" /> Open lounge
       </button>
     );
   }
   if (lounge.joinStatus === "pending") {
     return (
       <div className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-muted px-2.5 py-2 text-xs font-medium text-muted-foreground">
-        <Clock className="h-3.5 w-3.5" /> Request pending
+        <HugeiconsIcon icon={Clock2Icon} className="h-3.5 w-3.5" /> Request pending
       </div>
     );
   }
   return (
     <button onClick={handleRequestJoin} disabled={sending}
       className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/5 px-2.5 py-2 text-xs font-semibold text-primary transition-colors hover:bg-primary/10 disabled:opacity-60">
-      <Lock className="h-3.5 w-3.5" />
+      <HugeiconsIcon icon={CircleLock02Icon} className="h-3.5 w-3.5" />
       {sending ? "Sending…" : `Request to join${lounge.creator ? ` · ${lounge.creator.displayName}` : ""}`}
     </button>
   );
@@ -366,11 +362,10 @@ function RulesDialog({ lounge, onClose }: { lounge: LoungeListItem; onClose: () 
         onClick={(e) => e.stopPropagation()}>
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ScrollText className="h-4 w-4 text-primary" />
             <h3 className="font-heading text-base font-bold text-card-foreground">{lounge.name} — house rules</h3>
           </div>
           <button onClick={onClose} aria-label="Close" className="rounded-full p-1 text-muted-foreground hover:bg-accent">
-            <X className="h-5 w-5" />
+            <HugeiconsIcon icon={CheckmarkCircle02Icon} className="h-5 w-5" />
           </button>
         </div>
         <ol className="space-y-2.5">

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Heart, Send, Loader2, MessageCircle, ChevronDown, ChevronUp, Trash2, CornerDownRight } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { FavouriteIcon, SentIcon, Message01Icon, ArrowDown01Icon, ArrowUp01Icon, Delete03Icon } from "@hugeicons/core-free-icons";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
 import { cn } from "@/lib/utils";
@@ -183,7 +185,7 @@ export function CommentSection({ postSlug, isSignedIn, currentUserId, currentUse
   return (
     <section className="mt-16 lg:border-t-0 border-t border-border pt-10">
       <h2 className="mb-6 flex items-center gap-2 font-heading text-xl font-bold text-foreground">
-        <MessageCircle className="h-5 w-5 text-primary" />
+        <HugeiconsIcon icon={Message01Icon} className="h-5 w-5 text-primary" />
         Comments
         {total > 0 && <span className="text-base font-normal text-muted-foreground">({total})</span>}
       </h2>
@@ -210,7 +212,7 @@ export function CommentSection({ postSlug, isSignedIn, currentUserId, currentUse
                 disabled={!body.trim() || submitting}
                 className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
               >
-                {submitting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+                {submitting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <HugeiconsIcon icon={SentIcon} className="h-3.5 w-3.5" />}
                 Post
               </button>
             </div>
@@ -218,7 +220,7 @@ export function CommentSection({ postSlug, isSignedIn, currentUserId, currentUse
         </div>
       ) : (
         <div className="mb-8 flex items-center gap-3 rounded-2xl border border-dashed border-border bg-muted/20 px-5 py-4">
-          <MessageCircle className="h-5 w-5 text-muted-foreground/50" />
+          <HugeiconsIcon icon={Message01Icon} className="h-5 w-5 text-muted-foreground/50" />
           <button onClick={() => {saveRedirectIntent(); setMode('sign-in'); open();}} className="text-sm text-muted-foreground">
             <span className="font-semibold text-primary hover:underline">Sign in</span>
             {" "}to join the conversation.
@@ -242,7 +244,7 @@ export function CommentSection({ postSlug, isSignedIn, currentUserId, currentUse
         </div>
       ) : comments.length === 0 ? (
         <div className="py-10 text-center">
-          <MessageCircle className="mx-auto h-8 w-8 text-muted-foreground/20" />
+          <HugeiconsIcon icon={Message01Icon} className="mx-auto h-8 w-8 text-muted-foreground/20" />
           <p className="mt-3 text-sm text-muted-foreground">No comments yet. Be the first to share your thoughts.</p>
         </div>
       ) : (
@@ -275,7 +277,7 @@ export function CommentSection({ postSlug, isSignedIn, currentUserId, currentUse
           disabled={loadingMore}
           className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl border border-border py-3 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
         >
-          {loadingMore ? <Loader2 className="h-4 w-4 animate-spin" /> : <ChevronDown className="h-4 w-4" />}
+          {loadingMore ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={ArrowDown01Icon} className="h-4 w-4" />}
           Load more comments
         </button>
       )}
@@ -329,15 +331,13 @@ function CommentItem({ comment, isSignedIn, replyingTo, replyBody, submitting, o
                 className={cn("flex items-center gap-1 text-xs transition-colors",
                   comment.isLiked ? "text-rose-500" : "text-muted-foreground hover:text-foreground")}
               >
-                <Heart className={cn("h-3.5 w-3.5", comment.isLiked && "fill-current")} />
+                <HugeiconsIcon icon={FavouriteIcon} className={cn("h-3.5 w-3.5", comment.isLiked && "fill-current")} />
                 {comment.likesCount > 0 && comment.likesCount}
               </button>
               {isSignedIn && (
-                <button
-                  onClick={() => onSetReplyingTo(isReplying ? null : comment.id)}
+                <button onClick={() => onSetReplyingTo(isReplying ? null : comment.id)}
                   className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary"
                 >
-                  <CornerDownRight className="h-3.5 w-3.5" />
                   Reply
                 </button>
               )}
@@ -346,7 +346,7 @@ function CommentItem({ comment, isSignedIn, replyingTo, replyBody, submitting, o
                   onClick={() => onDelete(comment.id, false)}
                   className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive"
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
+                  <HugeiconsIcon icon={Delete03Icon} className="h-3.5 w-3.5" />
                   Delete
                 </button>
               )}
@@ -376,7 +376,7 @@ function CommentItem({ comment, isSignedIn, replyingTo, replyBody, submitting, o
                     disabled={!replyBody.trim() || submitting}
                     className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-50"
                   >
-                    {submitting ? <Loader2 className="h-3 w-3 animate-spin" /> : <Send className="h-3 w-3" />}
+                    {submitting ? <Loader2 className="h-3 w-3 animate-spin" /> : <HugeiconsIcon icon={SentIcon} className="h-3 w-3" />}
                     Reply
                   </button>
                 </div>
@@ -393,7 +393,7 @@ function CommentItem({ comment, isSignedIn, replyingTo, replyBody, submitting, o
             onClick={() => setShowReplies((v) => !v)}
             className="mb-3 flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-primary"
           >
-            {showReplies ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+            {showReplies ? <HugeiconsIcon icon={ArrowUp01Icon} className="h-3.5 w-3.5" /> : <HugeiconsIcon icon={ArrowDown01Icon}className="h-3.5 w-3.5" />}
             {showReplies ? "Hide" : "Show"} {comment.replies.length} {comment.replies.length === 1 ? "reply" : "replies"}
           </button>
           {showReplies && (
@@ -422,12 +422,12 @@ function CommentItem({ comment, isSignedIn, replyingTo, replyBody, submitting, o
                           className={cn("flex items-center gap-1 text-xs transition-colors",
                             reply.isLiked ? "text-rose-500" : "text-muted-foreground hover:text-foreground")}
                         >
-                          <Heart className={cn("h-3.5 w-3.5", reply.isLiked && "fill-current")} />
+                          <HugeiconsIcon icon={FavouriteIcon} className={cn("h-3.5 w-3.5", reply.isLiked && "fill-current")} />
                           {reply.likesCount > 0 && reply.likesCount}
                         </button>
                         {reply.isOwnComment && (
                           <button onClick={() => onDelete(reply.id, true)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive">
-                            <Trash2 className="h-3.5 w-3.5" /> Delete
+                            <HugeiconsIcon icon={Delete03Icon} className="h-3.5 w-3.5" /> Delete
                           </button>
                         )}
                       </div>

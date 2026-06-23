@@ -1,17 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Loader2, Check, Mail } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { ArrowDown01, Mail01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FAQ_CATEGORIES, FAQ_CONTACT } from "./faqs";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 /**
  * FAQ page — Nomeo.
@@ -56,7 +52,7 @@ export default function FaqPage() {
             {/* Category rail */}
             <nav
               aria-label="FAQ categories"
-              className="flex gap-2 overflow-x-auto pb-1 md:flex-col md:gap-1 md:overflow-visible md:pb-0"
+              className="flex gap-2 overflow-x-auto pb-1 md:flex-col md:gap-2 md:overflow-visible md:pb-0"
             >
               {FAQ_CATEGORIES.map((cat) => {
                 const on = cat.id === activeId;
@@ -121,7 +117,7 @@ function AccordionItem({ question, answer, isOpen, onToggle }: { question: strin
         className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-accent/50"
       >
         <span className="text-sm font-medium text-card-foreground md:text-base">{question}</span>
-        <ChevronDown
+        <HugeiconsIcon icon={ArrowDown01}
           className={cn(
             "h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300",
             isOpen && "rotate-180 text-primary"
@@ -189,7 +185,7 @@ function DirectEmail({ label, email }: { label: string; email: string }) {
       className="flex items-center gap-3 text-sm transition-colors group"
     >
       <span className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors group-hover:border-primary/40 group-hover:text-primary">
-        <Mail className="h-4 w-4" />
+        <HugeiconsIcon icon={Mail01Icon} className="h-4 w-4" />
       </span>
       <span>
         <span className="block text-xs text-muted-foreground">{label}</span>
@@ -240,7 +236,7 @@ function ContactForm() {
     return (
       <div className="flex flex-col items-center justify-center rounded-2xl border border-primary/30 bg-primary/5 p-8 text-center">
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-          <Check className="h-7 w-7 text-primary" />
+          <HugeiconsIcon icon={Tick02Icon} className="h-7 w-7 text-primary" />
         </span>
         <h3 className="mt-4 font-heading text-lg font-bold text-foreground">Message sent</h3>
         <p className="mt-1.5 max-w-xs text-sm text-muted-foreground">

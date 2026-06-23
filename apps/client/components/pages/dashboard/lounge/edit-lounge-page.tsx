@@ -2,10 +2,9 @@
 
 import { useState, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
-import {
-  Image, X, Plus, Loader2, AlertCircle,
-  Lock, Save,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Message01Icon, Cancel01Icon, Add01Icon, AlertCircleIcon, CircleLock02Icon, ImageAdd01Icon, SaveIcon } from "@hugeicons/core-free-icons";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
@@ -128,7 +127,7 @@ export default function EditLoungePage() {
   if (isError) {
     return (
       <div className="flex max-w-4xl flex-col items-center gap-3 rounded-2xl border border-destructive/30 bg-destructive/5 p-12 text-center">
-        <AlertCircle className="h-8 w-8 text-destructive" />
+        <HugeiconsIcon icon={AlertCircleIcon} className="h-8 w-8 text-destructive" />
         <p className="font-semibold text-foreground">Couldn't load this lounge.</p>
         <p className="text-sm text-muted-foreground">Go back and try again.</p>
         <button onClick={() => router.back()}
@@ -153,7 +152,7 @@ export default function EditLoungePage() {
         </div>
         <button onClick={submit} disabled={saving}
           className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60">
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={SaveIcon} className="h-4 w-4" />}
           {saving ? "Saving…" : "Save changes"}
         </button>
       </div>
@@ -183,14 +182,14 @@ export default function EditLoungePage() {
               </button>
               <button onClick={removeCoverImage}
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur hover:bg-white/30">
-                <X className="h-4 w-4" />
+                <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
               </button>
             </div>
           </div>
         ) : (
           <button onClick={() => coverInputRef.current?.click()}
             className="flex w-full flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border bg-muted/20 py-10 text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary">
-            <Image className="h-8 w-8" />
+            <HugeiconsIcon icon={ImageAdd01Icon} className="h-8 w-8" />
             <span className="text-sm font-medium">Upload a cover image</span>
             <span className="text-xs">Shows on the lounges discovery page</span>
           </button>
@@ -237,7 +236,7 @@ export default function EditLoungePage() {
           </p>
           <button onClick={addRule} disabled={rules.length >= 20}
             className="inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground disabled:opacity-40">
-            <Plus className="h-3.5 w-3.5" /> Add rule
+            <HugeiconsIcon icon={Add01Icon} className="h-3.5 w-3.5" /> Add rule
           </button>
         </div>
         <div className="space-y-2.5">
@@ -251,7 +250,7 @@ export default function EditLoungePage() {
                 className="min-w-0 flex-1 rounded-xl border border-border bg-background px-3.5 py-2 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20" />
               <button onClick={() => removeRule(i)} aria-label="Remove rule"
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-destructive">
-                <X className="h-4 w-4" />
+                <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
               </button>
             </div>
           ))}
@@ -263,7 +262,7 @@ export default function EditLoungePage() {
 
       {/* Access info */}
       <div className="flex gap-3 rounded-2xl border border-border bg-card p-4">
-        <Lock className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+        <HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
         <div>
           <p className="text-sm font-semibold text-foreground">Members only</p>
           <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
@@ -281,7 +280,7 @@ export default function EditLoungePage() {
         </button>
         <button onClick={submit} disabled={saving}
           className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60">
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={SaveIcon} className="h-4 w-4" />}
           {saving ? "Saving…" : "Save changes"}
         </button>
       </div>
@@ -293,7 +292,7 @@ export default function EditLoungePage() {
 function FieldError({ msg }: { msg: string }) {
   return (
     <p className="mt-1 flex items-center gap-1 text-xs text-destructive">
-      <AlertCircle className="h-3.5 w-3.5" />{msg}
+      <HugeiconsIcon icon={AlertCircleIcon} className="h-3.5 w-3.5" />{msg}
     </p>
   );
 }

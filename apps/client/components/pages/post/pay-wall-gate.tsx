@@ -2,7 +2,8 @@
 
 import { saveRedirectIntent } from "@/lib/redirect-storage";
 import { useAuthModal } from "@/stores/modal-store";
-import { Lock } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { CircleLock02Icon } from "@hugeicons/core-free-icons";
 import Link from "next/link";
 
 
@@ -27,7 +28,7 @@ function PaywallGate({ needsMembership, isGuest, freeReadsRemaining }: { needsMe
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="flex flex-col items-center gap-2">
             <div className="flex h-20 w-20 items-center justify-center rounded-full bg-background/90 shadow-xl ring-4 ring-primary/20">
-              <Lock className="h-9 w-9 text-primary" />
+              <HugeiconsIcon icon={CircleLock02Icon} className="h-9 w-9 2xl:h-10 2xl:w-10 text-primary" />
             </div>
             <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               Members only

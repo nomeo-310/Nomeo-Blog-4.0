@@ -2,15 +2,14 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Image, X, Plus, Loader2, AlertCircle,
-  MessageSquare, Lock, ScrollText,
-} from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Message01Icon, Cancel01Icon, Add01Icon, AlertCircleIcon, CircleLock02Icon, ImageAdd01Icon } from "@hugeicons/core-free-icons";
 import { toast } from "sonner";
 import { api } from "@/lib/axios";
 import { cn } from "@/lib/utils";
 import ImageCropper from "@/components/auth/image-cropper";
 import { deleteImage } from "@/lib/delete-images";
+import { Loader2 } from "lucide-react";
 
 const CLOUDINARY_PRESET_COVER = "nomeo_blogs_cover";
 
@@ -101,7 +100,7 @@ export default function NewLoungePage() {
 
       {/* What is a lounge */}
       <div className="flex gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-4">
-        <MessageSquare className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+        <HugeiconsIcon icon={Message01Icon} className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
         <div className="text-sm leading-relaxed text-muted-foreground">
           <span className="font-semibold text-foreground">Your lounge, your room.</span> Only people
           you approve can join. They can message in real-time, and you can pin announcements,
@@ -130,7 +129,7 @@ export default function NewLoungePage() {
               onClick={removeCoverImage}
               className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/70"
             >
-              <X className="h-3.5 w-3.5" />
+              <HugeiconsIcon icon={Cancel01Icon} className="h-3.5 w-3.5" />
             </button>
           </div>
         ) : (
@@ -138,7 +137,7 @@ export default function NewLoungePage() {
             onClick={() => coverInputRef.current?.click()}
             className="flex w-full flex-col items-center gap-2 rounded-xl border-2 border-dashed border-border bg-muted/20 py-10 text-muted-foreground transition-colors hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
           >
-            <Image className="h-8 w-8" />
+            <HugeiconsIcon icon={ImageAdd01Icon} className="h-8 w-8" />
             <span className="text-sm font-medium">Upload a cover image</span>
             <span className="text-xs">Shows on the lounges discovery page</span>
           </button>
@@ -215,7 +214,7 @@ export default function NewLoungePage() {
             disabled={rules.length >= 20}
             className="inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground disabled:opacity-40"
           >
-            <Plus className="h-3.5 w-3.5" /> Add rule
+            <HugeiconsIcon icon={Add01Icon} className="h-3.5 w-3.5" /> Add rule
           </button>
         </div>
         <div className="space-y-2.5">
@@ -236,7 +235,7 @@ export default function NewLoungePage() {
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-destructive"
                 aria-label="Remove rule"
               >
-                <X className="h-4 w-4" />
+                <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
               </button>
             </div>
           ))}
@@ -250,7 +249,7 @@ export default function NewLoungePage() {
 
       {/* Access info */}
       <div className="flex gap-3 rounded-2xl border border-border bg-card p-4">
-        <Lock className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+        <HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
         <div>
           <p className="text-sm font-semibold text-foreground">Members only</p>
           <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
@@ -273,7 +272,7 @@ export default function NewLoungePage() {
           disabled={saving}
           className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
         >
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <MessageSquare className="h-4 w-4" />}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={Message01Icon} className="h-4 w-4" />}
           {saving ? "Creating…" : "Create lounge"}
         </button>
       </div>
@@ -285,7 +284,7 @@ export default function NewLoungePage() {
 function FieldError({ msg }: { msg: string }) {
   return (
     <p className="mt-1 flex items-center gap-1 text-xs text-destructive">
-      <AlertCircle className="h-3.5 w-3.5" />{msg}
+      <HugeiconsIcon icon={AlertCircleIcon} className="h-3.5 w-3.5" />{msg}
     </p>
   );
 }

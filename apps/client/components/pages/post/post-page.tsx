@@ -1,11 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import mongoose from "mongoose";
-import {
-  ArrowLeft, Clock, Eye, Lock, BookOpen,
-  ChevronLeft, ChevronRight, MessageCircle,
-  Heart, Bookmark,
-} from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft02Icon, Clock03Icon, ViewIcon, CircleLock02Icon, BookOpen01Icon, ArrowRight01Icon, ArrowLeft01Icon, Message01Icon, FavouriteIcon, Bookmark01Icon } from "@hugeicons/core-free-icons";
 import { connectDB } from "@/lib/connect-to-database";
 import { getCurrentUser } from "@/lib/session";
 import { PostActions } from "./post-actions";
@@ -81,12 +78,12 @@ export async function generateMetadata({ params }: GenerateMetadataProps) {
   const post = await getPost(slug);
   if (!post) return { title: "Post not found — Nomeo" };
 
-  const url         = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/post/${post.slug}`;
-  const image       = post.coverImage?.secureUrl ?? null;
+  const url = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/post/${post.slug}`;
+  const image = post.coverImage?.secureUrl ?? null;
   const description = post.excerpt || `Read "${post.title}" on Nomeo — long-form writing worth your time.`;
 
   return {
-    title:       `${post.title} — Nomeo`,
+    title: `${post.title} — Nomeo`,
     description,
 
     // Canonical URL — prevents duplicate content if the page is ever
@@ -101,17 +98,17 @@ export async function generateMetadata({ params }: GenerateMetadataProps) {
     // shown as the preview card thumbnail; without it most platforms
     // show a blank or generic fallback.
     openGraph: {
-      type:        "article",
+      type: "article",
       url,
-      title:       post.title,
+      title: post.title,
       description,
-      siteName:    "Nomeo",
+      siteName: "Nomeo",
       publishedTime: post.publishedAt ?? undefined,
-      authors:     post.author.username
+      authors: post.author.username
         ? [`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/profile/${post.author.username}`]
         : undefined,
-      tags:        post.tags.length ? post.tags : undefined,
-      images:      image
+      tags: post.tags.length ? post.tags : undefined,
+      images: image
         ? [{ url: image, width: 1200, height: 630, alt: post.title }]
         : [],
     },
@@ -120,10 +117,10 @@ export async function generateMetadata({ params }: GenerateMetadataProps) {
     // the title/description. Without this Twitter falls back to "summary"
     // which is just a tiny thumbnail. The cover image IS the share preview.
     twitter: {
-      card:        "summary_large_image",
-      title:       post.title,
+      card: "summary_large_image",
+      title: post.title,
       description,
-      images:      image ? [image] : [],
+      images: image ? [image] : [],
     },
   };
 }
@@ -147,7 +144,7 @@ export default async function PostPage({ slug, user }: PostPageProps) {
       {/* Back */}
       <div className="pb-2 pt-6">
         <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Back to posts
+          <HugeiconsIcon icon={ArrowLeft02Icon} className="h-4 w-4" /> Back to posts
         </Link>
       </div>
 
@@ -178,20 +175,20 @@ export default async function PostPage({ slug, user }: PostPageProps) {
             {post.series && (
               <div className="mb-6 rounded-xl border border-border bg-card px-4 py-3">
                 <p className="text-xs font-semibold uppercase tracking-widest text-primary">
-                  <BookOpen className="mr-1 inline h-3.5 w-3.5" />
+                  <HugeiconsIcon icon={BookOpen01Icon} className="mr-1 inline h-3.5 w-3.5" />
                   Series · {post.series.title}
                 </p>
                 <div className="mt-2 flex items-center justify-between gap-4">
                   {post.series.prev ? (
                     <Link href={`/post/${post.series.prev.slug}`} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary">
-                      <ChevronLeft className="h-3.5 w-3.5" />
+                     <HugeiconsIcon icon={ArrowLeft01Icon} className="h-3.5 w-3.5" />
                       <span className="line-clamp-1">{post.series.prev.title}</span>
                     </Link>
                   ) : <span />}
                   {post.series.next && (
                     <Link href={`/post/${post.series.next.slug}`} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary">
                       <span className="line-clamp-1">{post.series.next.title}</span>
-                      <ChevronRight className="h-3.5 w-3.5" />
+                       <HugeiconsIcon icon={ArrowRight01Icon}  className="h-3.5 w-3.5" />
                     </Link>
                   )}
                 </div>
@@ -227,18 +224,18 @@ export default async function PostPage({ slug, user }: PostPageProps) {
                 {post.publishedAt && <span>{formatDate(post.publishedAt)}</span>}
                 {post.readingTime && (
                   <span className="inline-flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5" />{post.readingTime} min read
+                     <HugeiconsIcon icon={Clock03Icon}  className="h-3.5 w-3.5" />{post.readingTime} min read
                   </span>
                 )}
                 <span className="inline-flex items-center gap-1">
-                  <Eye className="h-3.5 w-3.5" />{formatCount(post.viewsCount)}
+                   <HugeiconsIcon icon={ViewIcon}  className="h-3.5 w-3.5" />{formatCount(post.viewsCount)}
                 </span>
                 <span className="inline-flex items-center gap-1">
-                  <MessageCircle className="h-3.5 w-3.5" />{formatCount(post.commentsCount)}
+                   <HugeiconsIcon icon={Message01Icon}  className="h-3.5 w-3.5" />{formatCount(post.commentsCount)}
                 </span>
                 {post.access === "paid" && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 font-semibold text-primary">
-                    <Lock className="h-3 w-3" /> Members
+                     <HugeiconsIcon icon={CircleLock02Icon}  className="h-3 w-3" /> Members
                   </span>
                 )}
               </div>
@@ -277,12 +274,12 @@ export default async function PostPage({ slug, user }: PostPageProps) {
         </div>
 
         {/* ── RIGHT: author bios (top) + comments ───────────────────────── */}
-        <div id="comments" className="flex flex-col gap-6">
+        <div id="comments" className="flex flex-col gap-6 w-full">
 
           {/* Author bio cards — above comments, not sticky individually
               but the whole right column is sticky at top on desktop     */}
           {access.canRead && (
-            <div className="lg:sticky lg:top-6 lg:self-start space-y-4">
+            <div className="lg:sticky lg:top-6 lg:self-start space-y-4 w-full">
               {/* Author bio — main author gets own card, co-authors share one card */}
               <div className="space-y-4">
                 <PersonBioCard
@@ -353,9 +350,9 @@ async function getPost(slug: string): Promise<FullPost | null> {
 
     const profiles = allUserIds.length
       ? await db.collection("profiles")
-          .find({ userId: { $in: allUserIds.map((id) => new mongoose.Types.ObjectId(id)) } },
-            { projection: { userId: 1, username: 1, displayName: 1, profileImage: 1, bio: 1 } })
-          .toArray()
+        .find({ userId: { $in: allUserIds.map((id) => new mongoose.Types.ObjectId(id)) } },
+          { projection: { userId: 1, username: 1, displayName: 1, profileImage: 1, bio: 1 } })
+        .toArray()
       : [];
     const profileMap = new Map(profiles.map((p: any) => [String(p.userId), p]));
     const authorProfile = profileMap.get(authorId);
@@ -369,52 +366,52 @@ async function getPost(slug: string): Promise<FullPost | null> {
       ]);
       if (seriesDoc) {
         series = {
-          id:    String(raw.seriesId),
+          id: String(raw.seriesId),
           title: String(seriesDoc.title || "Series"),
-          prev:  prevRaw ? { slug: String(prevRaw.slug),  title: String(prevRaw.title)  } : null,
-          next:  nextRaw ? { slug: String(nextRaw.slug),  title: String(nextRaw.title)  } : null,
+          prev: prevRaw ? { slug: String(prevRaw.slug), title: String(prevRaw.title) } : null,
+          next: nextRaw ? { slug: String(nextRaw.slug), title: String(nextRaw.title) } : null,
         };
       }
     }
 
     return {
-      id:            String(raw._id),
-      title:         String(raw.title   || "Untitled"),
-      slug:          String(raw.slug    || raw._id),
-      excerpt:       String(raw.excerpt || ""),
-      content:       String(raw.content || ""),
-      coverImage:    raw.coverImage?.secureUrl
+      id: String(raw._id),
+      title: String(raw.title || "Untitled"),
+      slug: String(raw.slug || raw._id),
+      excerpt: String(raw.excerpt || ""),
+      content: String(raw.content || ""),
+      coverImage: raw.coverImage?.secureUrl
         ? { secureUrl: raw.coverImage.secureUrl, publicId: raw.coverImage.publicId || "" }
         : raw.coverImage && typeof raw.coverImage === "string"
-        ? { secureUrl: raw.coverImage, publicId: "" }
-        : null,
-      tags:          Array.isArray(raw.tags) ? raw.tags.map(String).filter(Boolean) : [],
-      category:      String(raw.category || ""),
-      readingTime:   typeof raw.readingTime === "number" ? raw.readingTime : null,
-      access:        raw.access === "paid" ? "paid" : "free",
-      viewsCount:    Number(raw.viewsCount    || 0),
-      likesCount:    Number(raw.likesCount    || 0),
+          ? { secureUrl: raw.coverImage, publicId: "" }
+          : null,
+      tags: Array.isArray(raw.tags) ? raw.tags.map(String).filter(Boolean) : [],
+      category: String(raw.category || ""),
+      readingTime: typeof raw.readingTime === "number" ? raw.readingTime : null,
+      access: raw.access === "paid" ? "paid" : "free",
+      viewsCount: Number(raw.viewsCount || 0),
+      likesCount: Number(raw.likesCount || 0),
       commentsCount: Number(raw.commentsCount || 0),
-      savesCount:    Number(raw.savesCount    || 0),
-      publishedAt:   raw.publishedAt instanceof Date ? raw.publishedAt.toISOString() : null,
-      isFeatured:    !!raw.isFeatured,
-      seriesId:      raw.seriesId ? String(raw.seriesId) : null,
-      seriesOrder:   raw.seriesOrder ?? null,
+      savesCount: Number(raw.savesCount || 0),
+      publishedAt: raw.publishedAt instanceof Date ? raw.publishedAt.toISOString() : null,
+      isFeatured: !!raw.isFeatured,
+      seriesId: raw.seriesId ? String(raw.seriesId) : null,
+      seriesOrder: raw.seriesOrder ?? null,
       author: {
-        id:       authorId,
-        name:     String(authorProfile?.displayName || authorProfile?.username || "Nomeo writer"),
+        id: authorId,
+        name: String(authorProfile?.displayName || authorProfile?.username || "Nomeo writer"),
         username: String(authorProfile?.username || ""),
-        avatar:   String(authorProfile?.profileImage?.url || ""),
-        bio:      String(authorProfile?.bio || ""),
+        avatar: String(authorProfile?.profileImage?.url || ""),
+        bio: String(authorProfile?.bio || ""),
       },
       coAuthors: coAuthorIds.map((id) => {
         const p = profileMap.get(id);
         return {
           id,
-          name:     String(p?.displayName || p?.username || "Co-author"),
+          name: String(p?.displayName || p?.username || "Co-author"),
           username: String(p?.username || ""),
-          avatar:   String(p?.profileImage?.url || ""),
-          bio:      String(p?.bio || ""),
+          avatar: String(p?.profileImage?.url || ""),
+          bio: String(p?.bio || ""),
         };
       }),
       series,
@@ -440,16 +437,16 @@ async function getRelatedPosts(
     if (!db) return [];
 
     const filter: Record<string, any> = {
-      slug:      { $ne: currentSlug },
-      status:    "published",
+      slug: { $ne: currentSlug },
+      status: "published",
       isRemoved: { $ne: true },
     };
 
     // Match by category OR shared tags
     if (category || tags.length) {
       const conditions: any[] = [];
-      if (category)      conditions.push({ category });
-      if (tags.length)   conditions.push({ tags: { $in: tags } });
+      if (category) conditions.push({ category });
+      if (tags.length) conditions.push({ tags: { $in: tags } });
       if (conditions.length) filter.$or = conditions;
     }
 
@@ -469,33 +466,33 @@ async function getRelatedPosts(
 
     // Fetch author profiles for all related posts in one query
     const authorIds = [...new Set(raws.map((r) => String(r.authorId)))].filter((id) => mongoose.Types.ObjectId.isValid(id));
-    const profiles  = authorIds.length
+    const profiles = authorIds.length
       ? await db.collection("profiles")
-          .find({ userId: { $in: authorIds.map((id) => new mongoose.Types.ObjectId(id)) } },
-            { projection: { userId: 1, username: 1, displayName: 1, profileImage: 1 } })
-          .toArray()
+        .find({ userId: { $in: authorIds.map((id) => new mongoose.Types.ObjectId(id)) } },
+          { projection: { userId: 1, username: 1, displayName: 1, profileImage: 1 } })
+        .toArray()
       : [];
     const profileMap = new Map(profiles.map((p: any) => [String(p.userId), p]));
 
     return raws.map((r) => {
       const p = profileMap.get(String(r.authorId));
       return {
-        id:            String(r._id),
-        slug:          String(r.slug  || r._id),
-        title:         String(r.title || "Untitled"),
-        excerpt:       String(r.excerpt || ""),
-        coverImage:    r.coverImage?.secureUrl || (typeof r.coverImage === "string" ? r.coverImage : ""),
-        category:      String(r.category || ""),
-        publishedAt:   r.publishedAt instanceof Date ? r.publishedAt.toISOString() : null,
-        readingTime:   typeof r.readingTime === "number" ? r.readingTime : null,
-        likesCount:    Number(r.likesCount    || 0),
+        id: String(r._id),
+        slug: String(r.slug || r._id),
+        title: String(r.title || "Untitled"),
+        excerpt: String(r.excerpt || ""),
+        coverImage: r.coverImage?.secureUrl || (typeof r.coverImage === "string" ? r.coverImage : ""),
+        category: String(r.category || ""),
+        publishedAt: r.publishedAt instanceof Date ? r.publishedAt.toISOString() : null,
+        readingTime: typeof r.readingTime === "number" ? r.readingTime : null,
+        likesCount: Number(r.likesCount || 0),
         commentsCount: Number(r.commentsCount || 0),
-        viewsCount:    Number(r.viewsCount    || 0),
-        savesCount:    Number(r.savesCount    || 0),
+        viewsCount: Number(r.viewsCount || 0),
+        savesCount: Number(r.savesCount || 0),
         author: {
-          name:     String(p?.displayName || p?.username || "Nomeo writer"),
+          name: String(p?.displayName || p?.username || "Nomeo writer"),
           username: String(p?.username || ""),
-          avatar:   String(p?.profileImage?.url || ""),
+          avatar: String(p?.profileImage?.url || ""),
         },
       };
     });
@@ -585,8 +582,8 @@ function AvatarStack({ author, coAuthors }: {
   author: PostAuthor;
   coAuthors: PostAuthor[];
 }) {
-  const all     = [author, ...coAuthors];
-  const MAX     = 4;
+  const all = [author, ...coAuthors];
+  const MAX = 4;
   const visible = all.slice(0, MAX);
   const overflow = all.length - MAX;
 
@@ -652,7 +649,7 @@ function PersonBioCard({
             <p className="mt-1.5 line-clamp-3 text-xs leading-relaxed text-muted-foreground">{bio}</p>
           )}
           <Link href={href} className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
-            More by {name} <ChevronRight className="h-3 w-3" />
+            More by {name}  <HugeiconsIcon icon={ArrowRight01Icon} className="h-3 w-3" />
           </Link>
         </div>
       </div>
@@ -693,7 +690,7 @@ function CoAuthorsBioCard({ coAuthors }: { coAuthors: PostAuthor[] }) {
                     <p className="mt-1.5 line-clamp-3 text-xs leading-relaxed text-muted-foreground">{ca.bio}</p>
                   )}
                   <Link href={href} className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
-                    More by {ca.name} <ChevronRight className="h-3 w-3" />
+                    More by {ca.name}  <HugeiconsIcon icon={ArrowRight01Icon}  className="h-3 w-3" />
                   </Link>
                 </div>
               </div>
@@ -773,16 +770,16 @@ function RelatedPostCard({ post }: { post: RelatedPost }) {
           )}
           <div className="flex items-center gap-2.5 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
-              <Heart className="h-3.5 w-3.5" />{formatCount(post.likesCount)}
+               <HugeiconsIcon icon={FavouriteIcon}  className="h-3.5 w-3.5" />{formatCount(post.likesCount)}
             </span>
             <span className="inline-flex items-center gap-1">
-              <MessageCircle className="h-3.5 w-3.5" />{formatCount(post.commentsCount)}
+               <HugeiconsIcon icon={Message01Icon}  className="h-3.5 w-3.5" />{formatCount(post.commentsCount)}
             </span>
             <span className="inline-flex items-center gap-1">
-              <Eye className="h-3.5 w-3.5" />{formatCount(post.viewsCount)}
+               <HugeiconsIcon icon={ViewIcon}  className="h-3.5 w-3.5" />{formatCount(post.viewsCount)}
             </span>
             <span className="inline-flex items-center gap-1">
-              <Bookmark className="h-3.5 w-3.5" />{formatCount(post.savesCount)}
+               <HugeiconsIcon icon={Bookmark01Icon} className="h-3.5 w-3.5" />{formatCount(post.savesCount)}
             </span>
           </div>
         </div>
@@ -812,6 +809,6 @@ function formatDate(date: string) {
 
 function formatCount(value: number) {
   if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 1_000)     return `${(value / 1_000).toFixed(1)}k`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}k`;
   return String(value);
 }

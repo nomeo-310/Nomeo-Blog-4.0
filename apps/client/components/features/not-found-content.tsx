@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Home, LayoutDashboard, Search } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft02Icon, Home11Icon, DashboardSquare03Icon, Search01Icon } from "@hugeicons/core-free-icons";
 import { authClient } from "@/lib/authClient";
 
 /**
@@ -23,7 +24,7 @@ export default function NotFoundContent() {
 
   const primaryHref = isLoggedIn ? "/dashboard" : "/";
   const primaryLabel = isLoggedIn ? "Back to dashboard" : "Back home";
-  const PrimaryIcon = isLoggedIn ? LayoutDashboard : Home;
+  const PrimaryIcon = isLoggedIn ? DashboardSquare03Icon : Home11Icon;
 
   return (
     <main className="relative flex min-h-[calc(100vh-var(--nav-h,4rem))] w-full items-center justify-center overflow-hidden bg-background px-4">
@@ -51,7 +52,7 @@ export default function NotFoundContent() {
             href={primaryHref}
             className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 sm:w-auto"
           >
-            <PrimaryIcon className="h-4 w-4" />
+            <HugeiconsIcon icon={PrimaryIcon} className="h-4 w-4" />
             {/* Avoid a flash before session resolves: neutral label while pending */}
             {isPending ? "Take me home" : primaryLabel}
           </Link>
@@ -61,7 +62,7 @@ export default function NotFoundContent() {
             onClick={() => router.back()}
             className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent sm:w-auto"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <HugeiconsIcon icon={ArrowLeft02Icon} className="h-4 w-4" />
             Go back
           </button>
         </div>
@@ -69,7 +70,7 @@ export default function NotFoundContent() {
         {/* Secondary helpers */}
         <div className="mt-8 flex items-center justify-center gap-5 text-sm">
           <Link href="/search" className="inline-flex items-center gap-1.5 text-muted-foreground transition-colors hover:text-primary">
-            <Search className="h-3.5 w-3.5" />
+            <HugeiconsIcon icon={Search01Icon} className="h-3.5 w-3.5" />
             Search
           </Link>
           <span className="h-3 w-px bg-border" />
