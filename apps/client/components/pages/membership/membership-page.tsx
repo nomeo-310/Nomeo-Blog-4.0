@@ -52,7 +52,7 @@ export default function MembershipPage() {
       return;
     }
     if (isActive) {
-      router.push("/dashboard/subscription");
+      router.push("/dashboard/payments");
       return;
     }
     setPayingPlan(plan);
