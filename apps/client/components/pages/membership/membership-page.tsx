@@ -217,7 +217,7 @@ export default function MembershipPage() {
           onClose={() => setPayingPlan(null)}
           onSuccess={() => {
             setPayingPlan(null);
-            router.push("/dashboard/subscription");
+            router.push("/dashboard/payments");
           }}
         />
       )}

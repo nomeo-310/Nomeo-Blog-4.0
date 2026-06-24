@@ -115,7 +115,7 @@ export default async function HomePage({ searchParams, user }: {
 
 function HeroPost({ post }: { post: HomePost }) {
   return (
-    <section className="relative mt-6 h-[85vh] min-h-[500px] w-full overflow-hidden rounded-2xl bg-muted lg:min-h-[550px] xl:min-h-[650px] 2xl:min-h-[700px]">
+    <section className="relative mt-6 h-[86vh] min-h-[500px] w-full overflow-hidden rounded-2xl bg-muted ">
       {/* Cover image */}
       {post.coverImage?.secureUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
