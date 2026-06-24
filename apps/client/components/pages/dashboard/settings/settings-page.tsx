@@ -2,11 +2,9 @@
 
 import { useState, useRef, useCallback, useMemo, memo } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Save, Camera, Loader2, AlertTriangle, Eye, EyeOff,
-  Check, X, Sparkles, Shield, Bell, Palette, User,
-  MapPin, Briefcase, Globe, Lock, PenLine, Clock, ChevronDown, ChevronUp,
-} from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { SaveIcon, Image03Icon, AlertCircleIcon, ViewIcon, ViewOffIcon, Tick02Icon, Cancel01Icon, Sparkles, Shield01Icon, Notification02Icon, PaintBoardIcon, User03Icon, Location01Icon, Briefcase07Icon, Globe02Icon, CircleLock02Icon, Edit01Icon, Clock03Icon, ArrowUp01Icon, ArrowDown01Icon } from "@hugeicons/core-free-icons";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authClient } from "@/lib/authClient";
 import { api } from "@/lib/axios";
@@ -67,10 +65,10 @@ SettingsSkeleton.displayName = "SettingsSkeleton";
 
 const TabBar = memo(({ active, onChange }: { active: Tab; onChange: (t: Tab) => void }) => {
   const tabs: { key: Tab; icon: React.ReactNode; label: string }[] = [
-    { key: "profile",       icon: <User    className="h-4 w-4" />, label: "Profile"       },
-    { key: "notifications", icon: <Bell    className="h-4 w-4" />, label: "Notifications" },
-    { key: "appearance",    icon: <Palette className="h-4 w-4" />, label: "Appearance"    },
-    { key: "account",       icon: <Shield  className="h-4 w-4" />, label: "Account"       },
+    { key: "profile",       icon: <HugeiconsIcon icon={User03Icon}    className="h-4 w-4" />, label: "Profile"       },
+    { key: "notifications", icon: <HugeiconsIcon icon={Notification02Icon}    className="h-4 w-4" />, label: "Notifications" },
+    { key: "appearance",    icon: <HugeiconsIcon icon={PaintBoardIcon} className="h-4 w-4" />, label: "Appearance"    },
+    { key: "account",       icon: <HugeiconsIcon icon={Shield01Icon} className="h-4 w-4" />, label: "Account"       },
   ];
   return (
     <div className="flex gap-1 rounded-xl border border-border bg-muted/30 p-1">
@@ -241,12 +239,12 @@ function ProfileSettings() {
                 <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
                   <button onClick={() => { setCropTarget("cover"); coverInputRef.current?.click(); }}
                     className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur hover:bg-white/30">
-                    <Camera className="h-3.5 w-3.5" />{cover ? "Change cover" : "Add cover"}
+                    <HugeiconsIcon icon={Image03Icon} className="h-3.5 w-3.5" />{cover ? "Change cover" : "Add cover"}
                   </button>
                   {cover && (
                     <button onClick={removeCover} aria-label="Remove cover"
                       className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur hover:bg-white/30">
-                      <X className="h-3.5 w-3.5" />
+                      <HugeiconsIcon icon={Cancel01Icon} className="h-3.5 w-3.5" />
                     </button>
                   )}
                 </div>
@@ -265,7 +263,7 @@ function ProfileSettings() {
                   <button onClick={() => { setCropTarget("avatar"); fileInputRef.current?.click(); }}
                     aria-label="Change avatar"
                     className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full border-2 border-card bg-primary text-primary-foreground shadow transition-transform hover:scale-110">
-                    <Camera className="h-3.5 w-3.5" />
+                    <HugeiconsIcon icon={Image03Icon} className="h-3.5 w-3.5" />
                   </button>
                 </div>
                 <div className="h-12" />
@@ -301,7 +299,7 @@ function ProfileSettings() {
             <p className="text-sm font-semibold text-foreground">Bio</p>
             <button onClick={() => setBioOpen(true)}
               className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20">
-              <Sparkles className="h-3.5 w-3.5" /> Help me write it
+              <HugeiconsIcon icon={Sparkles} className="h-3.5 w-3.5" /> Help me write it
             </button>
           </div>
           <Field label="Short bio" hint="Shown on your profile card and post author section (max 500 chars)">
@@ -330,7 +328,7 @@ function ProfileSettings() {
 
         <button onClick={() => save()} disabled={saving}
           className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60">
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={SaveIcon} className="h-4 w-4" />}
           {saving ? "Saving…" : "Save changes"}
         </button>
       </div>
@@ -350,8 +348,8 @@ function ProfileSettings() {
             )}
             <h3 className="mt-3 font-heading text-base font-bold text-foreground w-full truncate">{form.displayName || "Your name"}</h3>
             {form.pronouns   && <p className="text-xs text-muted-foreground w-full truncate">{form.pronouns}</p>}
-            {form.occupation && <p className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground max-w-full"><Briefcase className="h-3 w-3 shrink-0" /><span className="truncate">{form.occupation}</span></p>}
-            {form.location   && <p className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted-foreground max-w-full"><MapPin className="h-3 w-3 shrink-0" /><span className="truncate">{form.location}</span></p>}
+            {form.occupation && <p className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground max-w-full"><HugeiconsIcon icon={Briefcase07Icon} className="h-3 w-3 shrink-0" /><span className="truncate">{form.occupation}</span></p>}
+            {form.location   && <p className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted-foreground max-w-full"><HugeiconsIcon icon={Location01Icon} className="h-3 w-3 shrink-0" /><span className="truncate">{form.location}</span></p>}
             {form.bio && (
               <p className="mt-3 line-clamp-4 text-xs leading-relaxed text-muted-foreground w-full break-words text-left">
                 {form.bio}
@@ -359,7 +357,7 @@ function ProfileSettings() {
             )}
             {(form.website || form.twitter || form.github) && (
               <div className="mt-3 flex flex-wrap justify-center gap-1.5 w-full">
-                {form.website && <span className="inline-flex items-center gap-1 rounded-lg border border-border px-2 py-1 text-[10px] text-muted-foreground"><Globe className="h-3 w-3" />Website</span>}
+                {form.website && <span className="inline-flex items-center gap-1 rounded-lg border border-border px-2 py-1 text-[10px] text-muted-foreground"><HugeiconsIcon icon={Globe02Icon} className="h-3 w-3" />Website</span>}
                 {form.twitter && <span className="rounded-lg border border-border px-2 py-1 text-[10px] text-muted-foreground">Twitter</span>}
                 {form.github  && <span className="rounded-lg border border-border px-2 py-1 text-[10px] text-muted-foreground">GitHub</span>}
               </div>
@@ -378,7 +376,7 @@ function ProfileSettings() {
               "Social links help people find you elsewhere.",
             ].map(tip => (
               <li key={tip} className="flex items-start gap-1.5">
-                <Check className="h-3 w-3 mt-0.5 shrink-0 text-primary" />{tip}
+                <HugeiconsIcon icon={Tick02Icon} className="h-3 w-3 mt-0.5 shrink-0 text-primary" />{tip}
               </li>
             ))}
           </ul>
@@ -484,7 +482,7 @@ function NotificationSettings() {
         ))}
         <button onClick={() => save()} disabled={saving}
           className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60">
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={SaveIcon} className="h-4 w-4" />}
           {saving ? "Saving…" : "Save preferences"}
         </button>
       </div>
@@ -554,7 +552,7 @@ function AppearanceSettings() {
                   prefs.theme === t ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/30 hover:text-foreground")}>
                 <span className="text-2xl">{t === "light" ? "☀️" : t === "dark" ? "🌙" : "💻"}</span>
                 {t}
-                {prefs.theme === t && <Check className="h-3.5 w-3.5" />}
+                {prefs.theme === t && <HugeiconsIcon icon={Tick02Icon} className="h-3.5 w-3.5" />}
               </button>
             ))}
           </div>
@@ -573,7 +571,7 @@ function AppearanceSettings() {
         </div>
         <button onClick={() => save()} disabled={saving}
           className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60">
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={SaveIcon} className="h-4 w-4" />}
           {saving ? "Saving…" : "Save appearance"}
         </button>
       </div>
@@ -610,7 +608,7 @@ function PwInput({
           className={cn(inputCls, "pr-10")} placeholder={placeholder} />
         <button type="button" onClick={onToggleShow}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-          {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          {show ? <HugeiconsIcon icon={ViewOffIcon} className="h-4 w-4" /> : <HugeiconsIcon icon={ViewIcon} className="h-4 w-4" />}
         </button>
       </div>
     </Field>
@@ -717,7 +715,7 @@ function AccountSettings() {
                   <ul className="space-y-0.5">
                     {strength.tips.map(tip => (
                       <li key={tip} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <X className="h-3 w-3 text-destructive shrink-0" />{tip}
+                        <HugeiconsIcon icon={Cancel01Icon} className="h-3 w-3 text-destructive shrink-0" />{tip}
                       </li>
                     ))}
                   </ul>
@@ -745,7 +743,7 @@ function AccountSettings() {
 
         <div className="rounded-2xl border border-destructive/30 bg-destructive/5 p-5">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+            <HugeiconsIcon icon={AlertCircleIcon} className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
             <div>
               <p className="font-heading text-base font-bold text-foreground">Delete account</p>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Permanently delete your account and all your data. This cannot be undone.</p>
@@ -771,7 +769,7 @@ function AccountSettings() {
                 ? "bg-primary/10 text-primary"
                 : "bg-muted text-muted-foreground"
             )}>
-              {profile?.role === "creator" ? <Sparkles className="h-3 w-3" /> : <User className="h-3 w-3" />}
+              {profile?.role === "creator" ? <HugeiconsIcon icon={Sparkles} className="h-3 w-3" /> : <HugeiconsIcon icon={User03Icon} className="h-3 w-3" />}
               {profile?.role === "creator" ? "Creator" : "Reader"}
             </span>
           </div>
@@ -800,16 +798,16 @@ function AccountSettings() {
           <ul className="space-y-2.5 text-xs text-muted-foreground">
             {isOAuth ? (
               <>
-                <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Your account is secured through {provider === "google" ? "Google" : provider}. No password is stored on Nomeo.</li>
-                <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Keep your {provider === "google" ? "Google" : provider} account secure — it controls access to Nomeo.</li>
-                <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Enable two-factor authentication on your {provider === "google" ? "Google" : provider} account for extra protection.</li>
+                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Your account is secured through {provider === "google" ? "Google" : provider}. No password is stored on Nomeo.</li>
+                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Keep your {provider === "google" ? "Google" : provider} account secure — it controls access to Nomeo.</li>
+                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon}className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Enable two-factor authentication on your {provider === "google" ? "Google" : provider} account for extra protection.</li>
               </>
             ) : (
               <>
-                <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Use a unique password not shared with any other account.</li>
-                <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Include uppercase letters, numbers and symbols.</li>
-                <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Nomeo will never ask for your password.</li>
-                <li className="flex items-start gap-1.5"><Lock className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Changing your password signs you out everywhere — you'll need to log in again.</li>
+                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Use a unique password not shared with any other account.</li>
+                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Include uppercase letters, numbers and symbols.</li>
+                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Nomeo will never ask for your password.</li>
+                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Changing your password signs you out everywhere — you'll need to log in again.</li>
               </>
             )}
           </ul>
@@ -883,7 +881,7 @@ function CreatorApplicationSection() {
     return (
       <div className="rounded-2xl border border-green-500/30 bg-green-500/5 p-5">
         <div className="flex items-start gap-3">
-          <Check className="mt-0.5 h-5 w-5 shrink-0 text-green-500" />
+          <HugeiconsIcon icon={Tick02Icon} className="mt-0.5 h-5 w-5 shrink-0 text-green-500" />
           <div>
             <p className="font-heading text-base font-bold text-foreground">You're a creator!</p>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -899,7 +897,7 @@ function CreatorApplicationSection() {
     return (
       <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5">
         <div className="flex items-start gap-3">
-          <Clock className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+          <HugeiconsIcon icon={Clock03Icon} className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
           <div>
             <p className="font-heading text-base font-bold text-foreground">Application under review</p>
             <p className="mt-1 text-sm text-muted-foreground">
@@ -915,7 +913,7 @@ function CreatorApplicationSection() {
     return (
       <div className="rounded-2xl border border-border bg-card p-5">
         <div className="flex items-start gap-3">
-          <X className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+          <HugeiconsIcon icon={Cancel01Icon} className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
           <div className="flex-1">
             <p className="font-heading text-base font-bold text-foreground">Application not approved</p>
             {appData?.reviewNote && (
@@ -928,7 +926,7 @@ function CreatorApplicationSection() {
               onClick={() => setExpanded(true)}
               className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90"
             >
-              <PenLine className="h-4 w-4" /> Apply again
+              <HugeiconsIcon icon={Edit01Icon} className="h-4 w-4" /> Apply again
             </button>
           </div>
         </div>
@@ -945,7 +943,7 @@ function CreatorApplicationSection() {
       >
         <div className="text-left">
           <p className="font-heading text-base font-bold text-foreground flex items-center gap-2">
-            <PenLine className="h-5 w-5 text-primary" />
+            <HugeiconsIcon icon={Edit01Icon} className="h-5 w-5 text-primary" />
             Become a creator
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
@@ -953,8 +951,8 @@ function CreatorApplicationSection() {
           </p>
         </div>
         {expanded
-          ? <ChevronUp className="h-5 w-5 shrink-0 text-muted-foreground" />
-          : <ChevronDown className="h-5 w-5 shrink-0 text-muted-foreground" />}
+          ? <HugeiconsIcon icon={ArrowUp01Icon} className="h-5 w-5 shrink-0 text-muted-foreground" />
+          : <HugeiconsIcon icon={ArrowDown01Icon} className="h-5 w-5 shrink-0 text-muted-foreground" />}
       </button>
 
       {expanded && (
@@ -1051,7 +1049,7 @@ function ApplicationForm({
           disabled={submitting || !canSubmit}
           className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
         >
-          {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <PenLine className="h-4 w-4" />}
+          {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={Edit01Icon} className="h-4 w-4" />}
           {submitting ? "Submitting…" : "Submit application"}
         </button>
       </div>
