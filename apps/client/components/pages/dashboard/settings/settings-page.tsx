@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useMemo, memo } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { SaveIcon, Image03Icon, AlertCircleIcon, ViewIcon, ViewOffIcon, Tick02Icon, Cancel01Icon, Sparkles, Shield01Icon, Notification02Icon, PaintBoardIcon, User03Icon, Location01Icon, Briefcase07Icon, Globe02Icon, CircleLock02Icon, Edit01Icon, Clock03Icon, ArrowUp01Icon, ArrowDown01Icon } from "@hugeicons/core-free-icons";
+import { SaveIcon, Image03Icon, AlertCircleIcon, ViewIcon, ViewOffIcon, Tick02Icon, Cancel01Icon, Sparkles, Shield01Icon, Notification02Icon, PaintBoardIcon, User03Icon, Location01Icon, Briefcase07Icon, Globe02Icon, CircleLock02Icon, Edit01Icon, Clock03Icon, ArrowUp01Icon, ArrowDown01Icon, Sun03Icon, Moon02Icon, ComputerIcon } from "@hugeicons/core-free-icons";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { authClient } from "@/lib/authClient";
 import { api } from "@/lib/axios";
@@ -550,7 +550,7 @@ function AppearanceSettings() {
               <button key={t} onClick={() => setLocalPrefs(p => ({ ...(p ?? {}), theme: t }))}
                 className={cn("flex flex-col items-center gap-2 rounded-xl border p-4 text-sm font-medium capitalize transition-colors",
                   prefs.theme === t ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:border-primary/30 hover:text-foreground")}>
-                <span className="text-2xl">{t === "light" ? "☀️" : t === "dark" ? "🌙" : "💻"}</span>
+                <span className="text-2xl">{t === "light" ? <HugeiconsIcon icon={Sun03Icon} /> : t === "dark" ? <HugeiconsIcon icon={Moon02Icon}/> : <HugeiconsIcon icon={ComputerIcon}/>}</span>
                 {t}
                 {prefs.theme === t && <HugeiconsIcon icon={Tick02Icon} className="h-3.5 w-3.5" />}
               </button>
