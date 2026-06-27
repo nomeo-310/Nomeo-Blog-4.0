@@ -247,7 +247,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
       if (signedIn.success) {
         toast.success("Welcome to Nomeo!");
         handleClose();
-        window.location.assign("/onboarding");
+        window.location.assign("/");
       } else {
         toast.success("Email verified. Please sign in.");
         onSwitchMode("sign-in");

@@ -29,12 +29,7 @@ import ContactMessageEmail from "@/email-templates/contact-message-email";
 
 type BaseArgs = { to: string };
 
-async function deliver(
-  to: string,
-  subject: string,
-  element: React.ReactElement,
-  opts?: { fromName?: string; replyTo?: string; unsubscribeUrl?: string }
-) {
+async function deliver(to: string, subject: string, element: React.ReactElement, opts?: { fromName?: string; replyTo?: string; unsubscribeUrl?: string }) {
   const html = await render(element);
   return transporter.sendMail({
     from: `"${opts?.fromName ?? FROM.name}" <${FROM.address}>`,
