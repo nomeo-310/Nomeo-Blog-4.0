@@ -344,7 +344,7 @@ function FlipCard({ writer }: { writer: Writer }) {
             )}
           </div>
           <Link
-            href={`/@${writer.username}`}
+            href={`/profile/${writer.username}`}
             onClick={e => e.stopPropagation()}
             className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
           >
