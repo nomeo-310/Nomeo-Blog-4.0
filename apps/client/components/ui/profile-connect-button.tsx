@@ -1,6 +1,8 @@
 "use client";
 
-import { MessageCircle, UserPlus, Clock, Check, Loader2, UserMinus, LogOut } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Message01Icon, UserAdd02Icon, Clock03Icon, Tick02Icon, UserMinus02Icon } from "@hugeicons/core-free-icons"
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useUserRelationship, useConnectActions } from "@/hooks/use-user-relationship";
@@ -80,7 +82,7 @@ export function ProfileConnectButton({
             title="Send message"
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:opacity-50"
           >
-            {isMessaging ? <Loader2 className="h-4 w-4 animate-spin" /> : <MessageCircle className="h-4 w-4" />}
+            {isMessaging ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={Message01Icon} className="h-4 w-4" />}
           </button>
           <button
             onClick={doDisconnect}
@@ -89,7 +91,7 @@ export function ProfileConnectButton({
           >
             {isDisconnecting
               ? <Loader2 className="h-4 w-4 animate-spin" />
-              : <Check className="h-4 w-4 text-primary" />}
+              : <HugeiconsIcon icon={Tick02Icon} className="h-4 w-4 text-primary" />}
             {isDisconnecting ? "Unfollowing…" : "Following"}
           </button>
         </div>
@@ -104,7 +106,7 @@ export function ProfileConnectButton({
           disabled={isMessaging}
           className="inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
         >
-          {isMessaging ? <Loader2 className="h-4 w-4 animate-spin" /> : <MessageCircle className="h-4 w-4" />}
+          {isMessaging ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={Message01Icon} className="h-4 w-4" />}
           Message
         </button>
         <button
@@ -113,7 +115,7 @@ export function ProfileConnectButton({
           title="Disconnect"
           className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:border-destructive/40 hover:bg-destructive/5 hover:text-destructive disabled:opacity-50"
         >
-          {isDisconnecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserMinus className="h-4 w-4" />}
+          {isDisconnecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={UserMinus02Icon} className="h-4 w-4" />}
         </button>
       </div>
     );
@@ -127,7 +129,7 @@ export function ProfileConnectButton({
         disabled={isConnecting}
         className={cn("inline-flex h-10 items-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50", className)}
       >
-        {isConnecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
+        {isConnecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={UserAdd02Icon} className="h-4 w-4" />}
         {targetIsCreator ? "Follow" : "Connect"}
       </button>
     );
@@ -138,7 +140,7 @@ export function ProfileConnectButton({
     return (
       <div className={cn("flex items-center gap-2", className)}>
         <button disabled className="inline-flex h-10 items-center gap-2 rounded-full border border-border px-5 text-sm font-medium text-muted-foreground">
-          <Clock className="h-4 w-4" />
+          <HugeiconsIcon icon={Clock03Icon} className="h-4 w-4" />
           {targetIsCreator ? "Requested" : "Request sent"}
         </button>
         <button
@@ -160,7 +162,7 @@ export function ProfileConnectButton({
         onClick={() => openActivity("connections")}
         className={cn("inline-flex h-10 items-center gap-2 rounded-full border border-primary/40 bg-primary/5 px-5 text-sm font-medium text-primary hover:bg-primary/10", className)}
       >
-        <Check className="h-4 w-4" />
+        <HugeiconsIcon icon={Tick02Icon} className="h-4 w-4" />
         Respond
       </button>
     );
