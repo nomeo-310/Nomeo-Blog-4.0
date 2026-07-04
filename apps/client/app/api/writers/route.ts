@@ -4,14 +4,16 @@ import { connectDB }    from "@/lib/connect-to-database";
 import mongoose         from "mongoose";
 
 export const dynamic    = "force-dynamic";
-export const revalidate = 3600; // re-fetch at most once per hour
+export const revalidate = 3600;
 
 /**
  * GET /api/writers
  * ----------------
  * Returns up to 24 active creators for the About page writer grid.
- * Sorted by follower count descending so the most established writers
- * appear first.
+ * Sorted by follower count descending.
+ *
+ * Creator = User.role === "creator" AND Profile.creatorStatus === "active"
+ *           AND Profile.banStatus === "active"
  */
 export async function GET() {
   try {
@@ -21,15 +23,16 @@ export async function GET() {
     const writers = await db
       .collection("profiles")
       .aggregate([
-        // Only verified creators with a public profile
+        // Only active creators with no ban
         {
           $match: {
-            role:     "creator",
-            isBanned: { $ne: true },
-            username: { $exists: true, $ne: "" },
+            creatorStatus: "active",
+            banStatus:     "active",
+            username:      { $exists: true, $ne: "" },
+            onboardingCompleted: true,
           },
         },
-        // Join Better Auth user to get name + avatar
+        // Join Better Auth user to confirm role and get name
         {
           $lookup: {
             from:         "user",
@@ -39,9 +42,9 @@ export async function GET() {
           },
         },
         { $unwind: "$user" },
-        // Only include active accounts
+        // Confirm the user record also says creator
         { $match: { "user.role": "creator" } },
-        // Sort by followers descending
+        // Most followed first
         { $sort: { followersCount: -1 } },
         { $limit: 24 },
         {
@@ -50,8 +53,9 @@ export async function GET() {
             username:       1,
             displayName:    1,
             bio:            1,
-            avatar:         1,
             followersCount: 1,
+            // profileImage is { url, publicId } — we only need the url
+            avatar: "$profileImage.url",
           },
         },
       ])
