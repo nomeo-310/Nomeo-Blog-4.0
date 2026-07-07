@@ -118,7 +118,7 @@ export default function LoungesPage() {
                   <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
                     {platformLounges.map((l) => (
                       <LoungeCard key={l.id} lounge={l} onOpen={() => open(l)} onRules={() => setRulesFor(l)} onGate={() => {
-                        saveRedirectIntent(); setMode("sign-in"); openAuthModal();
+                        saveRedirectIntent();
                         setGatedLounge(l);
                       }} />
                     ))}
@@ -136,7 +136,7 @@ export default function LoungesPage() {
                   <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
                     {creatorLounges.map((l) => (
                       <LoungeCard key={l.id} lounge={l} onOpen={() => open(l)} onRules={() => setRulesFor(l)} onGate={() => {
-                        saveRedirectIntent(); setMode("sign-in"); openAuthModal();
+                        saveRedirectIntent();
                         setGatedLounge(l);
                       }} />
                     ))}
