@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PaginationWithInfo } from "@/components/ui/pagination";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { UserMultiple02Icon, Message01Icon, CircleLock02Icon, Globe02Icon as GlobeIcon, Cancel01Icon, Search01Icon, Mail01Icon, ArrowLeft02Icon, Clock2Icon, CheckmarkCircle02Icon } from "@hugeicons/core-free-icons";
+import { useAuthModal } from "@/stores/modal-store";
 
 const PAGE_SIZE = 12;
 
@@ -46,6 +47,7 @@ export default function LoungesPage() {
 
   const open = (l: LoungeListItem) => router.push(`/lounges/${l.id}`);
   const hasAnyLounges = platformLounges.length > 0 || creatorLounges.length > 0;
+  const { setMode, open: openAuthModal } = useAuthModal()
 
   if (isError) {
     return (
@@ -116,7 +118,7 @@ export default function LoungesPage() {
                   <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
                     {platformLounges.map((l) => (
                       <LoungeCard key={l.id} lounge={l} onOpen={() => open(l)} onRules={() => setRulesFor(l)} onGate={() => {
-                        saveRedirectIntent();
+                        saveRedirectIntent(); setMode("sign-in"); openAuthModal();
                         setGatedLounge(l);
                       }} />
                     ))}
@@ -134,7 +136,7 @@ export default function LoungesPage() {
                   <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
                     {creatorLounges.map((l) => (
                       <LoungeCard key={l.id} lounge={l} onOpen={() => open(l)} onRules={() => setRulesFor(l)} onGate={() => {
-                        saveRedirectIntent();
+                        saveRedirectIntent(); setMode("sign-in"); openAuthModal();
                         setGatedLounge(l);
                       }} />
                     ))}
@@ -208,6 +210,8 @@ export default function LoungesPage() {
               <button
                 onClick={() => {
                   setGatedLounge(null);
+                  setMode("sign-in");
+                  openAuthModal();
                   // ── Open your login modal here ──────────────────────
                   // e.g. setLoginModalOpen(true)
                   // saveRedirectIntent() was already called when the

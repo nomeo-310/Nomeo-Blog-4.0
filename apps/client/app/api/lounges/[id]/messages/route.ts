@@ -6,6 +6,7 @@ import { publishToLounge } from "@/lib/server/ably";
 import { getCurrentUser } from "@/lib/session";
 import { resolveLoungeAccess } from "@/services/lounge-access-services";
 import { connectDB } from "@/lib/connect-to-database";
+import { User } from "@/models/user";
 
 /**
  * Lounge messages.
@@ -49,7 +50,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     const docs = await LoungeMessage.find(query)
       .sort({ _id: -1 })
       .limit(limit)
-      .populate("authorId", "name image")
+      .populate({ path: "authorId", model: User, select: "name image" })
       .lean();
 
     const messages = docs.reverse().map(serializeMessage);
@@ -88,7 +89,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     // Idempotency: if this clientTempId already saved (retry), return it.
     if (clientTempId) {
-      const existing = await LoungeMessage.findOne({ loungeId: id, clientTempId }).populate("authorId", "name image").lean();
+      const existing = await LoungeMessage.findOne({ loungeId: id, clientTempId }).populate({ path: "authorId", model: User, select: "name image" }).lean();
       if (existing) return NextResponse.json({ message: serializeMessage(existing) }, { status: 200 });
     }
 
@@ -103,7 +104,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     await Lounge.updateOne({ _id: id }, { $inc: { messagesCount: 1 } });
 
-    const populated = await LoungeMessage.findById(created._id).populate("authorId", "name image").lean();
+    const populated = await LoungeMessage.findById(created._id).populate({ path: "authorId", model: User, select: "name image" }).lean();
     const message = serializeMessage(populated);
 
     // Broadcast after persistence. Fire-and-forget: history covers drops.

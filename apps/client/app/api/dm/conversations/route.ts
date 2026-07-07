@@ -5,6 +5,7 @@ import { Conversation } from "@/models/direct-message";
 import { getCurrentUser } from "@/lib/session";
 import { connectDB } from "@/lib/connect-to-database";
 import { getOrCreateConversation } from "@/services/dm-access-services";
+import { User } from "@/models/user";
 
 /**
  *  GET  /api/dm/conversations          → my inbox (conversations list)
@@ -26,7 +27,7 @@ export async function GET() {
     })
       .sort({ lastMessageAt: -1 })
       .limit(50)
-      .populate("participants", "name image")
+      .populate({ path: "participants", model: User, select: "name image" })
       .lean();
 
     const conversations = convos.map((c: any) => {
