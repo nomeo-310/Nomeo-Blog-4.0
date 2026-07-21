@@ -10,7 +10,7 @@ import { Toaster } from "sonner";
 import { getCurrentUser, needsOnboarding } from "@/lib/session";
 import { getCuratedTopics } from "@/lib/get-curated-topics";
 import OnboardingGate from "@/components/auth/onboarding-gate";
-import { ConversationsPanel } from "@/components/pages/lounge/conversations-panel";
+import { ConversationsPanel } from "@/app-pages/lounge/conversations-panel";
 
 interface CuratedTopic {
   slug: string;

@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import DashboardLayout from "@/components/features/dashboard-layout";
-import NewPostPage from "@/components/pages/dashboard/posts/new-post-page";
+import NewPostPage from "@/app-pages/dashboard/posts/new-post-page";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 

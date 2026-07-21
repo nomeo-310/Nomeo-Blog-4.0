@@ -1,5 +1,5 @@
 import AppLayout from "@/components/features/app-layout";
-import LoungesPage from "@/components/pages/lounge/lounges-page";
+import LoungesPage from "@/app-pages/lounge/lounges-page";
 import { getCurrentUser } from "@/lib/session";
 import { Metadata } from "next";
 

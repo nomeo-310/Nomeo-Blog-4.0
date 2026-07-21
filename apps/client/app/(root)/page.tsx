@@ -1,5 +1,5 @@
 import AppLayout from "@/components/features/app-layout";
-import HomePage from "@/components/pages/home/home-page";
+import HomePage from "@/app-pages/home/home-page";
 import { getCurrentUser } from "@/lib/session";
 import { Metadata } from "next";
 

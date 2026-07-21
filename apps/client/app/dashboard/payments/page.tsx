@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import DashboardLayout from "@/components/features/dashboard-layout";
-import PaymentsPage from "@/components/pages/dashboard/payments/payments-page";
+import PaymentsPage from "@/app-pages/dashboard/payments/payments-page";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 

@@ -6,7 +6,7 @@ import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import DashboardLayout from "@/components/features/dashboard-layout";
-import { PostsGrid } from "@/components/pages/dashboard/posts/posts-grid";
+import { PostsGrid } from "@/app-pages/dashboard/posts/posts-grid";
 
 export const metadata: Metadata = { title: "Posts" };
 

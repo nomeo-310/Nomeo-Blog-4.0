@@ -1,5 +1,5 @@
 import AppLayout from "@/components/features/app-layout"
-import SearchPage from "@/components/pages/search/search-page";
+import SearchPage from "@/app-pages/search/search-page";
 import { getCurrentUser } from "@/lib/session";
 import { Metadata } from "next"
 

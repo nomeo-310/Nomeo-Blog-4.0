@@ -1,5 +1,5 @@
 import AppLayout from "@/components/features/app-layout";
-import DmConversationPage from "@/components/pages/lounge/dm-conversation-page";
+import DmConversationPage from "@/app-pages/lounge/dm-conversation-page";
 import { getCurrentUser } from "@/lib/session";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";

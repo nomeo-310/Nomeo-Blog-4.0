@@ -1,4 +1,4 @@
-import FaqPage from "@/components/pages/faqs/faq-page";
+import FaqPage from "@/app-pages/faqs/faq-page";
 import AppLayout from "@/components/features/app-layout"
 import { getCurrentUser } from "@/lib/session";
 import { Metadata } from "next"

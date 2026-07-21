@@ -1,5 +1,5 @@
 import AppLayout from "@/components/features/app-layout";
-import MessagesPage from "@/components/pages/lounge/message-page";
+import MessagesPage from "@/app-pages/lounge/message-page";
 import { getCurrentUser } from "@/lib/session";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";

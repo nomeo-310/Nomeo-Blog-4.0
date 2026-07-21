@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Message01Icon, DashboardSquare03Icon, Files02Icon, Bookmark01Icon, FavouriteIcon, MoneyBag01Icon, UserMultiple02Icon, Settings01Icon, ArrowRight01Icon, ArrowLeft01Icon, Menu02Icon, Cancel01Icon, SparklesIcon, Notification02Icon, User03Icon, Link05Icon, ArrowLeft02Icon, Add01Icon, CreditCard } from "@hugeicons/core-free-icons";
+import { Message01Icon, DashboardSquare03Icon, Files02Icon, Bookmark01Icon, FavouriteIcon, MoneyBag01Icon, UserMultiple02Icon, Settings01Icon, ArrowRight01Icon, ArrowLeft01Icon, Menu02Icon, Cancel01Icon, SparklesIcon, Notification02Icon, User03Icon, Link05Icon, ArrowLeft02Icon, Add01Icon, CreditCard, Megaphone01Icon } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/authClient";
 import { teardownRealtime } from "@/lib/ably-registry";
@@ -21,6 +21,7 @@ const CREATOR_GROUPS: NavGroup[] = [
     group: "Create",
     items: [
       { href: "/dashboard/posts",       label: "Posts",       icon: Files02Icon      },
+      { href: "/dashboard/promotions",  label: "Promotions",  icon: Megaphone01Icon  },
       { href: "/dashboard/lounges",     label: "Lounges",     icon: Message01Icon },
       { href: "/dashboard/earnings",    label: "Earnings",    icon: MoneyBag01Icon   },
       { href: "/dashboard/subscribers", label: "Subscribers", icon: UserMultiple02Icon   },
@@ -53,6 +54,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   "":             "Home",
   "dashboard":    "Dashboard",
   "posts":        "Posts",
+  "promotions":   "Promotions",
   "lounges":      "Lounges",
   "earnings":     "Earnings",
   "subscribers":  "Subscribers",

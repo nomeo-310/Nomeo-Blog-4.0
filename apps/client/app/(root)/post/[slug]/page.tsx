@@ -1,7 +1,7 @@
 // app/post/[slug]/page.tsx
 import { Metadata } from "next";
 import AppLayout from "@/components/features/app-layout";
-import PostPage, { generateMetadata as postMetadata } from "@/components/pages/post/post-page";
+import PostPage, { generateMetadata as postMetadata } from "@/app-pages/post/post-page";
 import { getCurrentUser } from "@/lib/session";
 
 interface PostRouteProps {

@@ -1,5 +1,5 @@
 import AppLayout from "@/components/features/app-layout"
-import MembershipPage from "@/components/pages/membership/membership-page";
+import MembershipPage from "@/app-pages/membership/membership-page";
 import { getCurrentUser } from "@/lib/session";
 import { Metadata } from "next"
 

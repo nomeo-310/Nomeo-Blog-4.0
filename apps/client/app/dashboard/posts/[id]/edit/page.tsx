@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
 import DashboardLayout from "@/components/features/dashboard-layout";
 import { Metadata } from "next";
-import EditPostPage from "@/components/pages/dashboard/posts/edit-post-page";
+import EditPostPage from "@/app-pages/dashboard/posts/edit-post-page";
 
 export const metadata: Metadata = {
   title: 'Edit Post',
