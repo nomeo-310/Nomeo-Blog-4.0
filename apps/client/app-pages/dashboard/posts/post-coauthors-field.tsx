@@ -121,7 +121,9 @@ export function CoAuthorsField({
                 {/* Role */}
                 <Select value={ca.role} onValueChange={(v) => onUpdate(ca.userId, { role: v as CoAuthorRole })}>
                   <SelectTrigger className="h-8 w-32 rounded-lg border-border bg-muted/30 text-xs">
-                    <SelectValue />
+                    <SelectValue>
+                      {(value: string | null) => COAUTHOR_ROLES.find((r) => r.value === value)?.label ?? value}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {COAUTHOR_ROLES.map((r) => <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>)}

@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import type { DateRange } from "react-day-picker";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Calendar02Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import Modal from "@/components/ui/modal";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCreateAdvert, useUpdateAdvert, type AdvertPlacement, type MyAdvert } from "@/hooks/use-my-adverts";
 import type { EligiblePost } from "./promotion-types";
@@ -61,8 +67,11 @@ function PromotionFormContent({ isOpen, onClose, posts, editing }: PromotionForm
   const [title,     setTitle]     = useState(() => editing?.title ?? "");
   const [body,      setBody]      = useState(() => editing?.body ?? "");
   const [placement, setPlacement] = useState<AdvertPlacement>(() => editing?.placement ?? "feed_card");
-  const [startAt,   setStartAt]   = useState(() => editing?.startAt?.slice(0, 10) ?? "");
-  const [endAt,     setEndAt]     = useState(() => editing?.endAt?.slice(0, 10) ?? "");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(() => ({
+    from: editing?.startAt ? new Date(editing.startAt) : undefined,
+    to:   editing?.endAt   ? new Date(editing.endAt)   : undefined,
+  }));
+  const [scheduleOpen, setScheduleOpen] = useState(false);
 
   const createAdvert = useCreateAdvert();
   const updateAdvert = useUpdateAdvert();
@@ -89,8 +98,8 @@ function PromotionFormContent({ isOpen, onClose, posts, editing }: PromotionForm
       image: post?.coverImage ?? null,
       ctaLabel: "Read more",
       ctaUrl: post ? `/post/${post.slug}` : "",
-      startAt: startAt || null,
-      endAt: endAt || null,
+      startAt: dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : null,
+      endAt: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : null,
     };
   };
 
@@ -136,7 +145,7 @@ function PromotionFormContent({ isOpen, onClose, posts, editing }: PromotionForm
       onClose={onClose}
       title={isEditing ? "Revise promotion" : "Promote a post"}
       description="Boost one of your posts in the feed. An admin reviews every promotion before it goes live."
-      size="lg"
+      size="xl"
       isLoading={saving}
       closeOnOutsideClick={!saving}
       actions={
@@ -171,7 +180,9 @@ function PromotionFormContent({ isOpen, onClose, posts, editing }: PromotionForm
           ) : (
             <Select value={postId} onValueChange={handlePostChange}>
               <SelectTrigger className="w-full rounded-xl border-border bg-background text-sm">
-                <SelectValue placeholder="Choose a post" />
+                <SelectValue placeholder="Choose a post">
+                  {(value: string | null) => posts.find((p) => p.id === value)?.title ?? "Choose a post"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent className="p-1">
                 {posts.map((p) => <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>)}
@@ -221,21 +232,51 @@ function PromotionFormContent({ isOpen, onClose, posts, editing }: PromotionForm
         </div>
 
         {/* Schedule */}
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold text-foreground">
-              Starts <span className="font-normal text-muted-foreground">(optional)</span>
+        <div>
+          <div className="mb-1.5 flex items-center justify-between">
+            <label className="text-sm font-semibold text-foreground">
+              Schedule <span className="font-normal text-muted-foreground">(optional)</span>
             </label>
-            <input type="date" value={startAt} onChange={(e) => setStartAt(e.target.value)}
-              className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
+            {(dateRange?.from || dateRange?.to) && (
+              <button type="button" onClick={() => setDateRange(undefined)}
+                className="flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-destructive">
+                <HugeiconsIcon icon={Cancel01Icon} className="h-3 w-3" /> Clear
+              </button>
+            )}
           </div>
-          <div>
-            <label className="mb-1.5 block text-sm font-semibold text-foreground">
-              Ends <span className="font-normal text-muted-foreground">(optional)</span>
-            </label>
-            <input type="date" value={endAt} onChange={(e) => setEndAt(e.target.value)}
-              className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20" />
-          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setScheduleOpen((o) => !o)}
+            className={cn(
+              "h-10 w-full justify-start text-left font-normal",
+              !dateRange?.from && "text-muted-foreground"
+            )}
+          >
+            <HugeiconsIcon icon={Calendar02Icon} className="mr-2 h-4 w-4" />
+            {dateRange?.from
+              ? dateRange.to
+                ? `${format(dateRange.from, "PPP")} – ${format(dateRange.to, "PPP")}`
+                : format(dateRange.from, "PPP")
+              : "Runs immediately, no end date"}
+          </Button>
+
+          {scheduleOpen && (
+            <div className="mt-2 rounded-lg border border-border bg-popover p-2">
+              <Calendar
+                mode="range"
+                selected={dateRange}
+                onSelect={setDateRange}
+                numberOfMonths={2}
+                disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                className="w-full [&_table]:w-full [&_.rdp-month]:w-full"
+              />
+            </div>
+          )}
+          <p className="mt-1.5 text-xs text-muted-foreground">
+            Leave blank to start immediately and run with no end date.
+          </p>
         </div>
       </div>
     </Modal>

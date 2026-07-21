@@ -37,7 +37,12 @@ export function SeriesField({
       </div>
       <Select value={selectValue} onValueChange={onSelectValueChange}>
         <SelectTrigger className="w-full rounded-xl border-border bg-background text-sm">
-          <SelectValue placeholder="None (standalone post)" />
+          <SelectValue placeholder="None (standalone post)">
+            {(value: string | null) =>
+              !value || value === "_none"
+                ? "None (standalone post)"
+                : series.find((s) => s.id === value)?.title ?? "None (standalone post)"}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent className="p-1">
           <SelectItem value="_none">None (standalone post)</SelectItem>
