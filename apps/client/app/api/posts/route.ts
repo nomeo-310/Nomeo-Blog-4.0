@@ -7,6 +7,7 @@ import { Profile } from "@/models/profile";
 import { getCurrentUser } from "@/lib/session";
 import { createNotifications } from "@/lib/create-notification";
 import { mailService } from "@/services/email-services";
+import { normalizeTags, adjustTopicPostCounts } from "@/services/topic-services";
 
 export const dynamic = "force-dynamic";
 
@@ -89,6 +90,8 @@ export async function POST(req: NextRequest) {
     const wordCount = content.trim().split(/\s+/).length;
     const readingTime = Math.max(1, Math.round(wordCount / 200));
 
+    const normalizedTags = await normalizeTags(tags);
+
     // Build the co-authors array — dedupe, drop self-invites, validate ids.
     const cleanCoAuthors = Array.isArray(coAuthors)
       ? coAuthors
@@ -112,7 +115,7 @@ export async function POST(req: NextRequest) {
         ? { secureUrl: coverImage.secureUrl || coverImage.url || "", publicId: coverImage.publicId || "" }
         : { secureUrl: "", publicId: "" },
       category: category?.trim() || "",
-      tags: Array.isArray(tags) ? tags.map((t: string) => t.trim().toLowerCase()).filter(Boolean) : [],
+      tags: normalizedTags,
       access: access === "paid" ? "paid" : "free",
       seriesId:    seriesId ? new mongoose.Types.ObjectId(seriesId) : null,
       seriesOrder: seriesOrder ? Number(seriesOrder) : undefined,
@@ -130,6 +133,7 @@ export async function POST(req: NextRequest) {
     // Increment postsCount on profile when publishing.
     if (isPublishing) {
       await Profile.updateOne({ userId: uid }, { $inc: { postsCount: 1 } });
+      await adjustTopicPostCounts([], normalizedTags);
     }
 
     // Author profile is needed for both co-author notifications and the

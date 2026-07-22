@@ -43,8 +43,17 @@ export function PromotionsPage({ initialPosts }: { initialPosts: EligiblePost[] 
 
       {/* List */}
       {isLoading ? (
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => <div key={i} className="h-20 animate-pulse rounded-2xl border border-border bg-muted" />)}
+        <div className="divide-y divide-border">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-start gap-4 py-5">
+              <div className="min-w-0 flex-1 space-y-2.5">
+                <div className="h-4 w-1/3 animate-pulse rounded-full bg-muted" />
+                <div className="h-3.5 w-2/3 animate-pulse rounded-full bg-muted" />
+                <div className="h-3 w-20 animate-pulse rounded-full bg-muted" />
+              </div>
+              <div className="h-24 w-24 shrink-0 animate-pulse rounded-xl bg-muted sm:h-28 sm:w-28" />
+            </div>
+          ))}
         </div>
       ) : adverts.length === 0 ? (
         <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
@@ -61,8 +70,14 @@ export function PromotionsPage({ initialPosts }: { initialPosts: EligiblePost[] 
           )}
         </div>
       ) : (
-        <div className="space-y-3">
-          {adverts.map((advert) => <PromotionCard key={advert.id} advert={advert} onEdit={openEdit} />)}
+        <div>
+          {adverts.map((advert, i) => (
+            <div key={advert.id}>
+              <PromotionCard advert={advert} onEdit={openEdit} />
+              {/* Divider between rows — not after the last one */}
+              {i < adverts.length - 1 && <div className="border-t border-border" />}
+            </div>
+          ))}
         </div>
       )}
 

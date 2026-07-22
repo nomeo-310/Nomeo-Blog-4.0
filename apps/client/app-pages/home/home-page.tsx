@@ -3,7 +3,11 @@ import { connectDB } from "@/lib/connect-to-database";
 import { BlogSection } from "./blog-section";
 import { HeroPost, EmptyHero } from "./home-hero";
 import { AdvertCTA } from "./home-advert-cta";
+import { HomeRecommended } from "./home-recommended";
 import type { HomePost, PageData } from "./home-types";
+
+// How many "Recommended for you" rows to show.
+const RECOMMENDED_LIMIT = 5;
 
 /**
  * HomePage — Nomeo blog discovery.
@@ -51,7 +55,21 @@ export default async function HomePage({ searchParams, user }: {
   const sort     = sp?.sort === "trending" ? "trending" : "newest";
   const page     = Math.max(1, Number(sp?.page) || 1);
 
-  const data = await getPageData({ query, category, sort, page });
+  // Recommendations are personal — only worth fetching for a signed-in
+  // reader on the plain, unfiltered first page (same guard the feed_card
+  // advert slot uses in blog-grid.tsx).
+  const wantsRecommended = !!user && page === 1 && !query && !category;
+
+  const [data, recommendedRaw] = await Promise.all([
+    getPageData({ query, category, sort, page }),
+    wantsRecommended ? getRecommendedPosts(user.id) : Promise.resolve([]),
+  ]);
+
+  // Exclude whatever landed in the hero slot so it isn't duplicated
+  // immediately below itself.
+  const recommended = recommendedRaw
+    .filter((p) => p.id !== data.hero?.id)
+    .slice(0, RECOMMENDED_LIMIT);
 
   return (
     <div className="w-full bg-background pb-24">
@@ -59,7 +77,10 @@ export default async function HomePage({ searchParams, user }: {
       {/* ── 1. Hero ────────────────────────────────────────────────────── */}
       {data.hero ? <HeroPost post={data.hero} /> : <EmptyHero user={user} />}
 
-      {/* ── 2. Blog section — client component so search/filter/pagination
+      {/* ── 2. Recommended for you — personalized, signed-in readers only ── */}
+      <HomeRecommended posts={recommended} />
+
+      {/* ── 3. Blog section — client component so search/filter/pagination
             don't reload the page or jump back to the hero ─────────── */}
       <BlogSection
         initialPosts={data.posts}
@@ -72,7 +93,7 @@ export default async function HomePage({ searchParams, user }: {
         pageSize={PAGE_SIZE}
       />
 
-      {/* ── 3. CTA / Advert ──────────────────────────────────────────── */}
+      {/* ── 4. CTA / Advert ──────────────────────────────────────────── */}
       <AdvertCTA totalPosts={data.total} lounges={data.lounges} />
     </div>
   );
@@ -200,37 +221,9 @@ async function getPageData({ query, category, sort, page }: {
       : [];
     const profileMap = new Map(profiles.map((p: any) => [String(p.userId), p]));
 
-    const shape = (p: any): HomePost => {
-      const profile = profileMap.get(String(p.authorId));
-      return {
-        id:           String(p._id),
-        title:        String(p.title || "Untitled"),
-        slug:         String(p.slug || p._id),
-        excerpt:      String(p.excerpt || ""),
-        coverImage:   p.coverImage?.secureUrl
-          ? { secureUrl: p.coverImage.secureUrl, publicId: p.coverImage.publicId || "" }
-          : null,
-        tags:         Array.isArray(p.tags) ? p.tags.map(String).filter(Boolean).slice(0, 2) : [],
-        category:     String(p.category || ""),
-        readingTime:  typeof p.readingTime === "number" ? p.readingTime : null,
-        access:       p.access === "paid" ? "paid" : "free",
-        viewsCount:   Number(p.viewsCount   || 0),
-        likesCount:   Number(p.likesCount   || 0),
-        commentsCount:Number(p.commentsCount || 0),
-        savesCount:   Number(p.savesCount   || 0),
-        publishedAt:  p.publishedAt instanceof Date ? p.publishedAt.toISOString() : null,
-        author: {
-          name:     String(profile?.displayName || profile?.username || "Nomeo writer"),
-          username: String(profile?.username || ""),
-          avatar:   String(profile?.profileImage?.url || ""),
-        },
-        externalUrl: p.externalUrl || undefined,
-      };
-    };
-
     return {
-      hero:       heroRaw[0] ? shape(heroRaw[0]) : null,
-      posts:      postsRaw.map(shape),
+      hero:       heroRaw[0] ? shapePost(heroRaw[0], profileMap) : null,
+      posts:      postsRaw.map((p: any) => shapePost(p, profileMap)),
       lounges:    loungesRaw.map((l: any) => ({
         id:           String(l._id),
         name:         String(l.name || ""),
@@ -244,6 +237,88 @@ async function getPageData({ query, category, sort, page }: {
   } catch (err) {
     console.error("[HomePage] failed to load", err);
     return empty;
+  }
+}
+
+/** Shared by getPageData (hero + grid) and getRecommendedPosts. */
+function shapePost(p: any, profileMap: Map<string, any>): HomePost {
+  const profile = profileMap.get(String(p.authorId));
+  return {
+    id:           String(p._id),
+    title:        String(p.title || "Untitled"),
+    slug:         String(p.slug || p._id),
+    excerpt:      String(p.excerpt || ""),
+    coverImage:   p.coverImage?.secureUrl
+      ? { secureUrl: p.coverImage.secureUrl, publicId: p.coverImage.publicId || "" }
+      : null,
+    tags:         Array.isArray(p.tags) ? p.tags.map(String).filter(Boolean).slice(0, 2) : [],
+    category:     String(p.category || ""),
+    readingTime:  typeof p.readingTime === "number" ? p.readingTime : null,
+    access:       p.access === "paid" ? "paid" : "free",
+    viewsCount:   Number(p.viewsCount   || 0),
+    likesCount:   Number(p.likesCount   || 0),
+    commentsCount:Number(p.commentsCount || 0),
+    savesCount:   Number(p.savesCount   || 0),
+    publishedAt:  p.publishedAt instanceof Date ? p.publishedAt.toISOString() : null,
+    author: {
+      name:     String(profile?.displayName || profile?.username || "Nomeo writer"),
+      username: String(profile?.username || ""),
+      avatar:   String(profile?.profileImage?.url || ""),
+    },
+    externalUrl: p.externalUrl || undefined,
+  };
+}
+
+/**
+ * getRecommendedPosts — published posts whose tags intersect the reader's
+ * onboarding interests (Profile.interests). Returns [] for readers with no
+ * interests set yet, or no matches — the caller (HomeRecommended) renders
+ * nothing in that case rather than showing an empty section.
+ */
+async function getRecommendedPosts(userId: string): Promise<HomePost[]> {
+  try {
+    await connectDB();
+    const db = mongoose.connection.db;
+    if (!db) return [];
+
+    const uid = new mongoose.Types.ObjectId(userId);
+    const profile = await db.collection("profiles").findOne(
+      { userId: uid },
+      { projection: { interests: 1 } }
+    );
+    const interests: string[] = Array.isArray(profile?.interests) ? profile.interests : [];
+    if (interests.length === 0) return [];
+
+    // Fetch a small buffer above the display limit — the caller may drop
+    // one (the hero, if it happens to also match) before slicing to size.
+    const raw = await db.collection("posts")
+      .find(
+        { status: "published", isRemoved: { $ne: true }, tags: { $in: interests } },
+        { projection: heroProjejction }
+      )
+      .sort({ publishedAt: -1 })
+      .limit(RECOMMENDED_LIMIT + 1)
+      .toArray();
+
+    if (raw.length === 0) return [];
+
+    const authorIds = [...new Set(
+      raw.map((p: any) => String(p.authorId || "")).filter((id) => mongoose.Types.ObjectId.isValid(id))
+    )];
+    const profiles = authorIds.length
+      ? await db.collection("profiles")
+          .find(
+            { userId: { $in: authorIds.map((id) => new mongoose.Types.ObjectId(id)) } },
+            { projection: { userId: 1, displayName: 1, username: 1, profileImage: 1 } }
+          )
+          .toArray()
+      : [];
+    const profileMap = new Map(profiles.map((p: any) => [String(p.userId), p]));
+
+    return raw.map((p: any) => shapePost(p, profileMap));
+  } catch (err) {
+    console.error("[HomePage] getRecommendedPosts failed", err);
+    return [];
   }
 }
 

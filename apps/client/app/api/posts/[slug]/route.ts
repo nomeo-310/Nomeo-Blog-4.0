@@ -6,6 +6,7 @@ import { Post } from "@/models/post";
 import { Profile } from "@/models/profile";
 import { getCurrentUser } from "@/lib/session";
 import { createNotifications } from "@/lib/create-notification";
+import { normalizeTags, adjustTopicPostCounts } from "@/services/topic-services";
 
 export const dynamic = "force-dynamic";
 
@@ -116,6 +117,11 @@ export async function PATCH(
     if (isPublishing && !((excerpt ?? post.excerpt)?.trim()))
       return NextResponse.json({ error: "Excerpt is required before publishing" }, { status: 400 });
 
+    // Tags go through the Topic vocabulary (aliases/merges resolved, banned
+    // dropped, new words create-on-first-use) — normalize before building
+    // the update object since this needs a DB round trip.
+    const normalizedTags = tags !== undefined ? await normalizeTags(tags) : undefined;
+
     // Build update object — only update fields that were sent
     const update: Record<string, any> = {};
     let newlyInvitedCoAuthors: Array<{ userId: mongoose.Types.ObjectId; role: string }> = [];
@@ -123,9 +129,7 @@ export async function PATCH(
     if (title     !== undefined) update.title    = title.trim();
     if (excerpt   !== undefined) update.excerpt  = excerpt.trim();
     if (category  !== undefined) update.category = category.trim();
-    if (tags      !== undefined) update.tags     = Array.isArray(tags)
-      ? tags.map((t: string) => t.trim().toLowerCase()).filter(Boolean)
-      : [];
+    if (normalizedTags !== undefined) update.tags = normalizedTags;
     if (access    !== undefined) update.access   = access === "paid" ? "paid" : "free";
     if (status    !== undefined) update.status   = status;
     if (sendAsNewsletter !== undefined) update.sendAsNewsletter = !!sendAsNewsletter;
@@ -194,6 +198,21 @@ export async function PATCH(
         { userId: new mongoose.Types.ObjectId(user.id) },
         { $inc: { postsCount: 1 } }
       );
+    }
+
+    // Topic.postsCount only counts published posts — diff whatever was
+    // counted before this edit against what should be counted after it,
+    // covering tag changes, publish, and unpublish in one pass.
+    {
+      const effectiveStatus = update.status ?? post.status;
+      const effectiveTags: string[] = update.tags ?? post.tags ?? [];
+      const oldCounted = wasPublished ? (post.tags ?? []) : [];
+      const newCounted = effectiveStatus === "published" ? effectiveTags : [];
+      const removed = oldCounted.filter((t: string) => !newCounted.includes(t));
+      const added   = newCounted.filter((t: string) => !oldCounted.includes(t));
+      if (removed.length > 0 || added.length > 0) {
+        await adjustTopicPostCounts(removed, added);
+      }
     }
 
     // ── Notify newly invited co-authors only ─────────────────────────────
