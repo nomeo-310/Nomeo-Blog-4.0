@@ -70,7 +70,7 @@ export function PromotionsPage({ initialPosts }: { initialPosts: EligiblePost[] 
           )}
         </div>
       ) : (
-        <div>
+        <div className="w-full max-w-5xl">
           {adverts.map((advert, i) => (
             <div key={advert.id}>
               <PromotionCard advert={advert} onEdit={openEdit} />

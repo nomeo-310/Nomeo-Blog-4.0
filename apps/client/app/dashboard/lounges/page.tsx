@@ -54,7 +54,7 @@ export default async function Lounges() {
               </Link>
             </div>
           ) : (
-            <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
+            <div className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))" }}>
               {lounges.map((l) => (
                 <div key={l.id} className="flex flex-col rounded-2xl border border-border bg-card p-5">
                   <div className="flex items-start justify-between gap-2">
