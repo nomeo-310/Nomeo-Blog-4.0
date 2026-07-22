@@ -43,7 +43,7 @@ export function PromotionsPage({ initialPosts }: { initialPosts: EligiblePost[] 
 
       {/* List */}
       {isLoading ? (
-        <div className="divide-y divide-border">
+        <div className="divide-y divide-border w-full max-w-5xl">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-start gap-4 py-5">
               <div className="min-w-0 flex-1 space-y-2.5">
