@@ -11,6 +11,7 @@ import { getCurrentUser, needsOnboarding } from "@/lib/session";
 import { getCuratedTopics } from "@/lib/get-curated-topics";
 import OnboardingGate from "@/components/auth/onboarding-gate";
 import { ConversationsPanel } from "@/app-pages/lounge/conversations-panel";
+import { ChatBubble } from "@/app-pages/lounge/chat-bubble";
 
 interface CuratedTopic {
   slug: string;
@@ -140,6 +141,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             <Toaster position="top-center" richColors />
             <ModalProvider />
             <ConversationsPanel currentUserId={user?.id} />
+            {user && <ChatBubble />}
             <OnboardingGate
               needsOnboarding={showOnboarding}
               topics={topics}

@@ -22,7 +22,7 @@ export default async function Earnings() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8 w-full max-w-4xl">
+      <div className="space-y-8 w-full max-w-5xl">
         <div>
           <h2 className="font-heading text-2xl font-bold text-foreground">Earnings</h2>
           <p className="mt-1 text-sm text-muted-foreground">Your share of Nomeo's monthly revenue pool.</p>
