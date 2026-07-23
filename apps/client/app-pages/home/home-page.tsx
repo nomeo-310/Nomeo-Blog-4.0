@@ -1,13 +1,17 @@
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/connect-to-database";
+import { getVisitorKey } from "@/lib/visitor-key";
+import { selectAdvertsForPlacement } from "@/services/advert-services";
 import { BlogSection } from "./blog-section";
-import { HeroPost, EmptyHero } from "./home-hero";
+import { HeroCarousel } from "./hero-carousel";
 import { AdvertCTA } from "./home-advert-cta";
 import { HomeRecommended } from "./home-recommended";
-import type { HomePost, PageData } from "./home-types";
+import type { HomePost, HeroSlide, PageData } from "./home-types";
 
 // How many "Recommended for you" rows to show.
 const RECOMMENDED_LIMIT = 5;
+// How many slides the hero carousel shows, whichever source fills it.
+const HERO_LIMIT = 5;
 
 /**
  * HomePage — Nomeo blog discovery.
@@ -19,8 +23,11 @@ const RECOMMENDED_LIMIT = 5;
  *   2. Hero visibility — bottom text area now sits on a guaranteed dark
  *      frosted panel (not relying on image darkness). Top badges use
  *      solid dark backdrops. Works on both light and dark cover images.
- *   3. Hero selection — weighted score (views×0.4 + likes×0.4 + recency×0.2)
- *      from the last 30 published posts, so trending posts get the hero slot.
+ *   3. Hero is now a carousel (see hero-carousel.tsx): live "hero"-placement
+ *      adverts win the slot when any are eligible for the viewer, otherwise
+ *      it falls back to the top HERO_LIMIT trending posts (same weighted
+ *      score as before: views×0.4 + likes×0.4 + recency×0.2, from the last
+ *      30 published posts). Dot indicators, auto-advance, pause-on-hover.
  *   4. Hero stats — views, likes, comments, saves shown in the overlay.
  *   5. Responsive page size — the blog grid now shows 4 posts per page on
  *      mobile/tablet, 6 on large screens, and 8 on 2xl. The server can't
@@ -60,22 +67,41 @@ export default async function HomePage({ searchParams, user }: {
   // advert slot uses in blog-grid.tsx).
   const wantsRecommended = !!user && page === 1 && !query && !category;
 
-  const [data, recommendedRaw] = await Promise.all([
+  const visitorKey = user ? null : await getVisitorKey();
+
+  const [data, recommendedRaw, promotedSlides] = await Promise.all([
     getPageData({ query, category, sort, page }),
     wantsRecommended ? getRecommendedPosts(user.id) : Promise.resolve([]),
+    getHeroPromotedSlides({ userId: user?.id ?? null, visitorKey }),
   ]);
 
-  // Exclude whatever landed in the hero slot so it isn't duplicated
+  // Admin-promoted posts get pinned first (in priority/weight order, already
+  // sorted by selectAdvertsForPlacement); trending posts fill whatever's
+  // left up to HERO_LIMIT, so "only one post is promoted" still yields a
+  // full carousel rather than a lonely single slide.
+  const promotedPostIds = new Set(promotedSlides.map((s) => s.post.id));
+  const trendingFill = data.heroTrendingPosts
+    .filter((p) => !promotedPostIds.has(p.id))
+    .slice(0, Math.max(0, HERO_LIMIT - promotedSlides.length));
+
+  const heroSlides: HeroSlide[] = [
+    ...promotedSlides.map((s) => ({ post: s.post, promotedAdvertId: s.advertId })),
+    ...trendingFill.map((post) => ({ post, promotedAdvertId: null })),
+  ];
+
+  const heroPostIds = new Set(heroSlides.map((s) => s.post.id));
+
+  // Exclude whatever landed in the hero carousel so it isn't duplicated
   // immediately below itself.
   const recommended = recommendedRaw
-    .filter((p) => p.id !== data.hero?.id)
+    .filter((p) => !heroPostIds.has(p.id))
     .slice(0, RECOMMENDED_LIMIT);
 
   return (
     <div className="w-full bg-background pb-24">
 
       {/* ── 1. Hero ────────────────────────────────────────────────────── */}
-      {data.hero ? <HeroPost post={data.hero} /> : <EmptyHero user={user} />}
+      <HeroCarousel slides={heroSlides} user={user} />
 
       {/* ── 2. Recommended for you — personalized, signed-in readers only ── */}
       <HomeRecommended posts={recommended} />
@@ -104,7 +130,7 @@ export default async function HomePage({ searchParams, user }: {
 async function getPageData({ query, category, sort, page }: {
   query: string; category: string; sort: string; page: number;
 }): Promise<PageData> {
-  const empty: PageData = { hero: null, posts: [], lounges: [], categories: [], total: 0 };
+  const empty: PageData = { heroTrendingPosts: [], posts: [], lounges: [], categories: [], total: 0 };
   try {
     await connectDB();
     const db = mongoose.connection.db;
@@ -112,9 +138,10 @@ async function getPageData({ query, category, sort, page }: {
 
     const base = { status: "published", isRemoved: { $ne: true } };
 
-    // ── Hero: weighted score from last 30 published posts ───────────────
+    // ── Hero fallback pool: weighted score from last 30 published posts ──
     // score = viewsCount × 0.4 + likesCount × 0.4 + recency bonus × 0.2
-    // Recency bonus: posts published in the last 7 days get +1000 views equivalent
+    // Recency bonus: posts published in the last 7 days get +1000 views equivalent.
+    // Top HERO_LIMIT feed the carousel when no sponsored "hero" advert is live.
     const heroRaw = await db.collection("posts")
       .aggregate([
         { $match: base },
@@ -143,7 +170,10 @@ async function getPageData({ query, category, sort, page }: {
           },
         },
         { $sort: { heroScore: -1 } },
-        { $limit: 1 },
+        // Small buffer above HERO_LIMIT: a promoted post may also rank as
+        // organically trending, in which case it's deduped out and the next
+        // one down fills the carousel instead of coming up short.
+        { $limit: HERO_LIMIT + 3 },
         { $project: heroProjejction },
       ])
       .toArray();
@@ -222,7 +252,7 @@ async function getPageData({ query, category, sort, page }: {
     const profileMap = new Map(profiles.map((p: any) => [String(p.userId), p]));
 
     return {
-      hero:       heroRaw[0] ? shapePost(heroRaw[0], profileMap) : null,
+      heroTrendingPosts: heroRaw.map((p: any) => shapePost(p, profileMap)),
       posts:      postsRaw.map((p: any) => shapePost(p, profileMap)),
       lounges:    loungesRaw.map((l: any) => ({
         id:           String(l._id),
@@ -318,6 +348,60 @@ async function getRecommendedPosts(userId: string): Promise<HomePost[]> {
     return raw.map((p: any) => shapePost(p, profileMap));
   } catch (err) {
     console.error("[HomePage] getRecommendedPosts failed", err);
+    return [];
+  }
+}
+
+/**
+ * getHeroPromotedSlides — posts an admin has promoted into the hero slot
+ * (live "hero"-placement Adverts, each with a postId; audience/schedule/
+ * frequency-cap already applied by selectAdvertsForPlacement), in priority
+ * order. Hero is reserved for real posts, so this fetches the POST's actual
+ * data (title, cover image, author, stats) rather than rendering separate
+ * ad creative — the slide looks and reads exactly like an organic trending
+ * slide, just tagged `promotedAdvertId` for tracking. An advert whose post
+ * got unpublished/deleted since being promoted is skipped, not errored.
+ */
+async function getHeroPromotedSlides({ userId, visitorKey }: {
+  userId: string | null; visitorKey: string | null;
+}): Promise<Array<{ post: HomePost; advertId: string }>> {
+  try {
+    await connectDB();
+    const adverts = await selectAdvertsForPlacement({ placement: "hero", userId, visitorKey }, HERO_LIMIT);
+    const withPostId = adverts.filter((a) => a.postId);
+    if (withPostId.length === 0) return [];
+
+    const db = mongoose.connection.db;
+    if (!db) return [];
+
+    const postIds = withPostId.map((a) => a.postId!);
+    const postsRaw = await db.collection("posts")
+      .find({ _id: { $in: postIds }, status: "published", isRemoved: { $ne: true } }, { projection: heroProjejction })
+      .toArray();
+    const postById = new Map(postsRaw.map((p: any) => [String(p._id), p]));
+
+    const authorIds = [...new Set(
+      postsRaw.map((p: any) => String(p.authorId || "")).filter((id) => mongoose.Types.ObjectId.isValid(id))
+    )];
+    const profiles = authorIds.length
+      ? await db.collection("profiles")
+          .find(
+            { userId: { $in: authorIds.map((id) => new mongoose.Types.ObjectId(id)) } },
+            { projection: { userId: 1, displayName: 1, username: 1, profileImage: 1 } }
+          )
+          .toArray()
+      : [];
+    const profileMap = new Map(profiles.map((p: any) => [String(p.userId), p]));
+
+    const slides: Array<{ post: HomePost; advertId: string }> = [];
+    for (const advert of withPostId) {
+      const raw = postById.get(String(advert.postId));
+      if (!raw) continue;
+      slides.push({ post: shapePost(raw, profileMap), advertId: String(advert._id) });
+    }
+    return slides;
+  } catch (err) {
+    console.error("[HomePage] getHeroPromotedSlides failed", err);
     return [];
   }
 }

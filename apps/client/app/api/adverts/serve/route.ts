@@ -7,7 +7,7 @@ import type { AdvertPlacement } from "@/models/advert";
 
 export const dynamic = "force-dynamic";
 
-const PLACEMENTS: AdvertPlacement[] = ["feed_card", "in_article", "notification_banner", "modal_popup"];
+const PLACEMENTS: AdvertPlacement[] = ["hero", "feed_card", "in_article", "notification_banner", "modal_popup"];
 
 /**
  * GET /api/adverts/serve?placement=modal_popup&topics=tech,design

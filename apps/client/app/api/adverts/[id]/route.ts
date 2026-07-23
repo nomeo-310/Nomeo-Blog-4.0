@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/connect-to-database";
 import { getCurrentUser } from "@/lib/session";
-import { Advert } from "@/models/advert";
+import { Advert, type AdvertPlacement } from "@/models/advert";
 import { serializeAdvertFull } from "@/services/advert-services";
 
 export const dynamic = "force-dynamic";
 
 const STAFF_ROLES = ["admin", "super_admin"];
 const STAFF_STATUSES = ["approved", "rejected", "paused", "active", "scheduled", "completed"];
+const PLACEMENTS: AdvertPlacement[] = ["hero", "feed_card", "in_article", "notification_banner", "modal_popup"];
 
 /**
  * GET /api/adverts/[id]
@@ -44,8 +45,11 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
  * Two very different capabilities live here, gated separately:
  *
  *   Staff (admin/super_admin): the review workflow — approve/reject a
- *   pending advert, pause/resume a live one, or edit priority. Sets
- *   reviewedBy/reviewedAt automatically.
+ *   pending advert, pause/resume a live one, edit priority, or change its
+ *   placement (e.g. this is how a creator's already-submitted feed_card/
+ *   in_article promotion gets elevated into the home hero carousel — hero
+ *   requires the advert to already have a postId, since it's reserved for
+ *   real posts). Sets reviewedBy/reviewedAt on status changes.
  *
  *   Owner (non-staff): can only edit creative fields while status is
  *   "draft", can submit a draft for review (status → pending_review), and
@@ -75,6 +79,15 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     if (isStaff) {
       if (typeof body.priority === "number") advert.priority = body.priority;
       if (typeof body.weight === "number" && body.weight > 0) advert.weight = body.weight;
+      if (body.placement && PLACEMENTS.includes(body.placement)) {
+        if (body.placement === "hero" && !advert.postId) {
+          return NextResponse.json(
+            { success: false, message: "Hero is reserved for posts — this advert has no linked post" },
+            { status: 400 }
+          );
+        }
+        advert.placement = body.placement;
+      }
       if (body.status && STAFF_STATUSES.includes(body.status)) {
         advert.status = body.status;
         advert.reviewedBy = new mongoose.Types.ObjectId(user.id);

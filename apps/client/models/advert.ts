@@ -19,6 +19,10 @@ import mongoose, { Schema, Document } from "mongoose";
  *                    Billable, attributed to the creator.
  *
  * Placements (industry-standard slots, mapped to Nomeo surfaces):
+ *   - hero                 Home page hero carousel slide — the single most
+ *                          valuable slot on the site. Admin/staff only (never
+ *                          creator-selectable in the "promote a post" flow);
+ *                          falls back to trending posts when none are live.
  *   - feed_card            Native card inline in the feed.
  *   - in_article           Card placed within a single post, between sections.
  *   - notification_banner  Banner on the notifications page.
@@ -52,6 +56,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export type AdvertType = "sponsored" | "house" | "promoted_post" | "creator_promo";
 
 export type AdvertPlacement =
+  | "hero"
   | "feed_card"
   | "in_article"
   | "notification_banner"
@@ -245,7 +250,7 @@ const AdvertSchema = new Schema<IAdvert>(
     },
     placement: {
       type: String,
-      enum: ["feed_card", "in_article", "notification_banner", "modal_popup"],
+      enum: ["hero", "feed_card", "in_article", "notification_banner", "modal_popup"],
       required: true,
       index: true,
     },

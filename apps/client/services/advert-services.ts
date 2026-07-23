@@ -48,7 +48,12 @@ export interface SelectAdvertOptions {
   topics?: string[];
 }
 
-export async function selectAdvertForPlacement(opts: SelectAdvertOptions): Promise<IAdvert | null> {
+/**
+ * Shared by both selectors: live, in-window, audience-eligible candidates
+ * for the slot, with viewer-exhausted/permanently-dismissed ones dropped —
+ * ordered by priority desc then weight desc.
+ */
+async function getEligibleCandidates(opts: SelectAdvertOptions): Promise<IAdvert[]> {
   const { placement, userId, visitorKey, topics = [] } = opts;
   const now = new Date();
 
@@ -75,7 +80,7 @@ export async function selectAdvertForPlacement(opts: SelectAdvertOptions): Promi
     .limit(CANDIDATE_LIMIT)
     .lean<IAdvert[]>();
 
-  if (candidates.length === 0) return null;
+  if (candidates.length === 0) return [];
 
   // Look up this viewer's impression history for the candidates in one query.
   const advertIds = candidates.map((c) => c._id);
@@ -90,7 +95,7 @@ export async function selectAdvertForPlacement(opts: SelectAdvertOptions): Promi
     : [];
   const impressionByAdvert = new Map(impressions.map((i) => [String(i.advertId), i]));
 
-  const eligible = candidates.filter((c) => {
+  return candidates.filter((c) => {
     const imp = impressionByAdvert.get(String(c._id));
     if (!imp) return true;
     if (c.maxImpressionsPerUser > 0 && imp.impressions >= c.maxImpressionsPerUser) return false;
@@ -98,7 +103,11 @@ export async function selectAdvertForPlacement(opts: SelectAdvertOptions): Promi
     if (imp.dismissed && c.dismissBehavior === "once") return false;
     return true;
   });
+}
 
+/** Single-slot placements (feed_card, in_article, notification_banner, modal_popup): one weighted-random pick from the top priority tier, so same-priority adverts rotate instead of one always winning. */
+export async function selectAdvertForPlacement(opts: SelectAdvertOptions): Promise<IAdvert | null> {
+  const eligible = await getEligibleCandidates(opts);
   if (eligible.length === 0) return null;
 
   const topPriority = eligible[0].priority;
@@ -111,6 +120,12 @@ export async function selectAdvertForPlacement(opts: SelectAdvertOptions): Promi
     if (r <= 0) return c;
   }
   return pool[0];
+}
+
+/** Multi-slot placements (currently just "hero"): up to `limit` eligible adverts, priority desc then weight desc — e.g. the hero carousel's sponsored slides. */
+export async function selectAdvertsForPlacement(opts: SelectAdvertOptions, limit: number): Promise<IAdvert[]> {
+  const eligible = await getEligibleCandidates(opts);
+  return eligible.slice(0, limit);
 }
 
 /* ── Serialization ─────────────────────────────────────────────────────── */

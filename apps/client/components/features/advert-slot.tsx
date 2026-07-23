@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAdvertSlot, type AdvertPlacement } from "@/hooks/use-advert";
@@ -13,9 +14,18 @@ import { cn } from "@/lib/utils";
  * All of them are self-contained: mount one, it fetches its own ad via
  * useAdvertSlot and renders nothing when there isn't a live match.
  *
- * CTAs are real `<a href="/api/adverts/[id]/click">` links (not onClick
- * handlers) so click tracking survives new-tab opens and works without JS —
- * see app/api/adverts/[id]/click/route.ts.
+ * CTAs branch on destination (see useAdvertSlot's `isInternal`):
+ *   - External (sponsored brand links, most house promos): a real
+ *     `<a href="/api/adverts/[id]/click" target="_blank">` — click tracking
+ *     survives new-tab opens, JS failures, and middle-clicks. Opening a new
+ *     tab is correct here — we don't want to navigate a reader off Nomeo.
+ *   - Internal (creator_promo/promoted_post → /post/[slug], or a house promo
+ *     linking to e.g. /membership): a same-tab Next.js <Link>, exactly like
+ *     every other post card, tracked with a fire-and-forget POST beacon
+ *     instead of routing the navigation through the redirect endpoint.
+ *     Forcing these through the external pattern was the bug where clicking
+ *     a promoted post card blew away the feed into a new tab instead of just
+ *     navigating to the post like its neighbors.
  */
 
 function AdLabel({ isHouse }: { isHouse: boolean }) {
@@ -29,20 +39,32 @@ function AdLabel({ isHouse }: { isHouse: boolean }) {
 /* ── modal_popup ───────────────────────────────────────────────────────── */
 
 export function AdvertPopup() {
-  const { advert, clickUrl, dismiss, hide } = useAdvertSlot("modal_popup");
+  const { advert, clickUrl, isInternal, trackClick, dismiss, hide } = useAdvertSlot("modal_popup");
   if (!advert) return null;
 
   // Keyed by advert id so a fresh AdvertPopupContent mounts (with its own
   // fresh `visible` state) whenever the served ad changes, instead of
   // reaching back into an effect to reset state for the old one.
-  return <AdvertPopupContent key={advert.id} advert={advert} clickUrl={clickUrl} dismiss={dismiss} hide={hide} />;
+  return (
+    <AdvertPopupContent
+      key={advert.id}
+      advert={advert}
+      clickUrl={clickUrl}
+      isInternal={isInternal}
+      trackClick={trackClick}
+      dismiss={dismiss}
+      hide={hide}
+    />
+  );
 }
 
 function AdvertPopupContent({
-  advert, clickUrl, dismiss, hide,
+  advert, clickUrl, isInternal, trackClick, dismiss, hide,
 }: {
   advert: NonNullable<ReturnType<typeof useAdvertSlot>["advert"]>;
   clickUrl: string;
+  isInternal: boolean;
+  trackClick: () => void;
   dismiss: () => void;
   hide: () => void;
 }) {
@@ -99,7 +121,19 @@ function AdvertPopupContent({
               <h3 className="font-heading text-base font-bold text-card-foreground">{advert.title}</h3>
               {advert.body && <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{advert.body}</p>}
 
-              {advert.ctaUrl && (
+              {advert.ctaUrl && (isInternal ? (
+                <Link
+                  href={advert.ctaUrl}
+                  onClick={() => {
+                    setVisible(false);
+                    trackClick();
+                    hide();
+                  }}
+                  className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                >
+                  {advert.ctaLabel}
+                </Link>
+              ) : (
                 <a
                   href={clickUrl}
                   target="_blank"
@@ -112,7 +146,7 @@ function AdvertPopupContent({
                 >
                   {advert.ctaLabel}
                 </a>
-              )}
+              ))}
             </div>
           </motion.div>
         </motion.div>
@@ -132,20 +166,16 @@ export function AdvertCard({
   topics?: string[];
   className?: string;
 }) {
-  const { advert, clickUrl, hide } = useAdvertSlot(placement, { topics });
+  const { advert, clickUrl, isInternal, trackClick, hide } = useAdvertSlot(placement, { topics });
   if (!advert) return null;
 
-  return (
-    <a
-      href={clickUrl}
-      target="_blank"
-      rel="noopener noreferrer sponsored"
-      onClick={hide}
-      className={cn(
-        "group flex flex-col overflow-hidden rounded-2xl border border-dashed border-primary/25 bg-card transition-all duration-200 hover:border-primary/50 hover:shadow-md",
-        className
-      )}
-    >
+  const cardClassName = cn(
+    "group flex flex-col overflow-hidden rounded-2xl border border-dashed border-primary/25 bg-card transition-all duration-200 hover:border-primary/50 hover:shadow-md",
+    className
+  );
+
+  const cardContent = (
+    <>
       <div className="relative block aspect-[16/10] overflow-hidden bg-muted">
         {advert.image?.url ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -173,6 +203,20 @@ export function AdvertCard({
           <span className="mt-auto pt-4 text-xs font-semibold text-primary">{advert.ctaLabel} →</span>
         )}
       </div>
+    </>
+  );
+
+  if (isInternal) {
+    return (
+      <Link href={advert.ctaUrl} onClick={() => { trackClick(); hide(); }} className={cardClassName}>
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <a href={clickUrl} target="_blank" rel="noopener noreferrer sponsored" onClick={hide} className={cardClassName}>
+      {cardContent}
     </a>
   );
 }
@@ -180,12 +224,17 @@ export function AdvertCard({
 /* ── notification_banner ──────────────────────────────────────────────── */
 
 export function AdvertBanner({ className }: { className?: string }) {
-  const { advert, clickUrl, dismiss } = useAdvertSlot("notification_banner");
+  const { advert, clickUrl, isInternal, trackClick, dismiss } = useAdvertSlot("notification_banner");
   if (!advert) return null;
+
+  const linkProps = isInternal
+    ? { href: advert.ctaUrl, onClick: trackClick }
+    : { href: clickUrl, target: "_blank" as const, rel: "noopener noreferrer sponsored" };
+  const LinkComponent = isInternal ? Link : "a";
 
   return (
     <div className={cn("flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3", className)}>
-      <a href={clickUrl} target="_blank" rel="noopener noreferrer sponsored" className="flex min-w-0 flex-1 items-center gap-3">
+      <LinkComponent {...linkProps} className="flex min-w-0 flex-1 items-center gap-3">
         {advert.image?.url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={advert.image.url} alt="" className="h-9 w-9 shrink-0 rounded-lg object-cover" />
@@ -194,16 +243,14 @@ export function AdvertBanner({ className }: { className?: string }) {
           <p className="truncate text-sm font-semibold text-foreground">{advert.title}</p>
           {advert.body && <p className="truncate text-xs text-muted-foreground">{advert.body}</p>}
         </div>
-      </a>
+      </LinkComponent>
       <div className="flex shrink-0 items-center gap-2">
-        <a
-          href={clickUrl}
-          target="_blank"
-          rel="noopener noreferrer sponsored"
+        <LinkComponent
+          {...linkProps}
           className="rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           {advert.ctaLabel}
-        </a>
+        </LinkComponent>
         <button
           type="button"
           onClick={dismiss}

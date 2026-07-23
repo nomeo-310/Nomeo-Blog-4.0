@@ -7,7 +7,7 @@ import { serializeAdvertFull } from "@/services/advert-services";
 
 export const dynamic = "force-dynamic";
 
-const PLACEMENTS: AdvertPlacement[] = ["feed_card", "in_article", "notification_banner", "modal_popup"];
+const PLACEMENTS: AdvertPlacement[] = ["hero", "feed_card", "in_article", "notification_banner", "modal_popup"];
 const TYPES: AdvertType[] = ["sponsored", "house", "promoted_post", "creator_promo"];
 const DISMISS_BEHAVIORS = ["once", "session", "always"];
 const STAFF_ROLES = ["admin", "super_admin"];
@@ -63,6 +63,8 @@ export async function GET(req: NextRequest) {
  *     requires it, since it's billable and needs an admin to confirm billing).
  *   - creator_promo / promoted_post → creators (promoting their own work) or
  *     staff on a creator's behalf. Always requires review.
+ *   - placement "hero" → staff only, regardless of advert type — the home
+ *     hero carousel is never creator-selectable.
  * New adverts start in "draft"; the owner submits for review via
  * PATCH { status: "pending_review" } once they're happy with it.
  */
@@ -85,6 +87,12 @@ export async function POST(req: NextRequest) {
     }
     if (!placement || !PLACEMENTS.includes(placement)) {
       return NextResponse.json({ success: false, message: "Invalid placement" }, { status: 400 });
+    }
+    if (placement === "hero" && !isStaff) {
+      return NextResponse.json({ success: false, message: "Only admins can create a hero placement" }, { status: 403 });
+    }
+    if (placement === "hero" && !postId) {
+      return NextResponse.json({ success: false, message: "Hero is reserved for posts — link one with postId" }, { status: 400 });
     }
     if (!type || !TYPES.includes(type)) {
       return NextResponse.json({ success: false, message: "Invalid advert type" }, { status: 400 });

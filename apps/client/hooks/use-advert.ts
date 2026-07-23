@@ -32,6 +32,22 @@ function isDismissedThisSession(id: string): boolean {
 }
 
 /**
+ * Relative paths (creator_promo/promoted_post always point at /post/[slug])
+ * are internal; absolute http(s) URLs to another origin are external. Used
+ * to decide same-tab <Link> + beacon tracking vs. new-tab redirect-tracker.
+ */
+export function isInternalUrl(url: string): boolean {
+  if (!url) return false;
+  if (url.startsWith("/")) return true;
+  if (typeof window === "undefined") return false;
+  try {
+    return new URL(url, window.location.origin).origin === window.location.origin;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Fetches the best-fit advert for a placement slot and tracks its lifecycle:
  *   - impression fires once, automatically, the first time an advert renders
  *   - `dismiss()` — explicit close (X button): records server-side, and for
@@ -92,10 +108,22 @@ export function useAdvertSlot(placement: AdvertPlacement, options?: { topics?: s
     setHiddenId(advert.id);
   }, [advert]);
 
+  // Internal destinations (another Nomeo page) navigate same-tab via <Link>
+  // and track the click with this fire-and-forget beacon instead of routing
+  // through the redirect endpoint — see components/features/advert-slot.tsx.
+  const trackClick = useCallback(() => {
+    if (!advert) return;
+    api.post(`/api/adverts/${advert.id}/click`).catch(() => {});
+  }, [advert]);
+
   return {
     advert,
     isLoading: query.isLoading,
+    /** External destinations only: <a href={clickUrl} target="_blank"> — records the click server-side, then redirects. */
     clickUrl: advert ? `/api/adverts/${advert.id}/click` : "#",
+    /** True when advert.ctaUrl points within Nomeo (same-tab <Link> territory). */
+    isInternal: advert ? isInternalUrl(advert.ctaUrl) : false,
+    trackClick,
     dismiss,
     hide,
   };

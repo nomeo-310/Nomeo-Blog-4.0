@@ -7,7 +7,7 @@ export type AdvertStatus =
   | "draft" | "pending_review" | "approved" | "rejected"
   | "scheduled" | "active" | "paused" | "completed";
 
-export type AdvertPlacement = "feed_card" | "in_article" | "notification_banner" | "modal_popup";
+export type AdvertPlacement = "hero" | "feed_card" | "in_article" | "notification_banner" | "modal_popup";
 
 /** One of the current creator's own promotions, as returned by GET /api/adverts. */
 export interface MyAdvert {
