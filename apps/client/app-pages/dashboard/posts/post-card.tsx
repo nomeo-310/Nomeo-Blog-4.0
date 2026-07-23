@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   PenLine, Eye, Heart, MessageCircle, Lock, Globe,
   BookOpen, MoreVertical, Edit2, Trash2, EyeOff, Eye as EyeIcon,
+  ArchiveRestore, ArchiveX,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { DashboardPost } from "./posts-grid-types";
@@ -13,12 +14,18 @@ import { formatDate, formatCount } from "./posts-grid-format";
 /**
  * PostCard — single post tile in the dashboard posts grid: cover image,
  * status/access badges, title, stats, and an edit link + actions dropdown.
+ *
+ * A removed post (isRemoved) is dimmed and swaps the dropdown's live-post
+ * actions (Publish/Unpublish, Remove) for trash actions (Restore, Delete
+ * permanently) — editing stays available either way.
  */
 export function PostCard({
-  post, onDelete, onTogglePublish,
+  post, onDelete, onRemove, onRestore, onTogglePublish,
 }: {
   post: DashboardPost;
   onDelete: (p: DashboardPost) => void;
+  onRemove: (p: DashboardPost) => void;
+  onRestore: (p: DashboardPost) => void;
   onTogglePublish: (p: DashboardPost) => void;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,7 +41,10 @@ export function PostCard({
   }, [menuOpen]);
 
   return (
-    <article className="group flex flex-col rounded-2xl border border-border bg-card transition-all hover:border-primary/30 hover:shadow-md">
+    <article className={cn(
+      "group flex flex-col rounded-2xl border border-border bg-card transition-all hover:border-primary/30 hover:shadow-md",
+      post.isRemoved && "opacity-60 hover:opacity-100"
+    )}>
       {/* Cover image */}
       <Link href={`/post/${post.slug}`} className="relative block aspect-[16/10] overflow-hidden rounded-t-2xl bg-muted">
         {post.coverImage ? (
@@ -50,11 +60,13 @@ export function PostCard({
         {/* Status badge */}
         <span className={cn(
           "absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-bold",
-          post.status === "published"
+          post.isRemoved
+            ? "bg-destructive/90 text-white"
+            : post.status === "published"
             ? "bg-green-500/90 text-white"
             : "bg-muted/90 text-muted-foreground backdrop-blur"
         )}>
-          {post.status === "published" ? "Published" : "Draft"}
+          {post.isRemoved ? "Removed" : post.status === "published" ? "Published" : "Draft"}
         </span>
 
         {/* Access badge */}
@@ -121,23 +133,41 @@ export function PostCard({
                   <Edit2 className="h-4 w-4 text-muted-foreground" /> Edit post
                 </Link>
 
-                <button
-                  onClick={() => { setMenuOpen(false); onTogglePublish(post); }}
-                  className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-accent"
-                >
-                  {post.status === "published"
-                    ? <><EyeOff className="h-4 w-4 text-muted-foreground" /> Unpublish</>
-                    : <><EyeIcon className="h-4 w-4 text-muted-foreground" /> Publish</>}
-                </button>
+                {post.isRemoved ? (
+                  <button
+                    onClick={() => { setMenuOpen(false); onRestore(post); }}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-accent"
+                  >
+                    <ArchiveRestore className="h-4 w-4 text-muted-foreground" /> Restore post
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => { setMenuOpen(false); onTogglePublish(post); }}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-accent"
+                  >
+                    {post.status === "published"
+                      ? <><EyeOff className="h-4 w-4 text-muted-foreground" /> Unpublish</>
+                      : <><EyeIcon className="h-4 w-4 text-muted-foreground" /> Publish</>}
+                  </button>
+                )}
 
                 <div className="my-1 border-t border-border" />
 
-                <button
-                  onClick={() => { setMenuOpen(false); onDelete(post); }}
-                  className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/10"
-                >
-                  <Trash2 className="h-4 w-4" /> Delete post
-                </button>
+                {post.isRemoved ? (
+                  <button
+                    onClick={() => { setMenuOpen(false); onDelete(post); }}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="h-4 w-4" /> Delete permanently
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => { setMenuOpen(false); onRemove(post); }}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-destructive hover:bg-destructive/10"
+                  >
+                    <ArchiveX className="h-4 w-4" /> Remove post
+                  </button>
+                )}
               </div>
             )}
           </div>

@@ -24,6 +24,7 @@ export type { DashboardPost, DashboardSeries } from "./posts-grid-types";
  */
 
 type Tab = "posts" | "series";
+type PostFilter = "all" | "published" | "draft" | "removed";
 
 interface Props {
   initialPosts:  DashboardPost[];
@@ -35,11 +36,13 @@ export function PostsGrid({ initialPosts, initialSeries }: Props) {
   const [posts,  setPosts]  = useState(initialPosts);
   const [series] = useState(initialSeries);
   const [query,  setQuery]  = useState("");
-  const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
+  const [filter, setFilter] = useState<PostFilter>("all");
 
   const filteredPosts = posts.filter(p => {
     const matchesQuery  = !query || p.title.toLowerCase().includes(query.toLowerCase());
-    const matchesFilter = filter === "all" || p.status === filter;
+    const matchesFilter = filter === "all" ? true
+      : filter === "removed" ? p.isRemoved
+      : !p.isRemoved && p.status === filter;
     return matchesQuery && matchesFilter;
   });
 
@@ -47,19 +50,45 @@ export function PostsGrid({ initialPosts, initialSeries }: Props) {
     !query || s.title.toLowerCase().includes(query.toLowerCase())
   );
 
-  const published = posts.filter(p => p.status === "published").length;
-  const drafts    = posts.filter(p => p.status === "draft").length;
+  const published = posts.filter(p => !p.isRemoved && p.status === "published").length;
+  const drafts    = posts.filter(p => !p.isRemoved && p.status === "draft").length;
+  const removed   = posts.filter(p => p.isRemoved).length;
 
   /* ── Actions ── */
 
+  // Permanent — only ever reachable once a post is already removed (the UI
+  // only shows this action in that state, and the API enforces it too).
   const handleDelete = async (post: DashboardPost) => {
-    if (!confirm(`Delete "${post.title}"? This cannot be undone.`)) return;
+    if (!confirm(`Permanently delete "${post.title}"? This cannot be undone.`)) return;
     try {
       await api.delete(`/api/posts/${post.slug}`);
       setPosts(prev => prev.filter(p => p.id !== post.id));
-      toast.success("Post deleted.");
+      toast.success("Post permanently deleted.");
     } catch {
       toast.error("Couldn't delete. Try again.");
+    }
+  };
+
+  // Reversible — hides the post from every public surface but keeps it
+  // right here in the dashboard (editable, restorable, or deletable).
+  const handleRemove = async (post: DashboardPost) => {
+    if (!confirm(`Remove "${post.title}"? It'll be hidden from readers until you restore it.`)) return;
+    try {
+      await api.post(`/api/posts/${post.slug}/remove`);
+      setPosts(prev => prev.map(p => p.id === post.id ? { ...p, isRemoved: true } : p));
+      toast.success("Post removed. Restore it anytime from here.");
+    } catch {
+      toast.error("Couldn't remove. Try again.");
+    }
+  };
+
+  const handleRestore = async (post: DashboardPost) => {
+    try {
+      await api.post(`/api/posts/${post.slug}/restore`);
+      setPosts(prev => prev.map(p => p.id === post.id ? { ...p, isRemoved: false } : p));
+      toast.success("Post restored.");
+    } catch {
+      toast.error("Couldn't restore. Try again.");
     }
   };
 
@@ -122,13 +151,14 @@ export function PostsGrid({ initialPosts, initialSeries }: Props) {
         {/* Filter pills — posts only */}
         {tab === "posts" && (
           <div className="flex items-center gap-1">
-            {([["all","All"], ["published","Published"], ["draft","Drafts"]] as const).map(([val, label]) => (
+            {([["all","All"], ["published","Published"], ["draft","Drafts"], ["removed","Removed"]] as const).map(([val, label]) => (
               <button key={val} onClick={() => setFilter(val)}
                 className={cn("rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
                   filter === val ? "bg-foreground text-background" : "border border-border bg-card text-muted-foreground hover:text-foreground")}>
                 {label}
                 {val === "published" && ` (${published})`}
                 {val === "draft"     && ` (${drafts})`}
+                {val === "removed"   && ` (${removed})`}
               </button>
             ))}
           </div>
@@ -147,7 +177,14 @@ export function PostsGrid({ initialPosts, initialSeries }: Props) {
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filteredPosts.map(post => (
-              <PostCard key={post.id} post={post} onDelete={handleDelete} onTogglePublish={handleTogglePublish} />
+              <PostCard
+                key={post.id}
+                post={post}
+                onDelete={handleDelete}
+                onRemove={handleRemove}
+                onRestore={handleRestore}
+                onTogglePublish={handleTogglePublish}
+              />
             ))}
           </div>
         )

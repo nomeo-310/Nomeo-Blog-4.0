@@ -15,7 +15,10 @@ export const metadata: Metadata = { title: "Posts" };
  *
  * Two tabs (Posts | Series) rendered client-side via PostsGrid island.
  * Grid: 1 col mobile → 2 tablet → 3 lg → 4 xl.
- * Each card has a dropdown: Edit · Unpublish/Publish · Delete.
+ * Each card has a dropdown: Edit · Publish/Unpublish · Remove (soft, for a
+ * live post) — or, once removed, Restore · Delete permanently. A removed
+ * post stays in this list (getMyPosts deliberately doesn't filter
+ * isRemoved) even though it's hidden from every public surface.
  *
  * Route: app/dashboard/posts/page.tsx
  */
@@ -74,6 +77,7 @@ export type DashboardPost = {
   commentsCount: number;
   publishedAt: string | null;
   seriesTitle: string | null;
+  isRemoved: boolean;
 };
 
 export type DashboardSeries = {
@@ -92,12 +96,16 @@ async function getMyPosts(userId: string): Promise<DashboardPost[]> {
     const db = mongoose.connection.db;
     if (!db) return [];
 
+    // Unlike every public-facing query, this deliberately does NOT filter
+    // out isRemoved posts — a creator's own dashboard list keeps showing a
+    // removed post (so it can be edited, restored, or permanently deleted)
+    // even though it's hidden everywhere else.
     const raw = await db.collection("posts")
-      .find({ authorId: new mongoose.Types.ObjectId(userId), isRemoved: { $ne: true } })
+      .find({ authorId: new mongoose.Types.ObjectId(userId) })
       .project({
         title: 1, slug: 1, coverImage: 1, status: 1, access: 1,
         viewsCount: 1, likesCount: 1, commentsCount: 1,
-        publishedAt: 1, seriesId: 1,
+        publishedAt: 1, seriesId: 1, isRemoved: 1,
       })
       .sort({ updatedAt: -1 })
       .limit(200)
@@ -127,6 +135,7 @@ async function getMyPosts(userId: string): Promise<DashboardPost[]> {
       likesCount:   Number(p.likesCount   || 0),
       commentsCount:Number(p.commentsCount || 0),
       publishedAt:  p.publishedAt instanceof Date ? p.publishedAt.toISOString() : null,
+      isRemoved:    Boolean(p.isRemoved),
       seriesTitle:  p.seriesId ? (seriesMap.get(String(p.seriesId)) ?? null) : null,
     }));
   } catch { return []; }

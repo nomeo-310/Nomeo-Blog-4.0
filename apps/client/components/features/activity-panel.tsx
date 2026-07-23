@@ -12,6 +12,7 @@ import { useActivityPanel } from "@/stores/activity-panel-store";
 import { useNotifications, useConnectionRequests, useActivityCount, type NotificationItem } from "@/hooks/use-activity";
 import { useCoAuthorInvites } from "@/hooks/use-coauthor-invites";
 import { useLoungeJoinRequests } from "@/hooks/use-lounge-join-requests";
+import { useResolvePostSlug } from "@/hooks/use-resolve-post-slug";
 import { authClient } from "@/lib/authClient";
 
 export function ActivityPanel() {
@@ -126,6 +127,7 @@ function TabButton({ active, onClick, icon, label, count }: {
 function NotificationsTab({ onNavigate }: { onNavigate: () => void }) {
   const router = useRouter();
   const { notifications, unreadCount, isLoading, markRead, isMarking } = useNotifications("unread");
+  const { resolve: resolvePostSlug } = useResolvePostSlug();
   const [selecting, setSelecting] = useState(false);
   const [selected,  setSelected]  = useState<Set<string>>(new Set());
 
@@ -141,6 +143,17 @@ function NotificationsTab({ onNavigate }: { onNavigate: () => void }) {
 
   const open = async (n: NotificationItem) => {
     if (!n.isRead) markRead({ ids: [n.id] });
+
+    // A "post" notification's entityId is always the Post _id, never the
+    // slug /post/[slug] actually needs — resolve it first so this can't
+    // land on a 404, instead of building the link straight off entityId.
+    if (n.entityType === "post" && n.entityId) {
+      const slug = await resolvePostSlug(n.entityId);
+      if (slug) { onNavigate(); router.push(`/post/${slug}`); }
+      else toast.error("That post isn't available anymore.");
+      return;
+    }
+
     const href = notifHref(n);
     if (href) { onNavigate(); router.push(href); }
   };
@@ -463,9 +476,11 @@ function TabSkeleton() {
   );
 }
 
+// "post" is handled separately in open() above (its entityId needs an
+// async slug lookup, not a plain string template) — everything else that
+// doesn't need resolving still goes through here.
 function notifHref(n: NotificationItem): string | null {
   switch (n.entityType) {
-    case "post":          return n.entityId ? `/post/${n.entityId}` : null;
     case "lounge_message":return n.entityId ? `/lounges/${n.entityId}` : null;
     case "user":          return n.actor?.username ? `/${n.actor.username}` : null;
     default:              return null;

@@ -10,6 +10,12 @@ export type DashboardPost = {
   commentsCount: number;
   publishedAt: string | null;
   seriesTitle: string | null;
+  /**
+   * Soft-removed by the creator — hidden from every public surface (home
+   * feed, search, profile, /post/[slug]) but still listed here in the
+   * dashboard so it can be edited, restored, or permanently deleted.
+   */
+  isRemoved: boolean;
 };
 
 export type DashboardSeries = {

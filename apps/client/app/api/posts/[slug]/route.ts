@@ -15,8 +15,11 @@ export const dynamic = "force-dynamic";
  * Accepts either a MongoDB ObjectId OR a slug string.
  * -------------------
  * Returns a single post by id. Used by the edit page to pre-fill the form.
- * Only the post's author (or a co-author) can fetch draft/archived posts.
- * Published posts are publicly readable.
+ * Only the post's author (or a co-author) can fetch draft/archived/removed
+ * posts. Published, non-removed posts are publicly readable — a removed
+ * post is hidden here too (not just on the public reading page), since a
+ * removed post can still be status "published" (removal doesn't touch
+ * status, so restoring brings back exactly what it was).
  */
 export async function GET(
   _req: NextRequest,
@@ -38,7 +41,7 @@ export async function GET(
     const isCoAuthor = user && post.coAuthors?.some(
       (ca: any) => String(ca.userId) === user.id && ca.status === "accepted"
     );
-    if (post.status !== "published" && !isAuthor && !isCoAuthor) {
+    if ((post.status !== "published" || post.isRemoved) && !isAuthor && !isCoAuthor) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -53,6 +56,7 @@ export async function GET(
       tags:         post.tags ?? [],
       access:       post.access,
       status:       post.status,
+      isRemoved:    !!post.isRemoved,
       sendAsNewsletter: post.sendAsNewsletter ?? false,
       seriesId:     post.seriesId ? String(post.seriesId) : null,
       seriesOrder:  post.seriesOrder ?? null,
@@ -241,5 +245,49 @@ export async function PATCH(
   } catch (err) {
     console.error("[PATCH /api/posts/[slug]]", err);
     return NextResponse.json({ error: "Failed to update post" }, { status: 500 });
+  }
+}
+
+/**
+ * DELETE /api/posts/[slug]
+ * Accepts either a MongoDB ObjectId OR a slug string.
+ * --------------------------
+ * Permanently deletes a post. Author only, and only once it's been
+ * soft-removed first (isRemoved === true, via .../remove) — a live
+ * draft/published post has to go through the trash before it can be
+ * permanently deleted, same idea as most trash/recycle-bin UIs. Topic
+ * postsCount was already decremented when the post was removed, so there's
+ * nothing further to adjust here.
+ */
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const { slug } = await params;
+    await connectDB();
+
+    const post = mongoose.isValidObjectId(slug)
+      ? await Post.findById(slug).select("authorId isRemoved")
+      : await Post.findOne({ slug }).select("authorId isRemoved");
+    if (!post) return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    if (String(post.authorId) !== user.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    if (!post.isRemoved) {
+      return NextResponse.json(
+        { error: "Remove the post first — it can be permanently deleted once it's in the trash" },
+        { status: 409 }
+      );
+    }
+
+    await post.deleteOne();
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("[DELETE /api/posts/[slug]]", err);
+    return NextResponse.json({ error: "Failed to delete post" }, { status: 500 });
   }
 }
