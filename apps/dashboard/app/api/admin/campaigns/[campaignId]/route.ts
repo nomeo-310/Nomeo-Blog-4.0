@@ -8,6 +8,7 @@ import { AdminAction }                 from "@/models/admin-log";
 import { Campaign, CampaignStatus, EmailStatus, CampaignType } from "@/models/campaign";
 import { EmailLog }                    from "@/models/email-log";
 import { NewsletterSubscriber }        from "@/models/newsletter";
+import { sanitizeCampaignHtml }        from "@/lib/sanitize-html";
 import type { IAdminPermissions }      from "@/models/admin";
 
 export const dynamic = "force-dynamic";
@@ -117,7 +118,7 @@ export async function PATCH(
       }
       if (body.title !== undefined) campaign.title = body.title.trim();
       if (body.subject !== undefined) campaign.subject = body.subject.trim();
-      if (body.content !== undefined) campaign.content = body.content.trim();
+      if (body.content !== undefined) campaign.content = sanitizeCampaignHtml(body.content.trim());
       if (body.type !== undefined) campaign.type = body.type;
       if (body.filters !== undefined) {
         campaign.filters = {

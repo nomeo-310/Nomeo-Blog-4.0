@@ -7,6 +7,7 @@ import { logAdminAction }              from "@/lib/admin-action-log";
 import { AdminAction }                 from "@/models/admin-log";
 import { Campaign, CampaignStatus, CampaignType } from "@/models/campaign";
 import { escapeRegExp }                from "@/lib/utils";
+import { sanitizeCampaignHtml }        from "@/lib/sanitize-html";
 import type { IAdminPermissions }      from "@/models/admin";
 
 export const dynamic = "force-dynamic";
@@ -103,7 +104,7 @@ export async function POST(req: Request) {
 
   const title   = body.title?.trim();
   const subject = body.subject?.trim();
-  const content = body.content?.trim();
+  const content = body.content?.trim() ? sanitizeCampaignHtml(body.content.trim()) : "";
   if (!title) return NextResponse.json({ error: "A title is required" }, { status: 400 });
   if (!subject) return NextResponse.json({ error: "A subject is required" }, { status: 400 });
   if (!content) return NextResponse.json({ error: "Content is required" }, { status: 400 });

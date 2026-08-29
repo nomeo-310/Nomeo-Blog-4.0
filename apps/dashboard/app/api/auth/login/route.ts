@@ -8,17 +8,26 @@ import { User } from "@/models/user";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import { verifyPassword } from "better-auth/crypto";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+    const ipAddress = getClientIp(request);
+
+    // This route checks password + seed phrase itself, bypassing the
+    // better-auth handler (and its built-in sign-in rate limiting) until
+    // step 6 below. Without a limiter here the password check had no
+    // attempt cap at all — unlike the seed phrase, which already locks out
+    // after 5 failures.
+    const emailForLimit = (await request.clone().json().catch(() => ({} as { email?: string }))).email?.toLowerCase()?.trim();
+    const limitKey = emailForLimit ? `admin-login:${ipAddress}:${emailForLimit}` : `admin-login:${ipAddress}`;
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: limitKey, limit: 5, windowSeconds: 15 * 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     await connectDB();
 
     const { email, password, seedphrase } = await request.json();
 
-    const ipAddress =
-      request.headers.get("x-forwarded-for") ||
-      request.headers.get("x-real-ip") ||
-      "unknown";
     const userAgent = request.headers.get("user-agent") || "unknown";
 
     if (!email?.trim()) {
