@@ -1,7 +1,7 @@
 import * as React from "react";
 import {
   EmailLayout, Heading, Paragraph, CtaButton,
-  Callout, SectionTitle, IconRow, HelpBlock, BRAND,
+  Callout, SectionTitle, IconRow, HelpBlock, BRAND, Divider,
 } from "./components";
 import { Section, Text } from "@react-email/components";
 
@@ -21,6 +21,7 @@ export default function AdminInvitationEmail({
   seedPhrase    = "apple mountain ocean star thunder forest crystal phoenix dragon shadow light ember",
   loginUrl      = "https://nomeo.com/admin/login",
   expiresAt     = "one year from now",
+  personalMessage,
 }: {
   name?:        string;
   displayName?: string;
@@ -30,6 +31,7 @@ export default function AdminInvitationEmail({
   seedPhrase?:  string;
   loginUrl?:    string;
   expiresAt?:   string;
+  personalMessage?: string;
 }) {
   const formattedRole = role.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
 
@@ -39,9 +41,17 @@ export default function AdminInvitationEmail({
 
       <Paragraph>Hello {displayName} ({name}),</Paragraph>
       <Paragraph>
-        You've been invited to join the {BRAND.name} administration team as a{" "}
+        You&apos;ve been invited to join the {BRAND.name} administration team as a{" "}
         <strong>{formattedRole}</strong>. Your account has been created and is ready to use.
       </Paragraph>
+
+      {personalMessage && (
+        <>
+          <Divider />
+          <Paragraph muted>&quot;{personalMessage}&quot;</Paragraph>
+          <Divider />
+        </>
+      )}
 
       {/* Credentials block */}
       <SectionTitle>Your login credentials</SectionTitle>

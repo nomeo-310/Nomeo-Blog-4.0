@@ -18,11 +18,12 @@ function StatBlock({ label, value }: { label: string; value: string | number }) 
 }
 
 export function LoungeOverviewTab({
-  data, canDelete, onClose,
+  data, canDelete, onClose, onEdit,
 }: {
   data: LoungeDetailResponse;
   canDelete: boolean;
   onClose: () => void;
+  onEdit: () => void;
 }) {
   const { lounge, memberStats, recentActions } = data;
   const moderate = useModerateLounge(lounge.id);
@@ -31,14 +32,21 @@ export function LoungeOverviewTab({
   return (
     <div className="space-y-6">
       {/* Meta */}
-      <div className="flex flex-wrap items-center gap-1.5">
-        <KindBadge kind={lounge.kind} />
-        <AccessTypeBadge accessType={lounge.accessType} />
-        <LoungeStatusBadge status={lounge.status} />
-        {lounge.isMuted && (
-          <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
-            Muted
-          </span>
+      <div className="flex flex-wrap items-center justify-between gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <KindBadge kind={lounge.kind} />
+          <AccessTypeBadge accessType={lounge.accessType} />
+          <LoungeStatusBadge status={lounge.status} />
+          {lounge.isMuted && (
+            <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+              Muted
+            </span>
+          )}
+        </div>
+        {lounge.kind === "platform" && (
+          <Button type="button" size="sm" variant="outline" onClick={onEdit}>
+            Edit lounge
+          </Button>
         )}
       </div>
 

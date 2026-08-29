@@ -12,6 +12,7 @@ import { Setting }                     from "@/models/setting";
 import { Subscription }                from "@/models/subscription";
 import { DeletedAccount }              from "@/models/deleted-account";
 import { Notification }                from "@/models/notification";
+import { mailService }                 from "@/lib/mail-service";
 import type { IAdminPermissions }      from "@/models/admin";
 
 export const dynamic = "force-dynamic";
@@ -229,6 +230,28 @@ export async function PATCH(
       });
     }
 
+    // Best-effort — a flaky SMTP send shouldn't undo an already-applied moderation
+    // action. Shadow bans and email verification are deliberately silent/uneventful.
+    try {
+      const performedBy = admin.displayName || admin.name;
+      if (action === "temp_ban") {
+        const durationDays = Math.max(1, Math.ceil((profile.banExpiresAt!.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+        await mailService.banUser({
+          to: user.email, name: user.name, reason: reason!.trim(),
+          isPermanent: false, durationDays, bannedBy: performedBy,
+          appealDeadline: profile.banExpiresAt!.toDateString(),
+        });
+      } else if (action === "permanent_ban") {
+        await mailService.banUser({ to: user.email, name: user.name, reason: reason!.trim(), isPermanent: true, bannedBy: performedBy });
+      } else if (action === "unban") {
+        await mailService.unbanUser({ to: user.email, name: user.name, unbannedBy: performedBy, note: reason });
+      } else if (action === "warn") {
+        await mailService.warnUser({ to: user.email, name: user.name, reason: reason!.trim(), warnedBy: performedBy });
+      }
+    } catch (mailError) {
+      console.error("[admin/users/:userId] failed to send moderation email:", mailError);
+    }
+
     return NextResponse.json({
       id: String(user._id),
       emailVerified: user.emailVerified,
@@ -280,6 +303,7 @@ export async function DELETE(
 
     const session = await mongoose.startSession();
     let deletedName = "";
+    let deletedEmail = "";
 
     try {
       await session.withTransaction(async () => {
@@ -293,6 +317,7 @@ export async function DELETE(
         const subscription = await Subscription.findOne({ subscriberId: user._id }).session(session);
 
         deletedName = user.name;
+        deletedEmail = user.email;
         const wasBanned = profile?.banStatus === "banned";
         const membershipDays = Math.max(0, Math.floor((Date.now() - user.createdAt.getTime()) / (1000 * 60 * 60 * 24)));
 
@@ -335,6 +360,15 @@ export async function DELETE(
       reason,
       reversible: false,
     });
+
+    try {
+      await mailService.deleteUser({
+        to: deletedEmail, name: deletedName, reason, deletionType: "hard",
+        initiatedBy: admin.displayName || admin.name,
+      });
+    } catch (mailError) {
+      console.error("[admin/users/:userId] failed to send deletion email:", mailError);
+    }
 
     return NextResponse.json({ id: userId, deleted: true });
   } catch (error) {

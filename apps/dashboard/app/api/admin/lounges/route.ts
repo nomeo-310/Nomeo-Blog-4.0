@@ -161,6 +161,7 @@ export async function POST(req: Request) {
     rules?: string[];
     slowModeSeconds?: number;
     maxMessageLength?: number;
+    coverImage?: { secureUrl: string; publicId: string };
   };
   try {
     body = await req.json();
@@ -199,6 +200,7 @@ export async function POST(req: Request) {
       rules,
       ...(body.slowModeSeconds !== undefined ? { slowModeSeconds: body.slowModeSeconds } : {}),
       ...(body.maxMessageLength !== undefined ? { maxMessageLength: body.maxMessageLength } : {}),
+      ...(body.coverImage ? { coverImage: body.coverImage } : {}),
     });
 
     await logAdminAction(req, admin, {

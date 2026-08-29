@@ -11,7 +11,7 @@ import { Section, Text } from "@react-email/components";
  * Replaces raw-HTML sendAdminActionEmail from the previous project.
  */
 
-export type AdminActionType = "promote" | "demote" | "suspend" | "activate" | "password_reset";
+export type AdminActionType = "promote" | "demote" | "suspend" | "activate" | "password_reset" | "remove";
 
 export default function AdminActionEmail({
   name          = "Admin",
@@ -43,6 +43,7 @@ export default function AdminActionEmail({
     suspend:        "Your admin account has been suspended",
     activate:       "Your admin account has been activated",
     password_reset: "Your admin password has been reset",
+    remove:         "Your admin access has been removed",
   };
 
   const isPasswordReset = action === "password_reset" && !!newPassword;
@@ -113,6 +114,12 @@ export default function AdminActionEmail({
       {action === "suspend" && (
         <Callout>
           You cannot access the admin dashboard while your account is suspended. Contact the super admin if you believe this is an error.
+        </Callout>
+      )}
+
+      {action === "remove" && (
+        <Callout>
+          Your admin dashboard access has been permanently removed. Your regular Nomeo platform account, if any, is unaffected.
         </Callout>
       )}
 

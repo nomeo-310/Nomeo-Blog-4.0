@@ -30,10 +30,16 @@ export type NotificationType =
 
   /* Earnings (creator only) */
   | "payout_processed"       // monthly earnings have been calculated and paid out
+  | "payout_on_hold"         // an admin placed a pending payout on hold
+  | "payout_released"        // a held payout was released back to normal processing
   | "earnings_milestone"     // creator hit a read-minutes milestone this month
 
-  /* Creator upgrade */
-  | "creator_upgrade_successful"  // user successfully upgraded to creator
+  /* Creator status */
+  | "creator_upgrade_successful"    // user successfully upgraded to creator (application approved)
+  | "creator_application_rejected"  // creator application was rejected
+  | "creator_suspended"             // creator privileges suspended by an admin
+  | "creator_reinstated"            // creator privileges restored by an admin
+  | "creator_demoted"               // creator account changed back to a regular user
 
   /* Moderation */
   | "report_filed" | "report_escalated"
@@ -72,8 +78,9 @@ const NotificationSchema = new Schema<INotification>(
         "lounge_message","lounge_mention","lounge_suspended",
         "subscription_started","subscription_renewed","subscription_expiring_soon",
         "subscription_cancelled","subscription_failed",
-        "payout_processed","earnings_milestone",
-        "creator_upgrade_successful",
+        "payout_processed","payout_on_hold","payout_released","earnings_milestone",
+        "creator_upgrade_successful","creator_application_rejected",
+        "creator_suspended","creator_reinstated","creator_demoted",
         "report_filed","report_escalated",
         "account_warned","account_banned","account_unbanned",
         "system_announcement","free_reads_low","free_reads_exhausted",

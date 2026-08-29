@@ -54,6 +54,7 @@ export interface LoungeDetailResponse {
     status: string; isMuted: boolean; isSuspended: boolean;
     suspendedBy: PersonRef | null; suspendedAt?: string; suspensionReason?: string;
     rules: string[];
+    coverImage?: { secureUrl: string; publicId: string };
     slowModeSeconds: number; maxMessageLength: number;
     membersCount: number; messagesCount: number;
     bannedMembers: PersonRef[];

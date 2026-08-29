@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/client/lib/**)",
+      "Bash(sed -E 's/=.*/=<redacted>/' .env)",
+      "Bash(sed -E 's/=.*/=<redacted>/' .env.local)",
+      "Read(//Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/client/components/auth/**)",
+      "Read(//Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/client/**)",
+      "Bash(npx next *)",
+      "Bash(mkdir -p \"/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/payments/[paymentId]/receipt\")",
+      "Bash(mkdir -p \"/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/subscriptions/[subscriptionId]/statement\")",
+      "Bash(mkdir -p \"/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/followers/[followingId]\" \\\\ *)",
+      "Bash(mkdir -p \"/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/subscribers/[subscriberId]\" \\\\ *)",
+      "Bash(mkdir -p \"/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/campaigns/[campaignId]\")",
+      "Bash(mkdir -p \"/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/sms-campaigns/[smsCampaignId]\")",
+      "Bash(mkdir -p \"/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/users/[userId]/export\" \\\\ *)",
+      "Bash(git diff *)",
+      "Bash(curl -s -D - -o /dev/null \"http://localhost:3919/campaigns\")",
+      "Bash(curl -s -D - -o /dev/null \"http://localhost:3919/audit-log\")",
+      "Bash(pkill -f \"next dev -p 3919\")"
+    ],
+    "additionalDirectories": [
+      "/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/payments/[paymentId]",
+      "/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/subscriptions/[subscriptionId]",
+      "/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/followers",
+      "/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/subscribers",
+      "/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/campaigns",
+      "/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/sms-campaigns",
+      "/Users/afolabi/Documents/GitHub/Nomeo-Blog-4.0/apps/dashboard/app/api/admin/users/[userId]"
+    ]
+  }
+}

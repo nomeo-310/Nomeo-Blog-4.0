@@ -6,6 +6,9 @@ import { requireAdminUserFromRequest } from "@/lib/session";
 import { logAdminAction }              from "@/lib/admin-action-log";
 import { AdminLog, AdminAction }       from "@/models/admin-log";
 import { Admin, defaultPermissions, type AdminRole, type IAdminPermissions } from "@/models/admin";
+import { mailService } from "@/lib/mail-service";
+
+const ROLE_RANK: Record<AdminRole, number> = { support: 0, admin: 1, super_admin: 2 };
 
 export const dynamic = "force-dynamic";
 
@@ -147,6 +150,7 @@ export async function PATCH(
 
     let adminAction: AdminAction;
     let details: string;
+    const oldRole: AdminRole = target.role;
 
     switch (action) {
       case "update_role":
@@ -191,6 +195,26 @@ export async function PATCH(
       reason,
       reversible: action !== "update_role",
     });
+
+    if (action === "update_role" || action === "suspend" || action === "activate") {
+      try {
+        await mailService.adminAction({
+          to: target.email,
+          name: target.displayName || target.name,
+          action: action === "update_role"
+            ? (ROLE_RANK[role!] > ROLE_RANK[oldRole] ? "promote" : "demote")
+            : action,
+          details,
+          performedBy: admin.displayName || admin.name,
+          performedByEmail: admin.email,
+          oldRole: action === "update_role" ? oldRole : undefined,
+          newRole: action === "update_role" ? role : undefined,
+          reason,
+        });
+      } catch (mailError) {
+        console.error("[admin/admins/:adminId] failed to send admin action email:", mailError);
+      }
+    }
 
     return NextResponse.json({
       id: String(target._id),
@@ -260,6 +284,7 @@ export async function DELETE(
     }
 
     const targetEmail = target.email;
+    const targetName  = target.displayName || target.name;
     await target.deleteOne();
 
     await logAdminAction(req, admin, {
@@ -271,6 +296,18 @@ export async function DELETE(
       reason,
       reversible: false,
     });
+
+    try {
+      await mailService.adminAction({
+        to: targetEmail, name: targetName, action: "remove",
+        details: "Your admin dashboard access has been removed.",
+        performedBy: admin.displayName || admin.name,
+        performedByEmail: admin.email,
+        reason,
+      });
+    } catch (mailError) {
+      console.error("[admin/admins/:adminId] failed to send removal email:", mailError);
+    }
 
     return NextResponse.json({ id: adminId, deleted: true });
   } catch (error) {

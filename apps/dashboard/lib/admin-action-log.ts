@@ -32,6 +32,8 @@ export async function logAdminAction(
     severity?:   AdminLogSeverity;
     reversible?: boolean;
     metadata?:   Record<string, unknown>;
+    /** Number of records affected — set on bulk actions. */
+    affectedCount?: number;
   }
 ): Promise<void> {
   const url = new URL(req.url);

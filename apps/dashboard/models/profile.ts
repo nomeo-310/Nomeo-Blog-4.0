@@ -63,6 +63,26 @@ export interface ISocialLinks {
   instagram?: string;
 }
 
+/**
+ * Where a creator's monthly CreatorEarning payouts get transferred — a
+ * Nigerian bank account, registered with Paystack as a Transfer Recipient.
+ * accountName is resolved from Paystack's account-resolution API against
+ * (accountNumber, bankCode) on the client app, never typed by the user.
+ * recipientCode is only set once that resolution + recipient registration
+ * both succeed; its presence is what "payout details are ready" means —
+ * the admin dashboard's mark_paid action requires it before it can
+ * initiate a transfer.
+ */
+export interface IPayoutDetails {
+  bankCode:      string;
+  bankName:      string;
+  accountNumber: string;
+  accountName:   string;
+  /** Paystack Transfer Recipient code (recipient_code) — required to initiate a transfer */
+  recipientCode?: string;
+  verifiedAt?:    Date;
+}
+
 export interface IProfile extends Document {
   _id: mongoose.Types.ObjectId;
 
@@ -127,6 +147,13 @@ export interface IProfile extends Document {
    */
   becameCreatorAt?: Date | null;
 
+  /**
+   * Only meaningful when User.role === "creator". Where their monthly
+   * CreatorEarning payouts get sent — see IPayoutDetails. null until they
+   * submit and verify a bank account from Settings on the client app.
+   */
+  payoutDetails?: IPayoutDetails | null;
+
   banStatus:    BanStatus;
   banReason?:   string;
   bannedBy?:    mongoose.Types.ObjectId;
@@ -170,6 +197,18 @@ export interface IProfile extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+const PayoutDetailsSchema = new Schema<IPayoutDetails>(
+  {
+    bankCode:      { type: String, required: true, trim: true },
+    bankName:      { type: String, required: true, trim: true },
+    accountNumber: { type: String, required: true, trim: true },
+    accountName:   { type: String, required: true, trim: true },
+    recipientCode: { type: String, trim: true },
+    verifiedAt:    { type: Date },
+  },
+  { _id: false }
+);
 
 const SocialLinksSchema = new Schema<ISocialLinks>(
   {
@@ -245,6 +284,7 @@ const ProfileSchema = new Schema<IProfile>(
     creatorSuspendedBy:      { type: Schema.Types.ObjectId, ref: "User" },
     creatorSuspendedAt:      { type: Date },
     becameCreatorAt:         { type: Date, default: null },
+    payoutDetails:           { type: PayoutDetailsSchema, default: null },
 
     banStatus: {
       type: String,

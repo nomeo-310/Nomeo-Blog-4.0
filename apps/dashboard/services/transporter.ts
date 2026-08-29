@@ -6,26 +6,30 @@ import nodemailer from "nodemailer";
  * Uses the same SMTP credentials as the main webapp — both apps
  * send from the same Nomeo email address.
  *
- * Required env vars (in admin dashboard's .env.local):
- *   SMTP_HOST
+ * Required env vars (in admin dashboard's .env):
+ *   SMTP_SERVER_HOST
  *   SMTP_PORT
- *   SMTP_USER
- *   SMTP_PASS
- *   MAIL_FROM_NAME   (default: "Nomeo")
- *   MAIL_FROM_EMAIL  (default: "noreply@nomeo.com")
+ *   SMTP_SECURE       (optional — defaults to true when SMTP_PORT is 465)
+ *   SMTP_SERVER_USERNAME
+ *   SMTP_SERVER_PASSWORD
+ *   SITE_NAME           (default: "Nomeo")
+ *   SITE_MAIL_RECIEVER  (default: "noreply@nomeo.com")
  */
 
 export const transporter = nodemailer.createTransport({
-  host:   process.env.SMTP_HOST!,
+  host:   process.env.SMTP_SERVER_HOST!,
   port:   Number(process.env.SMTP_PORT ?? 587),
-  secure: Number(process.env.SMTP_PORT) === 465,
+  secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : Number(process.env.SMTP_PORT) === 465,
   auth: {
-    user: process.env.SMTP_USER!,
-    pass: process.env.SMTP_PASS!,
+    user: process.env.SMTP_SERVER_USERNAME!,
+    pass: process.env.SMTP_SERVER_PASSWORD!,
   },
+  pool: true,            // reuse connections — important for campaign bulk sends
+  maxConnections: 3,
+  maxMessages: 100,
 });
 
 export const FROM = {
-  name:    process.env.MAIL_FROM_NAME  || "Nomeo",
-  address: process.env.MAIL_FROM_EMAIL || "noreply@nomeo.com",
+  name:    process.env.SITE_NAME          || "Nomeo",
+  address: process.env.SITE_MAIL_RECIEVER || "noreply@nomeo.com",
 };

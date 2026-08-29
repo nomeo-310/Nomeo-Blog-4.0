@@ -29,6 +29,7 @@ export interface CreateLoungeInput {
   rules?: string[];
   slowModeSeconds?: number;
   maxMessageLength?: number;
+  coverImage?: { secureUrl: string; publicId: string };
 }
 
 export function useCreateLounge(onCreated: () => void) {
@@ -41,6 +42,28 @@ export function useCreateLounge(onCreated: () => void) {
       onCreated();
     },
     onError: (error: unknown) => toast.error(apiErrorMessage(error, "Failed to create lounge.")),
+  });
+}
+
+export interface UpdateLoungeInput {
+  name: string;
+  description?: string;
+  rules?: string[];
+  slowModeSeconds?: number;
+  maxMessageLength?: number;
+  coverImage?: { secureUrl: string; publicId: string };
+}
+
+export function useUpdateLounge(loungeId: string, onUpdated: () => void) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: UpdateLoungeInput) => api.patch(`/api/admin/lounges/${loungeId}`, { action: "edit", ...input }),
+    onSuccess: () => {
+      toast.success("Lounge updated.");
+      invalidateLounge(queryClient, loungeId);
+      onUpdated();
+    },
+    onError: (error: unknown) => toast.error(apiErrorMessage(error, "Failed to update lounge.")),
   });
 }
 

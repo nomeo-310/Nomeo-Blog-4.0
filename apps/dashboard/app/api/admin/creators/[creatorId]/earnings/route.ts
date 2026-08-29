@@ -55,6 +55,10 @@ export async function GET(
       earnings: earnings.map((e) => ({
         id: String(e._id),
         billingPeriod: e.billingPeriod,
+        payoutModel: e.payoutModel,
+        completedReadsCount: e.completedReadsCount,
+        ratePerCompletedRead: e.ratePerCompletedRead,
+        payoutScaleFactor: e.payoutScaleFactor,
         weightedReadMinutes: e.weightedReadMinutes,
         readMinutesShare: e.readMinutesShare,
         grossAmount: e.grossAmount,
@@ -63,6 +67,7 @@ export async function GET(
         currency: e.currency,
         payoutStatus: e.payoutStatus,
         topPosts: e.topPosts,
+        payoutRequestedAt: e.payoutRequestedAt,
         payoutTransferId: e.payoutTransferId,
         payoutInitiatedAt: e.payoutInitiatedAt,
         payoutCompletedAt: e.payoutCompletedAt,

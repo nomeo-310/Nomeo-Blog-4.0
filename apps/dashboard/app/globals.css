@@ -92,6 +92,7 @@
 
   /* Radius */
   --radius: 0.625rem;
+  --cell-radius: 0.625rem;
 
   /* Sidebar — white with lilac accent */
   --sidebar: oklch(0.99 0.004 295);

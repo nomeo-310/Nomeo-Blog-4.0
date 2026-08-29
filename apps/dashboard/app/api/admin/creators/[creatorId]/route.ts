@@ -8,6 +8,8 @@ import { AdminLog, AdminAction }       from "@/models/admin-log";
 import { User }                        from "@/models/user";
 import { Profile }                     from "@/models/profile";
 import { CreatorEarning }              from "@/models/creator-earning";
+import { Notification }                from "@/models/notification";
+import { mailService }                 from "@/lib/mail-service";
 import type { IAdminPermissions }      from "@/models/admin";
 
 export const dynamic = "force-dynamic";
@@ -181,6 +183,34 @@ export async function PATCH(
       targetName: user.name,
       reason,
       reversible: action !== "demote",
+    });
+
+    try {
+      await mailService.creatorStatusChange({
+        to: user.email, name: user.name, action, reason,
+        performedBy: admin.displayName || admin.name,
+      });
+    } catch (mailError) {
+      console.error("[admin/creators/:creatorId] failed to send status email:", mailError);
+    }
+
+    const NOTIFICATION_TYPE = {
+      suspend:   "creator_suspended",
+      reinstate: "creator_reinstated",
+      demote:    "creator_demoted",
+    } as const;
+    const NOTIFICATION_MESSAGE = {
+      suspend:   `Your creator privileges were suspended${reason ? `: ${reason}` : "."}`,
+      reinstate: "Your creator privileges have been reinstated.",
+      demote:    `Your account was changed back to a reader account${reason ? `: ${reason}` : "."}`,
+    } as const;
+    await Notification.create({
+      recipientId: user._id,
+      type:        NOTIFICATION_TYPE[action],
+      actorId:     new mongoose.Types.ObjectId(admin.id),
+      message:     NOTIFICATION_MESSAGE[action],
+      entityType:  "user",
+      entityId:    user._id,
     });
 
     return NextResponse.json({

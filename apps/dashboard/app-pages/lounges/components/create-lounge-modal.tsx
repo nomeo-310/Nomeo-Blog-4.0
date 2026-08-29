@@ -1,28 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Globe02Icon, BubbleChatIcon, FileEditIcon, Shield01Icon, Delete02Icon } from "@hugeicons/core-free-icons";
+import { Globe02Icon, BubbleChatIcon, FileEditIcon, Shield01Icon, Delete02Icon, Image03Icon } from "@hugeicons/core-free-icons";
+import { Loader2, X } from "lucide-react";
+import { toast } from "sonner";
 import Modal from "@/components/ui/modal";
 import { Input }    from "@/components/ui/input";
 import { Label }    from "@/components/ui/label";
 import { Button }   from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { uploadImage } from "@/lib/upload-image";
 import { useCreateLounge } from "../use-lounge-mutations";
 
 const MAX_RULES = 15;
 const MAX_RULE_LENGTH = 200;
+const COVER_IMAGE_UPLOAD_PRESET = "nomeo_blogs_cover";
 
 export function CreateLoungeModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [ruleInput, setRuleInput] = useState("");
   const [rules, setRules] = useState<string[]>([]);
+  const [coverImage, setCoverImage] = useState<{ secureUrl: string; publicId: string } | null>(null);
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const coverInputRef = useRef<HTMLInputElement>(null);
 
-  const reset = () => { setName(""); setDescription(""); setRuleInput(""); setRules([]); };
+  const reset = () => { setName(""); setDescription(""); setRuleInput(""); setRules([]); setCoverImage(null); };
   const handleClose = () => { reset(); onClose(); };
 
   const create = useCreateLounge(handleClose);
+
+  const handleCoverChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    setIsUploadingCover(true);
+    try {
+      const result = await uploadImage({ file, uploadPreset: COVER_IMAGE_UPLOAD_PRESET });
+      setCoverImage({ secureUrl: result.secure_url, publicId: result.public_id });
+    } catch {
+      toast.error("Failed to upload image.");
+    } finally {
+      setIsUploadingCover(false);
+    }
+  };
 
   const canAddRule = ruleInput.trim().length > 0 && rules.length < MAX_RULES;
 
@@ -49,6 +72,7 @@ export function CreateLoungeModal({ isOpen, onClose }: { isOpen: boolean; onClos
       name: name.trim(),
       description: description.trim() || undefined,
       rules,
+      coverImage: coverImage ?? undefined,
     });
   };
 
@@ -70,6 +94,38 @@ export function CreateLoungeModal({ isOpen, onClose }: { isOpen: boolean; onClos
             <span className="font-semibold text-foreground">Open to everyone.</span>{" "}
             This is a Nomeo-owned space any authenticated user can join — not a creator&apos;s lounge.
           </p>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label>
+            <HugeiconsIcon icon={Image03Icon} className="h-3.5 w-3.5" />
+            Cover image
+          </Label>
+          {coverImage ? (
+            <div className="group relative overflow-hidden rounded-xl border border-border" style={{ aspectRatio: "16/5" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={coverImage.secureUrl} alt="" className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => setCoverImage(null)}
+                aria-label="Remove cover image"
+                className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur hover:bg-black/70"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => coverInputRef.current?.click()}
+              disabled={isUploadingCover}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border py-6 text-sm text-muted-foreground hover:bg-accent disabled:opacity-50"
+            >
+              {isUploadingCover ? <Loader2 className="h-4 w-4 animate-spin" /> : <HugeiconsIcon icon={Image03Icon} className="h-4 w-4" />}
+              {isUploadingCover ? "Uploading…" : "Upload a cover image"}
+            </button>
+          )}
+          <input ref={coverInputRef} type="file" accept="image/*" className="hidden" onChange={handleCoverChange} />
         </div>
 
         <div className="space-y-1.5">

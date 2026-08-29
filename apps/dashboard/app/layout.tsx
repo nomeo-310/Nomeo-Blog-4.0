@@ -6,6 +6,7 @@ import QueryProvider from "./provider/query-client-provider";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { ThemeWatcher } from "@/components/ui/theme-watcher";
+import { ErrorTracking } from "@/components/error-tracking";
 
 
 const urbanistHeading = Urbanist({
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" className={cn("h-full", "antialiased", quicksandSans.variable, urbanistHeading.variable)} suppressHydrationWarning>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <ThemeWatcher/>
+        <ErrorTracking />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Toaster richColors />
           <QueryProvider>

@@ -60,6 +60,7 @@ export enum AdminAction {
 
   // Lounge moderation
   CREATE_LOUNGE           = "create_lounge",
+  UPDATE_LOUNGE           = "update_lounge",
   SUSPEND_LOUNGE          = "suspend_lounge",
   RESTORE_LOUNGE          = "restore_lounge",
   DELETE_LOUNGE           = "delete_lounge",
@@ -86,6 +87,27 @@ export enum AdminAction {
 
   // Payments
   ISSUE_REFUND            = "issue_refund",
+
+  // Follower management
+  DEACTIVATE_FOLLOW       = "deactivate_follow",
+
+  // Newsletter subscriber management
+  UNSUBSCRIBE_SUBSCRIBER  = "unsubscribe_subscriber",
+  DELETE_SUBSCRIBER       = "delete_subscriber",
+
+  // Campaign management (email)
+  CREATE_CAMPAIGN         = "create_campaign",
+  UPDATE_CAMPAIGN         = "update_campaign",
+  SEND_CAMPAIGN           = "send_campaign",
+  CANCEL_CAMPAIGN         = "cancel_campaign",
+  DELETE_CAMPAIGN         = "delete_campaign",
+
+  // SMS campaign management
+  CREATE_SMS_CAMPAIGN     = "create_sms_campaign",
+  UPDATE_SMS_CAMPAIGN     = "update_sms_campaign",
+  SEND_SMS_CAMPAIGN       = "send_sms_campaign",
+  CANCEL_SMS_CAMPAIGN     = "cancel_sms_campaign",
+  DELETE_SMS_CAMPAIGN     = "delete_sms_campaign",
 
   // System
   CLEAR_CACHE             = "clear_cache",
@@ -132,6 +154,10 @@ export const TargetTypes = [
   "creator_application",
   "advert",
   "earning",
+  "follower",
+  "newsletter_subscriber",
+  "campaign",
+  "sms_campaign",
   "system",
   "admin",
 ] as const;
@@ -147,6 +173,8 @@ export const ActionCategories = [
   "advert_management",
   "subscription_management",
   "payment_management",
+  "audience_management",
+  "campaign_management",
   "system_settings",
   "security",
   "admin_management",
@@ -273,6 +301,7 @@ function getActionCategory(action: AdminAction): ActionCategory {
 
     // Lounge moderation
     [AdminAction.CREATE_LOUNGE]:          "lounge_moderation",
+    [AdminAction.UPDATE_LOUNGE]:          "lounge_moderation",
     [AdminAction.SUSPEND_LOUNGE]:         "lounge_moderation",
     [AdminAction.RESTORE_LOUNGE]:         "lounge_moderation",
     [AdminAction.DELETE_LOUNGE]:          "lounge_moderation",
@@ -299,6 +328,23 @@ function getActionCategory(action: AdminAction): ActionCategory {
 
     // Payment management
     [AdminAction.ISSUE_REFUND]:         "payment_management",
+
+    // Audience management
+    [AdminAction.DEACTIVATE_FOLLOW]:      "audience_management",
+    [AdminAction.UNSUBSCRIBE_SUBSCRIBER]: "audience_management",
+    [AdminAction.DELETE_SUBSCRIBER]:      "audience_management",
+
+    // Campaign management
+    [AdminAction.CREATE_CAMPAIGN]:      "campaign_management",
+    [AdminAction.UPDATE_CAMPAIGN]:      "campaign_management",
+    [AdminAction.SEND_CAMPAIGN]:        "campaign_management",
+    [AdminAction.CANCEL_CAMPAIGN]:      "campaign_management",
+    [AdminAction.DELETE_CAMPAIGN]:      "campaign_management",
+    [AdminAction.CREATE_SMS_CAMPAIGN]:  "campaign_management",
+    [AdminAction.UPDATE_SMS_CAMPAIGN]:  "campaign_management",
+    [AdminAction.SEND_SMS_CAMPAIGN]:    "campaign_management",
+    [AdminAction.CANCEL_SMS_CAMPAIGN]:  "campaign_management",
+    [AdminAction.DELETE_SMS_CAMPAIGN]:  "campaign_management",
 
     // System settings
     [AdminAction.CLEAR_CACHE]:          "system_settings",
@@ -332,6 +378,7 @@ function getActionSeverity(action: AdminAction): AdminLogSeverity {
     AdminAction.ESCALATE_REPORT,
     AdminAction.HARD_DELETE_POST,
     AdminAction.DELETE_ADVERT,
+    AdminAction.DELETE_SUBSCRIBER,
   ]);
 
   const warning = new Set<AdminAction>([
@@ -355,6 +402,8 @@ function getActionSeverity(action: AdminAction): AdminLogSeverity {
     AdminAction.SUSPEND_CREATOR,
     AdminAction.DEMOTE_CREATOR,
     AdminAction.HOLD_CREATOR_PAYOUT,
+    AdminAction.SEND_CAMPAIGN,
+    AdminAction.SEND_SMS_CAMPAIGN,
   ]);
 
   if (critical.has(action)) return AdminLogSeverity.CRITICAL;

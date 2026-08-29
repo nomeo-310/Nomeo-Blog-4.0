@@ -21,6 +21,7 @@ export interface CreateAdvertInput {
   postId?: string;
   title: string;
   body?: string;
+  image?: { url: string; publicId: string };
   ctaLabel?: string;
   ctaUrl?: string;
   advertiserName?: string;

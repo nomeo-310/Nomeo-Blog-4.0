@@ -9,6 +9,7 @@ import { CreatorApplication }          from "@/models/creator-application";
 import { User }                        from "@/models/user";
 import { Profile }                     from "@/models/profile";
 import { Notification }                from "@/models/notification";
+import { mailService }                 from "@/lib/mail-service";
 import type { IAdminPermissions }      from "@/models/admin";
 
 export const dynamic = "force-dynamic";
@@ -70,12 +71,12 @@ export async function PATCH(
     application.reviewedAt = now;
     await application.save();
 
+    const applicant = await User.findById(application.userId);
     if (action === "approve") {
-      const user = await User.findById(application.userId);
-      if (!user) return NextResponse.json({ error: "Applicant account no longer exists" }, { status: 404 });
+      if (!applicant) return NextResponse.json({ error: "Applicant account no longer exists" }, { status: 404 });
 
-      user.role = "creator";
-      await user.save();
+      applicant.role = "creator";
+      await applicant.save();
 
       await Profile.updateOne(
         { userId: application.userId },
@@ -100,15 +101,28 @@ export async function PATCH(
       reversible: false,
     });
 
-    if (action === "approve") {
-      await Notification.create({
-        recipientId: application.userId,
-        type:        "creator_upgrade_successful",
-        actorId:     new mongoose.Types.ObjectId(admin.id),
-        message:     "Your creator application was approved. You can now publish posts on Nomeo.",
-        entityType:  "user",
-        entityId:    application.userId,
-      });
+    await Notification.create({
+      recipientId: application.userId,
+      type:        action === "approve" ? "creator_upgrade_successful" : "creator_application_rejected",
+      actorId:     new mongoose.Types.ObjectId(admin.id),
+      message:     action === "approve"
+        ? "Your creator application was approved. You can now publish posts on Nomeo."
+        : `Your creator application was not approved${note ? `: ${note.trim()}` : "."}`,
+      entityType:  "user",
+      entityId:    application.userId,
+    });
+
+    if (applicant) {
+      try {
+        await mailService.creatorApplicationResult({
+          to: applicant.email, name: applicant.name,
+          approved: action === "approve",
+          reason: action === "reject" ? note : undefined,
+          canReapply: true,
+        });
+      } catch (mailError) {
+        console.error("[admin/creators/applications/:applicationId] failed to send result email:", mailError);
+      }
     }
 
     return NextResponse.json({

@@ -32,6 +32,13 @@ export interface INewsletterSubscriber extends Document {
   name?: string;
 
   /**
+   * Optional phone number, in E.164 format. Collected separately from email
+   * (e.g. via account profile or an opt-in form) — enables SMS campaigns to
+   * reach this subscriber in addition to email ones.
+   */
+  phone?: string;
+
+  /**
    * Linked platform account, if any.
    * Null for visitors who only filled the form.
    * Set by the service layer when an account with this email signs up.
@@ -67,6 +74,8 @@ const NewsletterSubscriberSchema = new Schema<INewsletterSubscriber>(
     },
 
     name: { type: String, trim: true, maxlength: 100 },
+
+    phone: { type: String, trim: true, index: true, sparse: true },
 
     userId: { type: Schema.Types.ObjectId, ref: "User", default: null, index: true },
 

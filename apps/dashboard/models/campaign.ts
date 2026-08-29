@@ -118,7 +118,7 @@ const CampaignSchema = new Schema<ICampaignDocument>(
 
     externalRecipients:   [{ email: { type: String, required: true }, name: String }],
     hasExternalRecipients: { type: Boolean, default: false },
-    recipientIds:          [{ type: Schema.Types.ObjectId, ref: "Newsletter" }],
+    recipientIds:          [{ type: Schema.Types.ObjectId, ref: "NewsletterSubscriber" }],
 
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },

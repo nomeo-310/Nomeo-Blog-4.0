@@ -34,6 +34,8 @@ interface CreateAdminParams {
   createdById:    string;   // ObjectId string of the acting super_admin
   createdByName:  string;
   createdByEmail: string;
+  /** Optional personal note from the inviter, shown in the invitation email. */
+  personalMessage?: string;
 }
 
 interface CreateAdminResult {
@@ -71,7 +73,7 @@ function generateTemporaryPassword(): string {
 
 export async function createAdminUser(params: CreateAdminParams): Promise<CreateAdminResult> {
   const startTime = Date.now();
-  const { email, name, displayName, department, role, createdById, createdByName, createdByEmail } = params;
+  const { email, name, displayName, department, role, createdById, createdByName, createdByEmail, personalMessage } = params;
 
   // ── 1. Validate ───────────────────────────────────────────────────────────
   if (!VALID_ROLES.includes(role)) {
@@ -134,7 +136,10 @@ export async function createAdminUser(params: CreateAdminParams): Promise<Create
       role,
       department,
       adminStatus: "active",
-      isActive:    true,
+      // isActive stays false until they complete first-login onboarding (see
+      // app/api/auth/login/route.ts's needsOnboarding check) — this is what lets
+      // the admin list distinguish "invited, not yet accepted" from "active".
+      isActive:    false,
       isOnboarded: false,
       useSeedPhrase: true,
       assignedBy:  new mongoose.Types.ObjectId(createdById),
@@ -192,10 +197,11 @@ export async function createAdminUser(params: CreateAdminParams): Promise<Create
       email:       normalizedEmail,
       tempPassword,
       seedPhrase:  plainSeedPhrase,
-      loginUrl:    `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/admin/login`,
+      loginUrl:    `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/login`,
       expiresAt:   seedPhraseExpiry.toLocaleDateString("en-NG", {
         year: "numeric", month: "long", day: "numeric",
       }),
+      personalMessage,
     });
 
     return {
@@ -209,7 +215,8 @@ export async function createAdminUser(params: CreateAdminParams): Promise<Create
       seedPhrase:  plainSeedPhrase,
     };
 
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
     console.error("[createAdminUser] failed:", error);
 
     try {
@@ -219,11 +226,11 @@ export async function createAdminUser(params: CreateAdminParams): Promise<Create
         adminName:    createdByName,
         adminRole:    LogAdminRole.SUPER_ADMIN,
         action:       AdminAction.CREATE_ADMIN,
-        details:      `Failed to create admin for ${normalizedEmail}: ${error.message}`,
+        details:      `Failed to create admin for ${normalizedEmail}: ${message}`,
         ipAddress:    "system",
         status:       "failed",
         severity:     AdminLogSeverity.ERROR,
-        errorMessage: error.message,
+        errorMessage: message,
         metadata:     { attemptedEmail: normalizedEmail, attemptedRole: role },
       });
     } catch (logErr) {

@@ -33,8 +33,10 @@ import {
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAdminLogout } from "@/hooks/use-admin-logout";
+import { useOnboardingStatus } from "@/hooks/use-onboarding-status";
 import { authClient } from "@/lib/auth-client";
 import { ThemeToggler } from "../ui/theme-toggler";
+import { OnboardingModal } from "./onboarding-modal";
 import Logo from "@/public/images/logo.webp"
 
 type NavItem  = { href: string; label: string; icon: any; superAdminOnly?: boolean };
@@ -88,7 +90,8 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: "/audit-log",  label: "Audit log",   icon: Eye01Icon          },
       { href: "/admins",     label: "Admins",       icon: ShieldUserIcon,     superAdminOnly: true },
-      { href: "/settings",   label: "Settings",     icon: Settings01Icon,     superAdminOnly: true },
+      { href: "/settings",   label: "Settings",     icon: Settings01Icon     },
+      { href: "/account",    label: "My account",   icon: Settings01Icon     },
     ],
   },
 ];
@@ -110,6 +113,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   "audit-log":   "Audit log",
   admins:        "Admin accounts",
   settings:      "Settings",
+  account:       "My account",
   new:           "New",
 };
 
@@ -122,6 +126,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const role        = (session?.user as any)?.role ?? "";
   const isSuperAdmin = role === "super_admin";
+  const isAdminRole  = ["support", "admin", "super_admin"].includes(role);
+  // Fetched directly rather than read off session.user — the Better Auth
+  // session-merge hook that would otherwise carry this has proven unreliable.
+  const { data: onboardingStatus } = useOnboardingStatus();
+  const needsOnboarding = isAdminRole && onboardingStatus?.isOnboarded === false;
 
   const { logout, isLoading } = useAdminLogout();
   const router = useRouter();
@@ -337,7 +346,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="flex items-center gap-2">
             {isSuperAdmin && (
               <Link
-                href="/dashboard/admins/new"
+                href="/admins?create=1"
                 className="hidden items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 sm:inline-flex"
               >
                 <HugeiconsIcon icon={Add01Icon} className="h-3.5 w-3.5" />
@@ -356,6 +365,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {children}
         </main>
       </div>
+
+      <OnboardingModal
+        isOpen={needsOnboarding}
+        currentDisplayName={onboardingStatus?.displayName || user?.name || ""}
+      />
     </div>
   );
 }
@@ -454,14 +468,14 @@ function TopBarUserMenu({ user, initials, onSignOut }: {
           )}
           <div className="py-1.5">
             <DropdownItem
-              href="/dashboard/settings"
+              href="/account"
               icon={<HugeiconsIcon icon={Settings01Icon} className="h-4 w-4" />}
               onClick={() => setOpen(false)}
             >
-              Settings
+              My account
             </DropdownItem>
             <DropdownItem
-              href="/dashboard/audit-log"
+              href="/audit-log"
               icon={<HugeiconsIcon icon={Eye01Icon} className="h-4 w-4" />}
               onClick={() => setOpen(false)}
             >

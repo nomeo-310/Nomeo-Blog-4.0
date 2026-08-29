@@ -73,6 +73,7 @@ export async function GET(
         suspendedBy: lounge.suspendedBy ? personOrUnknown(lounge.suspendedBy) : null,
         suspendedAt: lounge.suspendedAt, suspensionReason: lounge.suspensionReason,
         rules: lounge.rules,
+        coverImage: lounge.coverImage,
         slowModeSeconds: lounge.slowModeSeconds, maxMessageLength: lounge.maxMessageLength,
         membersCount: lounge.membersCount, messagesCount: lounge.messagesCount,
         bannedMembers: (lounge.bannedMembers as mongoose.Types.ObjectId[]).map((id) => ({ id: String(id), ...personOrUnknown(id) })),
@@ -92,6 +93,15 @@ export async function GET(
   }
 }
 
+interface EditLoungeBody {
+  name?: string;
+  description?: string;
+  rules?: string[];
+  slowModeSeconds?: number;
+  maxMessageLength?: number;
+  coverImage?: { secureUrl: string; publicId: string };
+}
+
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ loungeId: string }> }
@@ -104,7 +114,7 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid lounge id" }, { status: 400 });
   }
 
-  let body: { action?: ModerationAction; reason?: string };
+  let body: { action?: ModerationAction | "edit"; reason?: string } & EditLoungeBody;
   try {
     body = await req.json();
   } catch {
@@ -112,14 +122,18 @@ export async function PATCH(
   }
 
   const { action, reason } = body;
-  if (action !== "suspend" && action !== "reinstate") {
-    return NextResponse.json({ error: "action must be one of suspend, reinstate" }, { status: 400 });
+  if (action !== "suspend" && action !== "reinstate" && action !== "edit") {
+    return NextResponse.json({ error: "action must be one of suspend, reinstate, edit" }, { status: 400 });
   }
   if (action === "suspend" && !reason?.trim()) {
     return NextResponse.json({ error: "A reason is required to suspend a lounge" }, { status: 400 });
   }
-  if (!hasPermission(admin, "canSuspendLounge")) {
+  if ((action === "suspend" || action === "reinstate") && !hasPermission(admin, "canSuspendLounge")) {
     return NextResponse.json({ error: "You do not have permission to perform this action" }, { status: 403 });
+  }
+
+  if (action === "edit") {
+    return handleEditLounge(req, admin, loungeId, body);
   }
 
   try {
@@ -171,6 +185,80 @@ export async function PATCH(
     });
   } catch (error) {
     console.error("[admin/lounges/:loungeId] failed to moderate lounge:", error);
+    return NextResponse.json({ error: "Failed to update lounge" }, { status: 500 });
+  }
+}
+
+/**
+ * Edits a platform lounge's content fields (name, description, rules, cover
+ * image, slow mode, message length cap). Creator lounges are owned and edited
+ * by the creator from the main app — admins may only moderate them (suspend /
+ * delete), never rewrite their content, so this is restricted to kind "platform".
+ */
+async function handleEditLounge(req: Request, admin: CurrentUser, loungeId: string, body: EditLoungeBody) {
+  const name = body.name?.trim();
+  if (!name) return NextResponse.json({ error: "A lounge name is required" }, { status: 400 });
+  if (name.length > 100) return NextResponse.json({ error: "Lounge name must be 100 characters or fewer" }, { status: 400 });
+
+  const description = body.description?.trim() || undefined;
+  if (description && description.length > 500) {
+    return NextResponse.json({ error: "Description must be 500 characters or fewer" }, { status: 400 });
+  }
+
+  const rules = (body.rules ?? []).map((r) => r.trim()).filter(Boolean);
+  if (rules.length > 15) return NextResponse.json({ error: "A lounge can have at most 15 rules" }, { status: 400 });
+  if (rules.some((r) => r.length > 200)) {
+    return NextResponse.json({ error: "Each rule must be 200 characters or fewer" }, { status: 400 });
+  }
+
+  if (body.slowModeSeconds !== undefined && (body.slowModeSeconds < 0 || body.slowModeSeconds > 3600)) {
+    return NextResponse.json({ error: "Slow mode must be between 0 and 3600 seconds" }, { status: 400 });
+  }
+  if (body.maxMessageLength !== undefined && (body.maxMessageLength < 10 || body.maxMessageLength > 4000)) {
+    return NextResponse.json({ error: "Max message length must be between 10 and 4000 characters" }, { status: 400 });
+  }
+
+  try {
+    await connectDB();
+
+    const lounge = await Lounge.findById(loungeId);
+    if (!lounge) return NextResponse.json({ error: "Lounge not found" }, { status: 404 });
+    if (lounge.kind !== "platform") {
+      return NextResponse.json({ error: "Only platform lounges can be edited from the dashboard" }, { status: 400 });
+    }
+
+    const existing = await Lounge.findOne({ name, kind: "platform", _id: { $ne: lounge._id } });
+    if (existing) return NextResponse.json({ error: "A platform lounge with this name already exists" }, { status: 409 });
+
+    const previousName = lounge.name;
+    lounge.name = name;
+    lounge.description = description;
+    lounge.rules = rules;
+    if (body.slowModeSeconds !== undefined) lounge.slowModeSeconds = body.slowModeSeconds;
+    if (body.maxMessageLength !== undefined) lounge.maxMessageLength = body.maxMessageLength;
+    if (body.coverImage) lounge.coverImage = body.coverImage;
+    await lounge.save();
+
+    await logAdminAction(req, admin, {
+      action: AdminAction.UPDATE_LOUNGE,
+      details: previousName === name ? `updated platform lounge "${name}"` : `updated platform lounge "${previousName}" (renamed to "${name}")`,
+      targetType: "lounge",
+      targetId: String(lounge._id),
+      targetName: lounge.name,
+      reversible: false,
+    });
+
+    return NextResponse.json({
+      id: String(lounge._id),
+      name: lounge.name,
+      description: lounge.description,
+      rules: lounge.rules,
+      slowModeSeconds: lounge.slowModeSeconds,
+      maxMessageLength: lounge.maxMessageLength,
+      coverImage: lounge.coverImage,
+    });
+  } catch (error) {
+    console.error("[admin/lounges/:loungeId] failed to edit lounge:", error);
     return NextResponse.json({ error: "Failed to update lounge" }, { status: 500 });
   }
 }

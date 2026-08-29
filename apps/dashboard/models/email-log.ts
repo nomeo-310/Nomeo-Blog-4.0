@@ -30,7 +30,7 @@ export interface IEmailLogDocument extends IEmailLog, Document {}
 const EmailLogSchema = new Schema<IEmailLogDocument>(
   {
     campaignId:    { type: Schema.Types.ObjectId, ref: "Campaign",    required: true },
-    newsletterId:  { type: Schema.Types.ObjectId, ref: "Newsletter",  required: false, default: null },
+    newsletterId:  { type: Schema.Types.ObjectId, ref: "NewsletterSubscriber", required: false, default: null },
     email:         { type: String, required: true },
     name:          String,
     recipientType: { type: String, enum: ["subscriber", "external"], default: "subscriber" },

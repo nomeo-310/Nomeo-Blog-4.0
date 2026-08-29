@@ -63,9 +63,12 @@ export function createAuth() {
         if (!db) return;
 
         try {
+          // session.user.id is Better Auth's plain string id, but Admin.userId is
+          // stored as a real ObjectId — without this cast the raw driver query
+          // never matches, so admin fields (isOnboarded included) never merge.
           const admin = await db
             .collection("admins")
-            .findOne({ userId: session.user.id });
+            .findOne({ userId: new mongoose.Types.ObjectId(session.user.id) });
 
           if (!admin || !admin.isActive) return;
 

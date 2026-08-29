@@ -14,7 +14,6 @@ const SORT_STAGES: Record<string, Record<string, 1 | -1>> = {
   most_posts:     { "profile.postsCount": -1 },
 };
 
-const ROLES = ["user", "creator"] as const;
 const BAN_STATUSES = ["active", "banned", "shadow_banned"] as const;
 
 interface UserListRow {
@@ -47,8 +46,6 @@ export async function GET(req: Request) {
     const db = mongoose.connection.db!;
     const params = new URL(req.url).searchParams;
 
-    const roleParam    = params.get("role") ?? "all";
-    const role         = ROLES.includes(roleParam as (typeof ROLES)[number]) ? roleParam : "all";
     const banParam     = params.get("banStatus") ?? "all";
     const banStatus    = BAN_STATUSES.includes(banParam as (typeof BAN_STATUSES)[number]) ? banParam : "all";
     const search       = params.get("search")?.trim();
@@ -57,7 +54,8 @@ export async function GET(req: Request) {
     const page         = Math.max(1, Number(params.get("page")) || 1);
     const limit        = Math.min(100, Math.max(1, Number(params.get("limit")) || 20));
 
-    const userMatch: Record<string, unknown> = role === "all" ? { role: { $in: ROLES } } : { role };
+    // This page is for regular reader accounts only — creators have their own dedicated list.
+    const userMatch: Record<string, unknown> = { role: "user" };
 
     const searchMatch = search
       ? {
@@ -127,7 +125,7 @@ export async function GET(req: Request) {
     }));
 
     return NextResponse.json({
-      filters: { role, banStatus, search },
+      filters: { banStatus, search },
       sortBy,
       pagination: { page, limit, total, totalPages: Math.max(1, Math.ceil(total / limit)) },
       users,
