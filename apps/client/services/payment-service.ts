@@ -7,7 +7,9 @@ import {
   PaymentPurpose,
   type IPaymentDocument,
 } from "@/models/payment";
-import { paystack, type PaystackTransaction } from "@/lib/paystack";
+import { paystack, type PaystackTransaction, type PaystackTransferResponse } from "@/lib/paystack";
+import { CreatorEarning } from "@/models/creator-earning";
+import { Notification } from "@/models/notification";
 
 /**
  * PaymentService — Nomeo
@@ -119,7 +121,54 @@ export const PaymentService = {
       return { handled: true, payment };
     }
 
+    if (event.event === "transfer.success" || event.event === "transfer.failed" || event.event === "transfer.reversed") {
+      const data = event.data as unknown as PaystackTransferResponse & { reason?: string };
+      return PaymentService.handleTransferWebhook(event.event, data);
+    }
+
     return { handled: false, event: event.event };
+  },
+
+  /**
+   * Confirms or fails a creator payout once Paystack settles the outbound
+   * transfer initiated by the admin dashboard's "mark_paid" action. This is
+   * the ONLY place a CreatorEarning ever moves to "paid" — mark_paid only
+   * sets it to "processing" and fires the transfer, it never marks paid
+   * synchronously, because the transfer can still fail after being accepted.
+   */
+  async handleTransferWebhook(eventType: string, data: { reference: string; transfer_code: string; reason?: string }) {
+    const earningId = data.reference?.startsWith("payout_") ? data.reference.slice("payout_".length) : null;
+    const earning = earningId && mongoose.Types.ObjectId.isValid(earningId)
+      ? await CreatorEarning.findById(earningId)
+      : await CreatorEarning.findOne({ payoutTransferId: data.transfer_code });
+
+    if (!earning) return { handled: false, event: `${eventType} (matching earning not found)` };
+
+    if (eventType === "transfer.success") {
+      earning.payoutStatus = "paid";
+      earning.payoutCompletedAt = new Date();
+      await earning.save();
+      await Notification.create({
+        recipientId: earning.creatorId,
+        type: "payout_processed",
+        message: `Your ${earning.billingPeriod} payout of ${earning.netAmount} ${earning.currency} has been paid out.`,
+        entityType: "earning",
+        entityId: earning._id,
+      });
+    } else {
+      earning.payoutStatus = "failed";
+      earning.payoutFailureReason = data.reason ?? "Transfer failed";
+      await earning.save();
+      await Notification.create({
+        recipientId: earning.creatorId,
+        type: "payout_failed",
+        message: `Your ${earning.billingPeriod} payout couldn't be completed. Our team has been notified — please check your payout details.`,
+        entityType: "earning",
+        entityId: earning._id,
+      });
+    }
+
+    return { handled: true, earningId: String(earning._id), status: earning.payoutStatus };
   },
 
   /** Per-user payment stats for a billing/account page. */

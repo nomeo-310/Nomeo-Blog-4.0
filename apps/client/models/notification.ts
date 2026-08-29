@@ -30,6 +30,9 @@ export type NotificationType =
 
   /* Earnings (creator only) */
   | "payout_processed"       // monthly earnings have been calculated and paid out
+  | "payout_on_hold"         // admin placed a payout on hold
+  | "payout_released"        // admin released a held payout — processing again
+  | "payout_failed"          // the transfer to the creator's bank account failed
   | "earnings_milestone"     // creator hit a read-minutes milestone this month
 
   /* Creator upgrade */
@@ -72,7 +75,7 @@ const NotificationSchema = new Schema<INotification>(
         "lounge_message","lounge_mention","lounge_suspended",
         "subscription_started","subscription_renewed","subscription_expiring_soon",
         "subscription_cancelled","subscription_failed",
-        "payout_processed","earnings_milestone",
+        "payout_processed","payout_on_hold","payout_released","payout_failed","earnings_milestone",
         "creator_upgrade_successful",
         "report_filed","report_escalated",
         "account_warned","account_banned","account_unbanned",

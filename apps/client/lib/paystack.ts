@@ -104,6 +104,56 @@ export interface PaystackRefundResponse {
   refunded_at: string;
 }
 
+// ─── Outbound transfer types (creator payouts) ────────────────────────────────
+
+export interface PaystackBank {
+  name: string;
+  code: string;
+  slug: string;
+  currency: string;
+  active: boolean;
+}
+
+export interface PaystackResolvedAccount {
+  account_number: string;
+  account_name: string;
+  bank_id: number;
+}
+
+export interface CreateTransferRecipientPayload {
+  type: 'nuban'; // Nigerian bank account — the only rail Nomeo supports today
+  name: string;  // account holder's name, as resolved from the account number
+  account_number: string;
+  bank_code: string;
+  currency?: string;
+}
+
+export interface PaystackTransferRecipient {
+  recipient_code: string;
+  active: boolean;
+  details: {
+    account_number: string;
+    account_name: string | null;
+    bank_code: string;
+    bank_name: string;
+  };
+}
+
+export interface InitiateTransferPayload {
+  amount: number; // kobo
+  recipient: string; // recipient_code
+  reason?: string;
+  reference: string; // our own idempotency key
+  currency?: string;
+}
+
+export interface PaystackTransferResponse {
+  transfer_code: string;
+  reference: string;
+  status: string; // 'success' | 'pending' | 'otp' | 'failed'
+  amount: number;
+}
+
 // ─── Methods ─────────────────────────────────────────────────────────────────
 
 export const paystack = {
@@ -135,6 +185,40 @@ export const paystack = {
         transaction: reference,
         ...(amount !== undefined && { amount }),
       }),
+    }),
+
+  // ─── Outbound transfers (creator payouts) ─────────────────────────────────
+
+  /** List active Nigerian banks — for the payout-details bank picker. */
+  listBanks: () =>
+    paystackFetch<PaystackBank[]>('/bank?currency=NGN&country=nigeria'),
+
+  /**
+   * Resolve an account number + bank code to the account holder's name.
+   * This is the ONLY source of truth for whose name goes on a payout —
+   * never trust a user-typed account name.
+   */
+  resolveAccountNumber: (accountNumber: string, bankCode: string) =>
+    paystackFetch<PaystackResolvedAccount>(
+      `/bank/resolve?account_number=${encodeURIComponent(accountNumber)}&bank_code=${encodeURIComponent(bankCode)}`
+    ),
+
+  /** Register a bank account as a Transfer Recipient — required before any transfer to it. */
+  createTransferRecipient: (payload: CreateTransferRecipientPayload) =>
+    paystackFetch<PaystackTransferRecipient>('/transferrecipient', {
+      method: 'POST',
+      body: JSON.stringify({ currency: 'NGN', ...payload }),
+    }),
+
+  /**
+   * Initiate a transfer from the platform's Paystack balance to a
+   * registered recipient. `reference` is the idempotency key — reusing one
+   * that already succeeded returns the same transfer rather than double-paying.
+   */
+  initiateTransfer: (payload: InitiateTransferPayload) =>
+    paystackFetch<PaystackTransferResponse>('/transfer', {
+      method: 'POST',
+      body: JSON.stringify({ source: 'balance', currency: 'NGN', ...payload }),
     }),
 
   /**

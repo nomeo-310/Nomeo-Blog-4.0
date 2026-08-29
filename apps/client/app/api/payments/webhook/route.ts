@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     const result = await PaymentService.handleWebhook(rawBody, signature);
 
     if (!result.handled) {
-      console.info(`[Webhook] Unhandled event: ${result.event}`);
+      console.info(`[Webhook] Unhandled event: ${"event" in result ? result.event : "unknown"}`);
     }
 
     return NextResponse.json({ success: true, received: true }, { status: 200 });

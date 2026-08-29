@@ -12,7 +12,9 @@
     "topics:list": "node scripts/seed-topics.js list",
     "seed:plans": "node scripts/seed-plans.js seed",
     "plans:list": "node scripts/seed-plans.js list",
-    "seed:lounges": "node scripts/seed-open-lounges.js"
+    "seed:lounges": "node scripts/seed-open-lounges.js",
+    "earnings:backfill:preview": "tsx scripts/backfill-earnings.ts preview",
+    "earnings:backfill:run": "tsx scripts/backfill-earnings.ts run"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -73,6 +75,7 @@
     "eslint-config-next": "16.2.7",
     "react-email": "^6.6.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.12",
     "typescript": "^5"
   }
 }

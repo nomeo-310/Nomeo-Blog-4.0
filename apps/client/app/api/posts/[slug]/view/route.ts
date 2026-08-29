@@ -115,3 +115,69 @@ export async function POST(
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 }
+
+/**
+ * PATCH /api/posts/[slug]/view
+ * -----------------------------
+ * Advances the reading-progress fields on an existing PostRead — how long
+ * the reader has spent (readDurationSeconds) and whether they reached the
+ * end (completedRead). This is the ONLY thing that ever sets those two
+ * fields to something other than their zero/false defaults, and they feed
+ * directly into the monthly earnings calculation's weighted read-minutes
+ * (see services/earnings-service.ts) — without this endpoint being called,
+ * every read would be worth 0 minutes and no creator would ever earn
+ * anything from subscriber reads.
+ *
+ * Called by post-view-tracker.tsx periodically and on page-hide via
+ * sendBeacon. Never upserts — a PostRead must already exist (from the POST
+ * above) for progress to attach to.
+ */
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  try {
+    const { slug } = await params;
+    if (!slug) return NextResponse.json({ ok: false }, { status: 400 });
+
+    const user = await getCurrentUser().catch(() => null);
+    if (!user) return NextResponse.json({ ok: false }, { status: 401 });
+
+    let body: { durationSeconds?: number; completed?: boolean };
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ ok: false }, { status: 400 });
+    }
+
+    // Cap a single report at 2 hours — guards against a stuck/backgrounded
+    // tab reporting a runaway elapsed time.
+    const durationSeconds = Math.min(7200, Math.max(0, Math.floor(Number(body.durationSeconds) || 0)));
+    const completed = Boolean(body.completed);
+    if (durationSeconds === 0 && !completed) return NextResponse.json({ ok: true });
+
+    await connectDB();
+
+    const post = await Post.findOne({ slug }, { _id: 1 }).lean<{ _id: mongoose.Types.ObjectId }>();
+    if (!post) return NextResponse.json({ ok: false }, { status: 404 });
+
+    const db = mongoose.connection.db;
+    if (!db) return NextResponse.json({ ok: false }, { status: 503 });
+
+    const uid = new mongoose.Types.ObjectId(user.id);
+    const pid = post._id as mongoose.Types.ObjectId;
+
+    const set: Record<string, unknown> = { updatedAt: new Date() };
+    if (completed) set.completedRead = true;
+
+    await db.collection("post_reads").updateOne(
+      { userId: uid, postId: pid },
+      { $max: { readDurationSeconds: durationSeconds }, $set: set }
+    );
+
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("[PATCH /api/posts/[slug]/view]", err);
+    return NextResponse.json({ ok: false }, { status: 500 });
+  }
+}

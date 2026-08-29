@@ -1,13 +1,16 @@
 "use client";
 
 import { useState, memo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Shield01Icon, Notification02Icon, PaintBoardIcon, User03Icon } from "@hugeicons/core-free-icons";
+import { Shield01Icon, Notification02Icon, PaintBoardIcon, User03Icon, MoneyBag01Icon } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { ProfileSettings } from "./settings-profile";
 import { NotificationSettings } from "./settings-notifications";
 import { AppearanceSettings } from "./settings-appearance";
 import { AccountSettings } from "./settings-account";
+import { PayoutSettings } from "./settings-payout";
+import { fetchProfile } from "./settings-format";
 
 /**
  * SettingsPage — dashboard settings, tabbed by section.
@@ -21,13 +24,14 @@ import { AccountSettings } from "./settings-account";
  * Route:     app/dashboard/settings/page.tsx
  */
 
-type Tab = "profile" | "notifications" | "appearance" | "account";
+type Tab = "profile" | "notifications" | "appearance" | "account" | "payout";
 
-const TabBar = memo(({ active, onChange }: { active: Tab; onChange: (t: Tab) => void }) => {
+const TabBar = memo(({ active, onChange, showPayout }: { active: Tab; onChange: (t: Tab) => void; showPayout: boolean }) => {
   const tabs: { key: Tab; icon: React.ReactNode; label: string }[] = [
     { key: "profile",       icon: <HugeiconsIcon icon={User03Icon}    className="h-4 w-4" />, label: "Profile"       },
     { key: "notifications", icon: <HugeiconsIcon icon={Notification02Icon}    className="h-4 w-4" />, label: "Notifications" },
     { key: "appearance",    icon: <HugeiconsIcon icon={PaintBoardIcon} className="h-4 w-4" />, label: "Appearance"    },
+    ...(showPayout ? [{ key: "payout" as Tab, icon: <HugeiconsIcon icon={MoneyBag01Icon} className="h-4 w-4" />, label: "Payout" }] : []),
     { key: "account",       icon: <HugeiconsIcon icon={Shield01Icon} className="h-4 w-4" />, label: "Account"       },
   ];
   return (
@@ -49,16 +53,20 @@ TabBar.displayName = "TabBar";
 
 export default function SettingsPage() {
   const [tab, setTab] = useState<Tab>("profile");
+  const { data: profile } = useQuery({ queryKey: ["profile"], queryFn: fetchProfile, staleTime: 60_000 });
+  const isCreator = profile?.role === "creator";
+
   return (
     <div className="w-full space-y-6">
       <div>
         <h2 className="font-heading text-2xl font-bold text-foreground">Settings</h2>
         <p className="mt-1 text-sm text-muted-foreground">Manage your profile, preferences and account.</p>
       </div>
-      <TabBar active={tab} onChange={setTab} />
+      <TabBar active={tab} onChange={setTab} showPayout={isCreator} />
       {tab === "profile"       && <ProfileSettings />}
       {tab === "notifications" && <NotificationSettings />}
       {tab === "appearance"    && <AppearanceSettings />}
+      {tab === "payout" && isCreator && <PayoutSettings />}
       {tab === "account"       && <AccountSettings />}
     </div>
   );

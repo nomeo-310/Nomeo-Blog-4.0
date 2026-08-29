@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import QueryProvider from "@/provider/query-provider";
 import ModalProvider from "@/provider/modal-provider";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
+import { ErrorTracking } from "@/components/error-tracking";
 import { Toaster } from "sonner";
 import { getCurrentUser, needsOnboarding } from "@/lib/session";
 import { getCuratedTopics } from "@/lib/get-curated-topics";
@@ -138,6 +139,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <QueryProvider>
+            <ErrorTracking />
             <Toaster position="top-center" richColors />
             <ModalProvider />
             <ConversationsPanel currentUserId={user?.id} />
