@@ -8,6 +8,7 @@ import { Admin, type AdminRole, type AdminStatus, type IAdminPermissions } from 
 import { escapeRegExp }                from "@/lib/utils";
 import { createAdminUser }             from "@/lib/create-admin";
 import { AdminInvite }                 from "@/models/admin-invite";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -87,6 +88,11 @@ export async function GET(req: Request) {
  * setup, so the list can distinguish "invited, not yet accepted" from active.
  */
 export async function POST(req: Request) {
+  // Provisions a brand-new admin account with dashboard access — tightly limited.
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = await rateLimit({ key: `admin-create:${ip}`, limit: 5, windowSeconds: 60 * 60 });
+  if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
   const admin = await requireAdminUserFromRequest(req.headers).catch(() => null);
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

@@ -7,6 +7,7 @@ import { logAdminAction }              from "@/lib/admin-action-log";
 import { AdminLog, AdminAction }       from "@/models/admin-log";
 import { Admin, defaultPermissions, type AdminRole, type IAdminPermissions } from "@/models/admin";
 import { mailService } from "@/lib/mail-service";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 const ROLE_RANK: Record<AdminRole, number> = { support: 0, admin: 1, super_admin: 2 };
 
@@ -97,6 +98,11 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ adminId: string }> }
 ) {
+  // Role changes, suspension, and permission grants on another admin — tightly limited.
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = await rateLimit({ key: `admin-manage:${ip}`, limit: 10, windowSeconds: 15 * 60 });
+  if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
   const admin = await requireAdminUserFromRequest(req.headers).catch(() => null);
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -242,6 +248,11 @@ export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ adminId: string }> }
 ) {
+  // Permanently removes an admin's dashboard access — tightly limited.
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = await rateLimit({ key: `admin-manage:${ip}`, limit: 10, windowSeconds: 15 * 60 });
+  if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
   const admin = await requireAdminUserFromRequest(req.headers).catch(() => null);
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

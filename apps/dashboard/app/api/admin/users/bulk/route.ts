@@ -14,6 +14,7 @@ import { DeletedAccount }              from "@/models/deleted-account";
 import { Notification }                from "@/models/notification";
 import { mailService }                 from "@/lib/mail-service";
 import type { IAdminPermissions }      from "@/models/admin";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,10 @@ const MAX_BULK = 200;
 const MAX_BULK_DELETE = 50;
 
 export async function POST(req: Request) {
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = await rateLimit({ key: `users-bulk:${ip}`, limit: 15, windowSeconds: 10 * 60 });
+  if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
   const admin = await requireAdminUserFromRequest(req.headers).catch(() => null);
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

@@ -15,29 +15,25 @@ export function useAdminLogin() {
 
   const searchParams = useSearchParams();
 
-  /* ── Step 1: verify email + password ─────────────────────────────── */
-  const submitCredentials = async (e: React.FormEvent) => {
+  /* ── Step 1: collect email + password ────────────────────────────────
+   * Local form validation only — no network call. There used to be a
+   * POST to /api/auth/check here that looked up the email and reported
+   * back whether it existed and whether it belonged to an admin, with no
+   * password check at all. That made it a free, unauthenticated way to
+   * enumerate which emails are admin accounts (call it directly, skip
+   * the UI entirely). The real credential check already happens at step
+   * 2 (/api/auth/login), which validates email + password + seed phrase
+   * together and fails with one generic message regardless of which
+   * factor was wrong — that's the only place this should be checked.
+   */
+  const submitCredentials = (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     if (!email || !password) { setError("Email and password are required."); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError("Please enter a valid email address."); return; }
 
-    setLoading(true);
-    try {
-      const res  = await fetch("/api/auth/check", {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ email }),
-      });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error || "Invalid credentials."); return; }
-      setStep(2);
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    setStep(2);
   };
 
   /* ── Step 2: verify seed phrase + complete login ──────────────────── */

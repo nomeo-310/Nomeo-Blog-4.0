@@ -10,6 +10,7 @@ import { EmailLog }                    from "@/models/email-log";
 import { NewsletterSubscriber }        from "@/models/newsletter";
 import { sanitizeCampaignHtml }        from "@/lib/sanitize-html";
 import type { IAdminPermissions }      from "@/models/admin";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -73,6 +74,11 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ campaignId: string }> }
 ) {
+  // Covers update/send/cancel — send fans out a real email blast, so keep this tight.
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = await rateLimit({ key: `email-campaign-action:${ip}`, limit: 8, windowSeconds: 30 * 60 });
+  if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
   const admin = await requireAdminUserFromRequest(req.headers).catch(() => null);
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

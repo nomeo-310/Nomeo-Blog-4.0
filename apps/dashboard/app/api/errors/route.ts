@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
 import { logError } from "@/lib/log-error";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,12 @@ export const dynamic = "force-dynamic";
  * error to a client that's already failing.
  */
 export async function POST(req: NextRequest) {
+  // Deliberately unauthenticated (see comment above) — rate-limit by IP so
+  // it can't be used to flood the error log.
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = await rateLimit({ key: `client-error-report:${ip}`, limit: 30, windowSeconds: 5 * 60 });
+  if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
   let body: {
     errorCode?: string;
     message?: string;

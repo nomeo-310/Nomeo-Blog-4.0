@@ -6,12 +6,17 @@ import { requireAdminUserFromRequest } from "@/lib/session";
 import { logAdminAction }              from "@/lib/admin-action-log";
 import { AdminAction }                 from "@/models/admin-log";
 import { Following }                   from "@/models/following";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 const MAX_BULK = 200;
 
 export async function POST(req: Request) {
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = await rateLimit({ key: `followers-bulk:${ip}`, limit: 15, windowSeconds: 10 * 60 });
+  if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
   const admin = await requireAdminUserFromRequest(req.headers).catch(() => null);
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

@@ -9,6 +9,7 @@ import { SmsCampaign, SmsCampaignStatus, SmsAudience, SmsStatus } from "@/models
 import { SmsLog }                      from "@/models/sms-log";
 import { NewsletterSubscriber }        from "@/models/newsletter";
 import type { IAdminPermissions }      from "@/models/admin";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -68,6 +69,11 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ smsCampaignId: string }> }
 ) {
+  // Covers update/send/cancel — send fans out real, paid SMS, so keep this tight.
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = await rateLimit({ key: `sms-campaign-action:${ip}`, limit: 8, windowSeconds: 30 * 60 });
+  if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
   const admin = await requireAdminUserFromRequest(req.headers).catch(() => null);
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

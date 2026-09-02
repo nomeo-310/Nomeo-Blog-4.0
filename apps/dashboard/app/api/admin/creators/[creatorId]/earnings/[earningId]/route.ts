@@ -10,6 +10,7 @@ import { Notification }                from "@/models/notification";
 import { Profile }                     from "@/models/profile";
 import { paystack }                    from "@/lib/paystack";
 import type { IAdminPermissions }      from "@/models/admin";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,11 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ creatorId: string; earningId: string }> }
 ) {
+  // mark_paid initiates a real Paystack transfer — keep this tight.
+  const ip = getClientIp(req);
+  const { allowed, retryAfterSeconds } = await rateLimit({ key: `creator-payout-action:${ip}`, limit: 10, windowSeconds: 60 * 60 });
+  if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
   const admin = await requireAdminUserFromRequest(req.headers).catch(() => null);
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
