@@ -28,6 +28,7 @@ interface NavbarProps {
 
 const NAV_ITEMS = [
   { label: "Discover",   href: "/"           },
+  { label: "Writers",    href: "/writers"    },
   { label: "About",      href: "/about"      },
   { label: "Lounges",    href: "/lounges"    },
   { label: "Membership", href: "/membership" },

@@ -3,16 +3,22 @@ import { NextRequest } from "next/server";
 import mongoose from "mongoose";
 import { hashPassword } from "better-auth/crypto";
 import { connectDB } from "@/lib/connect-to-database";
+import { verifyOTP } from "@/lib/otp";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `reset-password:${ip}`, limit: 10, windowSeconds: 15 * 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     await connectDB();
 
-    const { email, newPassword } = await req.json();
+    const { email, otp, newPassword } = await req.json();
 
-    if (!email || !newPassword) {
+    if (!email || !otp || !newPassword) {
       return Response.json(
-        { error: "Email and new password are required" },
+        { error: "Email, code, and new password are required" },
         { status: 400 }
       );
     }
@@ -22,6 +28,15 @@ export async function POST(req: NextRequest) {
         { error: "Password must be at least 8 characters" },
         { status: 400 }
       );
+    }
+
+    // Authoritative check — this is what actually gates the password
+    // change. /api/auth/verify-otp only pre-checks the code for the UI and
+    // deliberately leaves it unconsumed for this purpose; without this call
+    // the endpoint would accept any email + password with no code at all.
+    const otpResult = await verifyOTP({ email, code: otp, purpose: "password_reset", consume: true });
+    if (!otpResult.success) {
+      return Response.json({ error: otpResult.error || "Invalid or expired code" }, { status: 400 });
     }
 
     const userCollection = mongoose.connection.db!.collection("user");

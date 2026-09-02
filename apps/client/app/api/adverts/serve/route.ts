@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/session";
 import { ensureVisitorKey } from "@/lib/visitor-key";
 import { selectAdvertForPlacement, serializeAdvertForClient } from "@/services/advert-services";
 import type { AdvertPlacement } from "@/models/advert";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,10 @@ const PLACEMENTS: AdvertPlacement[] = ["hero", "feed_card", "in_article", "notif
  */
 export async function GET(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `advert-serve:${ip}`, limit: 60, windowSeconds: 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const { searchParams } = new URL(req.url);
     const placement = searchParams.get("placement") as AdvertPlacement | null;
     const topics = (searchParams.get("topics") ?? "")

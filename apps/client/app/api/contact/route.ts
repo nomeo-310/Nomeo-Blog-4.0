@@ -1,5 +1,6 @@
 import { mailService } from "@/services/email-services";
 import { NextRequest } from "next/server";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 /**
  * POST /api/contact  { fullName, email, purpose, message }
@@ -13,6 +14,10 @@ const EMAIL_RX = /^\S+@\S+\.\S+$/;
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `contact:${ip}`, limit: 5, windowSeconds: 15 * 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const body = await req.json();
     const fullName = String(body.fullName || "").trim();
     const email = String(body.email || "").trim();

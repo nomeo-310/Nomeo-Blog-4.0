@@ -29,7 +29,11 @@ export async function generateAndStoreOTP({email, purpose = 'email_verification'
 
   const otp = crypto.randomInt(100000, 999999).toString();
 
-  await Otp.deleteMany({ email, purpose });
+  // Invalidate any still-active code for this identifier+purpose so only the
+  // newest one verifies. (Previously filtered on a non-existent `email`
+  // field, so old codes never actually got deleted and stayed valid
+  // alongside every new one until their 15-minute TTL.)
+  await Otp.deleteMany({ identifier: email.toLowerCase(), purpose });
 
   const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
@@ -43,43 +47,43 @@ export async function generateAndStoreOTP({email, purpose = 'email_verification'
   return otp;
 }
 
-export async function verifyOTP({email, code, purpose = "email_verification"}:{email: string, code: string,  purpose: OtpPurpose} ): Promise<{ success: boolean; error?: string }> {
+/**
+ * Verifies a submitted code against the active OTP for (email, purpose).
+ *
+ * `consume` controls whether the record is deleted on success. For
+ * "password_reset" the verify-otp route calls this with consume: false —
+ * it's only a UX gate — so /api/auth/reset-password can independently
+ * re-verify the same code (consume: true) as the actual authorization check
+ * before changing the password. Every other purpose consumes immediately.
+ *
+ * The record is looked up by (identifier, purpose) ONLY — not by code — so
+ * a wrong guess always increments `attempts` against the real record
+ * (previously the query filtered on `code` too, which meant a wrong guess
+ * never matched any document and `attempts` never advanced, making the
+ * lockout unreachable and the 6-digit code brute-forceable with unlimited
+ * guesses).
+ */
+export async function verifyOTP({email, code, purpose = "email_verification", consume = true}:{email: string, code: string, purpose: OtpPurpose, consume?: boolean} ): Promise<{ success: boolean; error?: string }> {
   await ensureDBConnection();
 
-  // Find valid OTP
-  const record = await Otp.findOne({ 
-    identifier: email.toLowerCase(), 
-    code, 
+  const record = await Otp.findOne({
+    identifier: email.toLowerCase(),
     purpose,
   });
 
   if (!record) {
-    // Check if there's an expired OTP
-    const expiredRecord = await Otp.findOne({
-      identifier: email.toLowerCase(),
-      code,
-      purpose,
-    });
-    
-    if (expiredRecord) {
-      return { success: false, error: "Code has expired. Please request a new one." };
-    }
-    
-    return { success: false, error: "Invalid code. Please try again." };
+    return { success: false, error: "Code has expired or does not exist. Please request a new one." };
   }
 
-  // Check if max attempts reached
-  if (record.attempts >= 5) {
+  if (record.attempts >= 3) {
     await Otp.deleteOne({ _id: record._id });
     return { success: false, error: "Too many failed attempts. Please request a new code." };
   }
 
-  // Increment attempts
-  await Otp.findByIdAndUpdate(
-    record._id,
-    { $inc: { attempts: 1 } },
-    { new: true }
-  );
+  if (record.code !== code) {
+    await Otp.updateOne({ _id: record._id }, { $inc: { attempts: 1 } });
+    return { success: false, error: "Invalid code. Please try again." };
+  }
 
   // If this is a forget-password request, also verify the email
   if (purpose === 'password_reset') {
@@ -87,7 +91,7 @@ export async function verifyOTP({email, code, purpose = "email_verification"}:{e
 
     if (user && user.emailVerified === false) {
       await User.findOneAndUpdate(
-        { email: email.toLowerCase() }, 
+        { email: email.toLowerCase() },
         { emailVerified: true, emailVerifiedAt: new Date() }
       );
     }
@@ -96,12 +100,14 @@ export async function verifyOTP({email, code, purpose = "email_verification"}:{e
   // For email verification, mark as verified
   if (purpose === 'email_verification') {
     await User.findOneAndUpdate(
-      { email: email.toLowerCase() }, 
+      { email: email.toLowerCase() },
       { emailVerified: true, emailVerifiedAt: new Date() }
     );
   }
 
-  await Otp.deleteOne({ _id: record._id });
+  if (consume) {
+    await Otp.deleteOne({ _id: record._id });
+  }
 
   return { success: true };
 };

@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/session";
 import { logError } from "@/lib/log-error";
+import { getClientIp, rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +17,14 @@ export const dynamic = "force-dynamic";
  * error to a client that's already failing.
  */
 export async function POST(req: NextRequest) {
+  // Best-effort cap, not a hard gate — this route must never surface a
+  // failure of its own, so an over-limit report is silently dropped rather
+  // than returned as a 429 (the client can't act on it anyway; most calls
+  // arrive via sendBeacon, which doesn't read the response).
+  const ip = getClientIp(req);
+  const { allowed } = await rateLimit({ key: `errors:${ip}`, limit: 20, windowSeconds: 60 });
+  if (!allowed) return NextResponse.json({ ok: true });
+
   let body: {
     errorCode?: string;
     message?: string;

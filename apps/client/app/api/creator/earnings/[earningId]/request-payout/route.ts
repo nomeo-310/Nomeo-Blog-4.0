@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/connect-to-database";
 import { getCurrentUser } from "@/lib/session";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { CreatorEarning } from "@/models/creator-earning";
 import { Profile } from "@/models/profile";
 import { getPlatformSettings } from "@/models/platform-settings";
@@ -33,6 +34,10 @@ export async function POST(
   }
 
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: "request-payout:" + ip, limit: 5, windowSeconds: 900 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     await connectDB();
 
     const earning = await CreatorEarning.findOne({ _id: earningId, creatorId: user.id });

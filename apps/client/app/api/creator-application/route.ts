@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/connect-to-database";
 import { CreatorApplication } from "@/models/creator-application";
 import { getCurrentUser } from "@/lib/session";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +47,10 @@ export async function GET() {
  */
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: "creator-application:" + ip, limit: 5, windowSeconds: 3600 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

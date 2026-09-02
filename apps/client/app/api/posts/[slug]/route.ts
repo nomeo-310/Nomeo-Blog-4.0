@@ -7,6 +7,7 @@ import { Profile } from "@/models/profile";
 import { getCurrentUser } from "@/lib/session";
 import { createNotifications } from "@/lib/create-notification";
 import { normalizeTags, adjustTopicPostCounts } from "@/services/topic-services";
+import { sanitizePostHtml } from "@/lib/sanitize-html";
 
 export const dynamic = "force-dynamic";
 
@@ -183,7 +184,7 @@ export async function PATCH(
 
     // Recompute reading time if content changed
     if (content !== undefined) {
-      update.content     = content.trim();
+      update.content     = sanitizePostHtml(content.trim());
       update.readingTime = Math.max(1, Math.round(
         content.trim().split(/\s+/).filter(Boolean).length / 200
       ));

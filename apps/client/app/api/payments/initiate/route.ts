@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Plan } from "@/models/plan";
 import { getCurrentUser } from "@/lib/session";
 import { connectDB } from "@/lib/connect-to-database";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { PaymentService } from "@/services/payment-service";
 
 /**
@@ -17,6 +18,10 @@ import { PaymentService } from "@/services/payment-service";
  */
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: "payments-initiate:" + ip, limit: 10, windowSeconds: 900 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const user = await getCurrentUser();
     if (!user) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });

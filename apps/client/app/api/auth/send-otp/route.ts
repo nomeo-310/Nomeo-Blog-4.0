@@ -3,9 +3,14 @@ import { NextRequest } from "next/server";
 import mongoose from "mongoose";
 import { sendVerificationOTP } from "@/lib/otp";
 import { connectDB } from "@/lib/connect-to-database";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `send-otp:${ip}`, limit: 5, windowSeconds: 15 * 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     await connectDB();
 
     const { email, type } = await req.json();

@@ -5,14 +5,19 @@ import { connectDB } from "@/lib/connect-to-database";
 import { Reaction } from "@/models/reaction";
 import { Post } from "@/models/post";
 import { getCurrentUser } from "@/lib/session";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: "post-like:" + ip, limit: 60, windowSeconds: 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Sign in to like posts" }, { status: 401 });
 

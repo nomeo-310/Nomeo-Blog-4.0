@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { Conversation, DirectMessage } from "@/models/direct-message";
 import { publishToDm } from "@/lib/server/ably";
 import { getCurrentUser } from "@/lib/session";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { assertCanUseConversation } from "@/services/dm-access-services";
 import { connectDB } from "@/lib/connect-to-database";
 
@@ -54,6 +55,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: "dm-message:" + ip, limit: 30, windowSeconds: 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const { id } = await params;
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

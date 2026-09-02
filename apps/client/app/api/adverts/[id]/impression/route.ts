@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/connect-to-database";
 import { getCurrentUser } from "@/lib/session";
 import { ensureVisitorKey } from "@/lib/visitor-key";
 import { recordImpression } from "@/services/advert-services";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -14,8 +15,12 @@ export const dynamic = "force-dynamic";
  * fetch — a slot that fetched an ad but never mounted it shouldn't count).
  * Public: works for signed-in users and anonymous visitors alike.
  */
-export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `advert-impression:${ip}`, limit: 60, windowSeconds: 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const { id } = await params;
     if (!mongoose.isValidObjectId(id)) return NextResponse.json({ ok: false }, { status: 400 });
 

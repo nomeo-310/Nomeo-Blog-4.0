@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { headers } from "next/headers";
 import { connectDB } from "@/lib/connect-to-database";
 import { getAuth } from "@/lib/auth";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 /**
  * GET /api/search?q=...&type=all|story|author|tag|lounge&limit=20
@@ -47,6 +48,10 @@ function escapeRegex(s: string) {
 
 export async function GET(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `search:${ip}`, limit: 60, windowSeconds: 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const { searchParams } = new URL(req.url);
     const q = (searchParams.get("q") || "").trim();
     const typeParam = (searchParams.get("type") || "all") as SearchType;

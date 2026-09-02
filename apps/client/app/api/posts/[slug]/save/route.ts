@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { connectDB } from "@/lib/connect-to-database";
 import { Post } from "@/models/post";
 import { getCurrentUser } from "@/lib/session";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -14,8 +15,12 @@ export const dynamic = "force-dynamic";
  * (no model import — same pattern as the dashboard saved page).
  * Returns { saved: boolean, savesCount: number }
  */
-export async function POST( _req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+export async function POST( req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: "post-save:" + ip, limit: 60, windowSeconds: 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const user = await getCurrentUser();
     if (!user)
       return NextResponse.json({ error: "Sign in to save posts" }, { status: 401 });

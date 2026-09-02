@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/connect-to-database";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,10 @@ function parsePageSize(raw: string | null): number {
  */
 export async function GET(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `posts-search:${ip}`, limit: 60, windowSeconds: 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     await connectDB();
     const db = mongoose.connection.db;
     if (!db) return NextResponse.json({ posts: [], total: 0, categories: [] });

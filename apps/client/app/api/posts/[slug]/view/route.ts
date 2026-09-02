@@ -6,6 +6,7 @@ import { connectDB } from "@/lib/connect-to-database";
 import { Post } from "@/models/post";
 import { getCurrentUser } from "@/lib/session";
 import { resolvePostAccess, consumeFreeRead } from "@/services/post-access-services";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,10 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `post-view:${ip}`, limit: 30, windowSeconds: 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const { slug } = await params;
     if (!slug) return NextResponse.json({ ok: false }, { status: 400 });
 

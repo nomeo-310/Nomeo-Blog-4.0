@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { connectDB } from "@/lib/connect-to-database";
 import { Comment } from "@/models/comment";
 import { getCurrentUser } from "@/lib/session";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -160,6 +161,10 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: "comment:" + ip, limit: 20, windowSeconds: 600 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const user = await getCurrentUser();
     if (!user)
       return NextResponse.json({ error: "Sign in to comment" }, { status: 401 });

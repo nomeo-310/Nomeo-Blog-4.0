@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/lib/session";
 import { createNotifications } from "@/lib/create-notification";
 import { mailService } from "@/services/email-services";
 import { normalizeTags, adjustTopicPostCounts } from "@/services/topic-services";
+import { sanitizePostHtml } from "@/lib/sanitize-html";
 
 export const dynamic = "force-dynamic";
 
@@ -110,7 +111,7 @@ export async function POST(req: NextRequest) {
       title: title.trim(),
       slug,
       excerpt: excerpt?.trim() || "",
-      content: content.trim(),
+      content: sanitizePostHtml(content.trim()),
       coverImage: coverImage
         ? { secureUrl: coverImage.secureUrl || coverImage.url || "", publicId: coverImage.publicId || "" }
         : { secureUrl: "", publicId: "" },

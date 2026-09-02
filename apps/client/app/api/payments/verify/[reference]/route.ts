@@ -2,6 +2,7 @@
 import { connectDB } from "@/lib/connect-to-database";
 import { PaymentService } from "@/services/payment-service";
 import { NextRequest, NextResponse } from "next/server";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 /**
  * GET /api/payments/verify/:reference
@@ -10,8 +11,12 @@ import { NextRequest, NextResponse } from "next/server";
  * the transaction against Paystack and returns its current status.
  * The webhook remains the source of truth for production.
  */
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ reference: string }> }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ reference: string }> }) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `payments-verify:${ip}`, limit: 20, windowSeconds: 5 * 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const { reference } = await params;
     if (!reference) {
       return NextResponse.json({ success: false, message: "Payment reference is required" }, { status: 400 });

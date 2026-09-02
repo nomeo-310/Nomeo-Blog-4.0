@@ -4,9 +4,14 @@ import mongoose from "mongoose";
 import { sendVerificationOTP } from "@/lib/otp";
 import { ObjectId } from "mongodb";
 import { connectDB } from "@/lib/connect-to-database";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `forgot-password:${ip}`, limit: 5, windowSeconds: 15 * 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     await connectDB();
 
     const { email } = await req.json();

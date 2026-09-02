@@ -98,6 +98,18 @@ export function createAuth() {
       cookiePrefix: "nomeo_client",
     },
 
+    // Explicit rather than relying on the isProduction default and its
+    // in-memory storage — on serverless (Vercel) each cold start gets a
+    // fresh in-memory Map, so an attacker cycling through instances would
+    // see the counter reset constantly. Database-backed persists across
+    // invocations. (This is what actually rate-limits /sign-in, /sign-up,
+    // /change-password and /forget-password — better-auth applies its own
+    // tight defaults, 3 attempts per 10-60s, to those paths automatically.)
+    rateLimit: {
+      enabled: true,
+      storage: "database",
+    },
+
     database: mongodbAdapter(mongoose.connection.db! as never),
 
     user: {

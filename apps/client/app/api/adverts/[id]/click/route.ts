@@ -5,6 +5,7 @@ import { Advert, type IAdvert } from "@/models/advert";
 import { getCurrentUser } from "@/lib/session";
 import { ensureVisitorKey } from "@/lib/visitor-key";
 import { recordClick } from "@/services/advert-services";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,10 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const fallback = NextResponse.redirect(new URL("/", req.url));
   try {
+    const ip = getClientIp(req);
+    const { allowed } = await rateLimit({ key: `advert-click:${ip}`, limit: 20, windowSeconds: 60 });
+    if (!allowed) return fallback;
+
     const { id } = await params;
     if (!mongoose.isValidObjectId(id)) return fallback;
 
@@ -53,8 +58,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
  * so it behaves like any other post card. Records the click and returns —
  * never redirects.
  */
-export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `advert-click:${ip}`, limit: 20, windowSeconds: 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const { id } = await params;
     if (!mongoose.isValidObjectId(id)) return NextResponse.json({ ok: false }, { status: 400 });
 

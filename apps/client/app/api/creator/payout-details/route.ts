@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/connect-to-database";
 import { getCurrentUser } from "@/lib/session";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 import { Profile, type IPayoutDetails } from "@/models/profile";
 import { paystack } from "@/lib/paystack";
 
@@ -82,6 +83,10 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: "payout-details:" + ip, limit: 5, windowSeconds: 900 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     await connectDB();
 
     const banks = await paystack.listBanks();

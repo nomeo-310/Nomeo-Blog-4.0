@@ -3,6 +3,7 @@ import crypto from "crypto";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/connect-to-database";
 import { mailService } from "@/services/email-services";
+import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 /**
  * POST /api/newsletter  { email }
@@ -19,6 +20,10 @@ const EMAIL_RX = /^\S+@\S+\.\S+$/;
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = await rateLimit({ key: `newsletter:${ip}`, limit: 5, windowSeconds: 15 * 60 });
+    if (!allowed) return rateLimitResponse(retryAfterSeconds);
+
     const { email } = await req.json();
 
     if (!email || !EMAIL_RX.test(email)) {

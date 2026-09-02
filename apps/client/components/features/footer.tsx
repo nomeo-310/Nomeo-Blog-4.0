@@ -22,7 +22,8 @@ import { toast } from "sonner";
 
 const EXPLORE_LINKS = [
   { label: "Discover", href: "/" },
-  { label: "Lounge", href: "/lounge" },
+  { label: "Writers", href: "/writers" },
+  { label: "Lounges", href: "/lounges" },
   { label: "Membership", href: "/membership" },
   { label: "Search", href: "/search" },
 ];
