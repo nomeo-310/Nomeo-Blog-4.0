@@ -14,6 +14,7 @@ import { Field, inputCls } from "./settings-field";
 import { SettingsSkeleton } from "./settings-skeleton";
 import { fetchProfile } from "./settings-format";
 import { CreatorApplicationSection } from "./settings-creator-application";
+import Modal from "@/components/ui/modal";
 
 function getPasswordStrength(pw: string): { score: number; label: string; tips: string[] } {
   if (!pw) return { score: 0, label: "", tips: [] };
@@ -68,6 +69,33 @@ export function AccountSettings() {
   const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
   const [showPw, setShowPw] = useState({ current: false, next: false, confirm: false });
   const [saving, setSaving] = useState(false);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const deleteConfirmed = deleteConfirmText.trim().toUpperCase() === "DELETE" && (isOAuth || deletePassword.length > 0);
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setDeleteConfirmText("");
+    setDeletePassword("");
+  };
+
+  const confirmDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      await api.post("/api/account/delete", { password: deletePassword || undefined });
+      toast.success("Your account has been deleted.");
+      await authClient.signOut();
+      router.push("/");
+    } catch (e: unknown) {
+      const msg = (e as { response?: { data?: { error?: string } } })?.response?.data?.error;
+      toast.error(msg ?? "Couldn't delete your account. Try again.");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const strength = useMemo(() => getPasswordStrength(pwForm.next), [pwForm.next]);
 
@@ -185,10 +213,11 @@ export function AccountSettings() {
               <p className="font-heading text-base font-bold text-foreground">Delete account</p>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Permanently delete your account and all your data. This cannot be undone.</p>
               <button
-                onClick={() => { if (!confirm("Are you absolutely sure? This cannot be undone.")) return; toast.error("Account deletion is managed by our support team. Contact us to proceed."); }}
+                onClick={() => setShowDeleteModal(true)}
                 className="mt-4 inline-flex items-center gap-2 rounded-full border border-destructive px-5 py-2.5 text-sm font-semibold text-destructive hover:bg-destructive/10">
                 Delete my account
               </button>
+              <p className="mt-2 text-xs text-muted-foreground">Your account is recoverable for 45 days after deletion — contact support within that window to restore it.</p>
             </div>
           </div>
         </div>
@@ -250,6 +279,45 @@ export function AccountSettings() {
           </ul>
         </div>
       </div>
+
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={closeDeleteModal}
+        title="Delete your account?"
+        description="Your profile and login will be removed immediately. You have 45 days to contact support and recover it before it's gone for good."
+        variant="danger"
+        size="sm"
+        isLoading={deleting}
+        secondaryAction={{ label: "Cancel", onClick: closeDeleteModal, disabled: deleting }}
+        primaryAction={{ label: "Delete my account", onClick: confirmDeleteAccount, disabled: !deleteConfirmed, loading: deleting }}
+      >
+        <div className="space-y-4">
+          <ul className="space-y-1.5 text-sm text-muted-foreground">
+            <li>• Your profile and login are removed right away.</li>
+            <li>• Any active subscription is cancelled.</li>
+            <li>• Your posts stay up, credited to a deleted user, unless you remove them first.</li>
+          </ul>
+          {!isOAuth && (
+            <Field label="Confirm your password">
+              <input
+                type="password"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                placeholder="••••••••"
+                className={inputCls}
+              />
+            </Field>
+          )}
+          <Field label={`Type "DELETE" to confirm`}>
+            <input
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              placeholder="DELETE"
+              className={inputCls}
+            />
+          </Field>
+        </div>
+      </Modal>
     </div>
   );
 }

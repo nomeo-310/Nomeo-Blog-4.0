@@ -1,26 +1,37 @@
+"use client";
+
+import { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { UserMultiple02Icon } from "@hugeicons/core-free-icons";
 import type { TopWriter } from "@/lib/get-top-writers";
 import { WriterCard } from "./writer-card";
+import { WriterDetailModal } from "./writer-detail-modal";
 
 /**
  * WritersPage — the /writers directory: Nomeo's top writers by followers,
- * each with their paid and free posts categorized and linked. Server
- * Component — data comes from getTopWriters() in the route (app/(root)/writers/page.tsx).
+ * each a flip card (front: identity, back: bio + paid/free counts) that
+ * opens an XL detail modal with the writer's full paid and free post
+ * lists, linked straight into each post.
+ *
+ * Full-width max-w-7xl container to match the rest of the site (home,
+ * search, about, membership) — narrower than that reads as inconsistent
+ * next to every other page.
  *
  * Component: app-pages/writers/writers-page.tsx
  * Route:     app/(root)/writers/page.tsx
  */
 export default function WritersPage({ writers }: { writers: TopWriter[] }) {
+  const [selected, setSelected] = useState<TopWriter | null>(null);
+
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="mx-auto w-full px-4 py-12">
       <div className="text-center">
         <p className="text-xs font-semibold uppercase tracking-widest text-primary">Community</p>
         <h1 className="mt-2 font-heading text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           Top writers
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-          The voices that make Nomeo worth reading — with their paid and free stories, so you can jump straight in.
+          The voices that make Nomeo worth reading. Hover a card for a quick look, or open it for their full paid and free stories.
         </p>
       </div>
 
@@ -31,12 +42,14 @@ export default function WritersPage({ writers }: { writers: TopWriter[] }) {
           <p className="mt-2 max-w-xs text-sm text-muted-foreground">Check back soon — new writers join Nomeo all the time.</p>
         </div>
       ) : (
-        <div className="mt-12 space-y-5">
+        <div className="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {writers.map((w) => (
-            <WriterCard key={w.username} writer={w} />
+            <WriterCard key={w.username} writer={w} onViewDetails={() => setSelected(w)} />
           ))}
         </div>
       )}
+
+      <WriterDetailModal writer={selected} onClose={() => setSelected(null)} />
     </div>
   );
 }

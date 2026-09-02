@@ -1,98 +1,63 @@
-import Link from "next/link";
+"use client";
+
 import Image from "next/image";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { UserCircle02Icon } from "@hugeicons/core-free-icons";
-import type { TopWriter, TopWriterPost } from "@/lib/get-top-writers";
+import { ArrowRight02Icon, BookOpen01Icon, UserAdd02Icon } from "@hugeicons/core-free-icons";
+import type { TopWriter } from "@/lib/get-top-writers";
 
-/** One writer's card on the /writers directory — profile summary plus their paid and free posts, categorized. */
-export function WriterCard({ writer }: { writer: TopWriter }) {
+/**
+ * WriterCard — one writer tile on /writers. Static, not a flip card — a
+ * hover-to-reveal flip has no equivalent on touch, and tap-to-flip fights
+ * with tap-to-open-the-modal on mobile. Avatar + name up top, bio and
+ * stats below, "View details" opens the full-detail modal.
+ */
+export function WriterCard({ writer, onViewDetails }: { writer: TopWriter; onViewDetails: () => void }) {
   const initials = (writer.displayName || writer.username).split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
 
   return (
-    <div className="flex flex-col gap-5 rounded-2xl border border-border bg-card p-6 sm:flex-row sm:gap-6">
-      {/* Profile summary */}
-      <Link href={`/profile/${writer.username}`} className="flex shrink-0 flex-row items-center gap-3 sm:w-48 sm:flex-col sm:items-start sm:text-left">
-        {writer.avatar ? (
-          <Image
-            src={writer.avatar}
-            alt={writer.displayName || writer.username}
-            width={56} height={56}
-            className="h-14 w-14 shrink-0 rounded-full object-cover ring-2 ring-border"
-          />
-        ) : (
-          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-lg font-bold text-primary ring-2 ring-border">
-            {initials}
-          </span>
-        )}
-        <div className="min-w-0">
-          <p className="truncate font-heading text-sm font-bold text-foreground hover:text-primary">
-            {writer.displayName || writer.username}
-          </p>
-          <p className="truncate text-xs text-muted-foreground">@{writer.username}</p>
-          <p className="mt-1 text-xs font-semibold text-primary">{formatFollowers(writer.followersCount)}</p>
+    <div className="flex h-full flex-col rounded-xl border border-border bg-card p-5 transition-shadow hover:shadow-md">
+      {/* Grid rows stretch every card to the row's tallest — this spacer
+          absorbs that extra height so "View details" lands on the same
+          baseline across a row, whether a card has a bio or not. */}
+      <div className="flex-1">
+        <div className="flex items-start gap-3">
+          {writer.avatar ? (
+            <Image src={writer.avatar} alt={writer.displayName || writer.username} width={52} height={52} className="h-13 w-13 shrink-0 rounded-full object-cover ring-2 ring-border" />
+          ) : (
+            <span className="flex h-13 w-13 shrink-0 items-center justify-center rounded-full bg-primary/10 font-heading text-lg font-bold text-primary ring-2 ring-border">
+              {initials}
+            </span>
+          )}
+          <div className="min-w-0 flex-1 pt-0.5">
+            <p className="truncate font-heading text-sm font-bold text-foreground">{writer.displayName || writer.username}</p>
+            <p className="truncate text-xs text-muted-foreground">@{writer.username}</p>
+            <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-semibold text-primary">
+              <HugeiconsIcon icon={UserAdd02Icon} className="h-3 w-3" /> {formatFollowers(writer.followersCount)}
+            </span>
+          </div>
         </div>
-      </Link>
 
-      {writer.bio && (
-        <p className="hidden max-w-xs shrink-0 text-xs leading-relaxed text-muted-foreground sm:block">{writer.bio}</p>
-      )}
-
-      {/* Paid / free post lists */}
-      <div className="grid flex-1 gap-5 sm:grid-cols-2">
-        <PostList
-          label="Paid"
-          posts={writer.paidPosts}
-          totalCount={writer.paidPostsCount}
-          username={writer.username}
-          emptyLabel="No paid posts yet"
-        />
-        <PostList
-          label="Free"
-          posts={writer.freePosts}
-          totalCount={writer.freePostsCount}
-          username={writer.username}
-          emptyLabel="No free posts yet"
-        />
-      </div>
-    </div>
-  );
-}
-
-function PostList({ label, posts, totalCount, username, emptyLabel }: {
-  label: string;
-  posts: TopWriterPost[];
-  totalCount: number;
-  username: string;
-  emptyLabel: string;
-}) {
-  return (
-    <div>
-      <span className={
-        "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide " +
-        (label === "Paid" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground")
-      }>
-        {label}
-      </span>
-      {posts.length === 0 ? (
-        <p className="mt-2.5 flex items-center gap-1.5 text-xs text-muted-foreground/60 italic">
-          <HugeiconsIcon icon={UserCircle02Icon} className="h-3.5 w-3.5" /> {emptyLabel}
+        <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
+          {writer.bio || "No bio yet."}
         </p>
-      ) : (
-        <ul className="mt-2.5 space-y-1.5">
-          {posts.map((p) => (
-            <li key={p.id}>
-              <Link href={`/post/${p.slug}`} className="line-clamp-1 text-sm text-foreground hover:text-primary hover:underline">
-                {p.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-      {totalCount > posts.length && (
-        <Link href={`/profile/${username}`} className="mt-2 inline-block text-xs font-semibold text-primary hover:underline">
-          View all {totalCount} →
-        </Link>
-      )}
+
+        <div className="mt-3 flex items-center gap-2 text-[11px] font-medium">
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-1 text-primary">
+            <HugeiconsIcon icon={BookOpen01Icon} className="h-3 w-3" /> {writer.paidPostsCount} paid
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-muted-foreground">
+            <HugeiconsIcon icon={BookOpen01Icon} className="h-3 w-3" /> {writer.freePostsCount} free
+          </span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={onViewDetails}
+        className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+      >
+        View details <HugeiconsIcon icon={ArrowRight02Icon} className="h-3.5 w-3.5" />
+      </button>
     </div>
   );
 }
