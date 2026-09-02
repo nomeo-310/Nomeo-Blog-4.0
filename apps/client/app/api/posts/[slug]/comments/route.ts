@@ -116,7 +116,7 @@ export async function GET(
       return {
         id:                cid,
         body:              isDeleted ? "" : String(c.body || ""),
-        authorName:        String(p?.displayName || p?.username || "Nomeo user"),
+        authorName:        String(p?.displayName || p?.username || "QuilHub user"),
         authorUsername:    String(p?.username || ""),
         authorAvatar:      String(p?.profileImage?.url || ""),
         likesCount:        Number(c.likesCount || 0),

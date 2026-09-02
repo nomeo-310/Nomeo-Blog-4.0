@@ -8,7 +8,7 @@ import { FaqAccordion } from "./faq-accordion";
 import { FaqContact } from "./faq-contact";
 
 /**
- * FAQ page — Nomeo.
+ * FAQ page — QuilHub.
  *
  * Matches the app design (forest-green tokens, Quicksand body / Urbanist
  * headings, container layout). Two parts:

@@ -93,7 +93,7 @@ async function getLikedPosts(userId: string) {
       excerpt: String(p.excerpt || ""), coverImage: String(p.coverImage.secureUrl || p.coverImage.url || ""),
       readingTime: p.readingTime ?? null, access: p.access === "paid" ? "paid" : "free" as "free" | "paid",
       likesCount: Number(p.likesCount || 0),
-      authorName: String(pm.get(String(p.authorId))?.displayName || "Nomeo writer"),
+      authorName: String(pm.get(String(p.authorId))?.displayName || "QuilHub writer"),
     }));
   } catch { return []; }
 }

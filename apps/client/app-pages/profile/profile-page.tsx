@@ -34,12 +34,12 @@ import type { ProfileData, ProfilePost, ProfileLounge } from "./profile-types";
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
   const profile = await getProfile(username);
-  if (!profile) return { title: "Profile not found — Nomeo" };
+  if (!profile) return { title: "Profile not found — QuilHub" };
   return {
-    title: `${profile.displayName} (@${profile.username}) — Nomeo`,
-    description: profile.bio || `Read ${profile.displayName}'s writing on Nomeo.`,
+    title: `${profile.displayName} (@${profile.username}) — QuilHub`,
+    description: profile.bio || `Read ${profile.displayName}'s writing on QuilHub.`,
     openGraph: {
-      title: `${profile.displayName} on Nomeo`,
+      title: `${profile.displayName} on QuilHub`,
       description: profile.bio,
       images: profile.avatar ? [profile.avatar] : [],
     },
@@ -165,7 +165,7 @@ async function getProfile(username: string): Promise<ProfileData | null> {
     return {
       userId:        String(raw.userId),
       username:      String(raw.username),
-      displayName:   String(raw.displayName || raw.username || "Nomeo user"),
+      displayName:   String(raw.displayName || raw.username || "QuilHub user"),
       pronouns:      String(raw.pronouns || ""),
       bio:           String(raw.bio || ""),
       about:         String(raw.about || ""),

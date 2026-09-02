@@ -23,10 +23,10 @@ export function PostViewTracker({ postSlug, canRead }: PostViewTrackerProps) {
 
   // Generate or get a session ID that persists for the browser session
   const getSessionId = () => {
-    let sessionId = sessionStorage.getItem('nomeo:sessionId');
+    let sessionId = sessionStorage.getItem('quilhub:sessionId');
     if (!sessionId) {
       sessionId = crypto.randomUUID();
-      sessionStorage.setItem('nomeo:sessionId', sessionId);
+      sessionStorage.setItem('quilhub:sessionId', sessionId);
     }
     return sessionId;
   };
@@ -37,7 +37,7 @@ export function PostViewTracker({ postSlug, canRead }: PostViewTrackerProps) {
 
     const sessionId = getSessionId();
     // Include both userId and sessionId for maximum uniqueness
-    const viewKey = `nomeo:viewed:${KEY_VERSION}:${user.id}:${sessionId}:${postSlug}`;
+    const viewKey = `quilhub:viewed:${KEY_VERSION}:${user.id}:${sessionId}:${postSlug}`;
 
     if (sessionStorage.getItem(viewKey)) return;
     if (firedRef.current.has(`${user.id}:${sessionId}:${postSlug}`)) return;

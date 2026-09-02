@@ -25,13 +25,13 @@ import * as React from "react";
 /* ── Brand tokens — edit once, applies to every email ─────────────────── */
 
 export const BRAND = {
-  name: "Nomeo",
-  url: "https://nomeo.com",
-  supportEmail: "support@nomeo.com",
+  name: "QuilHub",
+  url: "https://quilhub.com",
+  supportEmail: "support@quilhub.com",
   address: "Lagos, Nigeria",
   social: {
-    twitter: "https://x.com/nomeo",
-    instagram: "https://instagram.com/nomeo",
+    twitter: "https://x.com/quilhub",
+    instagram: "https://instagram.com/quilhub",
   },
 };
 

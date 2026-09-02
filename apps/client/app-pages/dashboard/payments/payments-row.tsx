@@ -11,7 +11,7 @@ export function PaymentHistoryRow({ payment }: { payment: PaymentRow }) {
       {/* Plan */}
       <div className="min-w-0">
         <p className="truncate text-sm font-semibold text-foreground">
-          {payment.plan?.name ?? "Nomeo Membership"}
+          {payment.plan?.name ?? "QuilHub Membership"}
         </p>
         <p className="text-xs text-muted-foreground">
           {payment.plan?.interval ? `Billed ${payment.plan.interval}` : "Subscription"}

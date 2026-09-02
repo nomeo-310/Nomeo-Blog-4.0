@@ -53,11 +53,11 @@ const getBaseUrl = () => {
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
-    template: "%s | Nomeo",
-    default: "Nomeo | Long-form stories, worth your time",
+    template: "%s | QuilHub",
+    default: "QuilHub | Long-form stories, worth your time",
   },
   description:
-    "Nomeo is a home for long-form writing. Read in-depth stories from independent writers, follow the voices you love, and support them directly through a single subscription. Write, publish, and earn from the reader pool.",
+    "QuilHub is a home for long-form writing. Read in-depth stories from independent writers, follow the voices you love, and support them directly through a single subscription. Write, publish, and earn from the reader pool.",
   keywords: [
     "long-form writing",
     "blogging platform",
@@ -67,12 +67,12 @@ export const metadata: Metadata = {
     "essays and stories",
     "follow writers",
     "publish online",
-    "Nomeo",
+    "QuilHub",
   ],
-  authors: [{ name: "Nomeo" }],
-  creator: "Nomeo",
+  authors: [{ name: "QuilHub" }],
+  creator: "QuilHub",
   publisher: "Nomeo Consults Inc.",
-  applicationName: "Nomeo",
+  applicationName: "QuilHub",
   formatDetection: {
     email: false,
     address: false,
@@ -80,8 +80,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "Nomeo",
-    title: "Nomeo | Long-form stories, worth your time",
+    siteName: "QuilHub",
+    title: "QuilHub | Long-form stories, worth your time",
     description:
       "Read in-depth stories from independent writers, follow the voices you love, and support them through a single subscription. Write, publish, and earn.",
     url: "/",
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nomeo | Long-form stories, worth your time",
+    title: "QuilHub | Long-form stories, worth your time",
     description:
       "A home for long-form writing. Read, follow, and support independent writers — or publish and earn from the reader pool.",
   },

@@ -291,7 +291,7 @@ function LoungeCard({ lounge, onOpen, onRules, onGate }: {
         {!lounge.creator && isOpen && (
           <div className="mt-3 flex items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-[9px] font-bold text-primary">N</span>
-            <span className="text-xs text-muted-foreground">by <span className="font-medium text-foreground">Nomeo</span></span>
+            <span className="text-xs text-muted-foreground">by <span className="font-medium text-foreground">QuilHub</span></span>
           </div>
         )}
         <div className="mt-4 flex items-center justify-between border-t border-border pt-3">

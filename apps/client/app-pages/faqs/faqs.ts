@@ -1,5 +1,5 @@
 /**
- * faqs.ts — Nomeo FAQ content.
+ * faqs.ts — QuilHub FAQ content.
  *
  * Every answer here is grounded in the published legal documents (Terms of
  * Service, Privacy Policy, Data Protection Policy, Community Guidelines, Cookie
@@ -30,12 +30,12 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
     description: "Accounts, eligibility, and setting up your profile.",
     items: [
       {
-        q: "What is Nomeo?",
-        a: "Nomeo is a platform for long-form writing where readers and writers share ideas, learn, and connect. Readers can follow creators, save posts, comment, and subscribe; creators can publish posts, host lounges, collaborate, and earn from a shared subscription revenue pool.",
+        q: "What is QuilHub?",
+        a: "QuilHub is a platform for long-form writing where readers and writers share ideas, learn, and connect. Readers can follow creators, save posts, comment, and subscribe; creators can publish posts, host lounges, collaborate, and earn from a shared subscription revenue pool.",
       },
       {
-        q: "How old do I have to be to use Nomeo?",
-        a: "You must be at least 13 years old. If you're under the age of majority in your country, you may only use Nomeo with the involvement and consent of a parent or legal guardian. Nomeo isn't intended for children under 13, and we don't knowingly collect their data.",
+        q: "How old do I have to be to use QuilHub?",
+        a: "You must be at least 13 years old. If you're under the age of majority in your country, you may only use QuilHub with the involvement and consent of a parent or legal guardian. QuilHub isn't intended for children under 13, and we don't knowingly collect their data.",
       },
       {
         q: "How do I create an account?",
@@ -51,7 +51,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
       },
       {
         q: "How do I keep my account secure?",
-        a: "You're responsible for keeping your login credentials safe and for activity under your account. If you suspect someone has accessed your account without permission, email support@nomeo.com immediately. We protect accounts with encrypted connections, hashed passwords, and access controls.",
+        a: "You're responsible for keeping your login credentials safe and for activity under your account. If you suspect someone has accessed your account without permission, email support@quilhub.com immediately. We protect accounts with encrypted connections, hashed passwords, and access controls.",
       },
     ],
   },
@@ -76,7 +76,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
       },
       {
         q: "Who processes my payment?",
-        a: "Payments are handled securely by our payment processor, Paystack. Your use of payment features is also subject to their terms. Nomeo doesn't store full card numbers — we receive only limited information such as transaction status and the last digits of a card.",
+        a: "Payments are handled securely by our payment processor, Paystack. Your use of payment features is also subject to their terms. QuilHub doesn't store full card numbers — we receive only limited information such as transaction status and the last digits of a card.",
       },
       {
         q: "How do I cancel my subscription?",
@@ -97,11 +97,11 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
     items: [
       {
         q: "How do I become a creator?",
-        a: "You can apply to upgrade from a reader to a creator at any time — you don't have to decide permanently at sign-up. Administrative roles (moderator, admin) are assigned by Nomeo only and can't be self-selected.",
+        a: "You can apply to upgrade from a reader to a creator at any time — you don't have to decide permanently at sign-up. Administrative roles (moderator, admin) are assigned by QuilHub only and can't be self-selected.",
       },
       {
         q: "How do creators earn money?",
-        a: "Subscription revenue, after Nomeo's platform fee and applicable costs, forms a distributable pool. Each billing period, that pool is shared among creators based on the reading time their content attracted from subscribers, using our current methodology.",
+        a: "Subscription revenue, after QuilHub's platform fee and applicable costs, forms a distributable pool. Each billing period, that pool is shared among creators based on the reading time their content attracted from subscribers, using our current methodology.",
       },
       {
         q: "What do I need to receive payouts?",
@@ -109,7 +109,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
       },
       {
         q: "Can the platform fee or earnings calculation change?",
-        a: "Yes. The platform fee percentage and the earnings methodology are set by Nomeo and may change. We'll give reasonable notice of material changes.",
+        a: "Yes. The platform fee percentage and the earnings methodology are set by QuilHub and may change. We'll give reasonable notice of material changes.",
       },
       {
         q: "How do earnings work for co-authored posts?",
@@ -121,7 +121,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
       },
       {
         q: "Who owns the content I publish?",
-        a: "You keep ownership of your posts, comments, and other content. By posting, you grant Nomeo a worldwide, non-exclusive, royalty-free licence to host, display, distribute, and promote it for running and marketing the Platform. That licence ends when you delete your content, except for copies kept for legal or backup reasons, or already shared or saved by others.",
+        a: "You keep ownership of your posts, comments, and other content. By posting, you grant QuilHub a worldwide, non-exclusive, royalty-free licence to host, display, distribute, and promote it for running and marketing the Platform. That licence ends when you delete your content, except for copies kept for legal or backup reasons, or already shared or saved by others.",
       },
     ],
   },
@@ -137,7 +137,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
         a: "A lounge is a space a creator hosts for discussion among their subscribers. Lounge hosts are responsible for keeping their spaces within the Community Guidelines. Hosts may set additional reasonable rules, but those can't override the Guidelines.",
       },
       {
-        q: "What's expected of everyone on Nomeo?",
+        q: "What's expected of everyone on QuilHub?",
         a: "Be respectful — disagree with ideas, not people. Be honest and don't impersonate others. Be original: only publish work you own or have the right to share, and credit your sources. Respect privacy and don't share others' private information without consent.",
       },
       {
@@ -150,11 +150,11 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
       },
       {
         q: "How do I report something?",
-        a: "Use the report feature, or contact support@nomeo.com. Reports are reviewed by our moderation team. Please don't abuse the reporting system with false reports.",
+        a: "Use the report feature, or contact support@quilhub.com. Reports are reviewed by our moderation team. Please don't abuse the reporting system with false reports.",
       },
       {
         q: "What if I think a moderation decision was a mistake?",
-        a: "You can appeal by contacting support@nomeo.com with your account details and an explanation. We'll review and respond. Enforcement is applied at our discretion, with stronger action for severe or repeated violations.",
+        a: "You can appeal by contacting support@quilhub.com with your account details and an explanation. We'll review and respond. Enforcement is applied at our discretion, with stronger action for severe or repeated violations.",
       },
     ],
   },
@@ -166,16 +166,16 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
     description: "What we collect, your rights, and how your data is protected.",
     items: [
       {
-        q: "What data does Nomeo collect?",
+        q: "What data does QuilHub collect?",
         a: "Account and profile details, optional sensitive data (pronouns, gender, date of birth), the content you create, payment and payout information, and communications with us. We also collect usage data such as reading time (used to calculate creator earnings) and device/log data. Full details are in the Privacy Policy.",
       },
       {
-        q: "Does Nomeo sell my data?",
+        q: "Does QuilHub sell my data?",
         a: "No. We don't sell your personal data. We share it only with trusted service providers (such as hosting, email delivery, and payment processing) under agreements that require them to protect it, or where the law requires it.",
       },
       {
         q: "What are my rights over my data?",
-        a: "Depending on where you live, you can access, correct, or delete your data; restrict or object to certain processing; receive a copy in a portable format; and withdraw consent where processing relies on it. You can manage much of this in your settings, or email privacy@nomeo.com. You also have the right to complain to your data protection authority — in Nigeria, the Nigeria Data Protection Commission (NDPC).",
+        a: "Depending on where you live, you can access, correct, or delete your data; restrict or object to certain processing; receive a copy in a portable format; and withdraw consent where processing relies on it. You can manage much of this in your settings, or email privacy@quilhub.com. You also have the right to complain to your data protection authority — in Nigeria, the Nigeria Data Protection Commission (NDPC).",
       },
       {
         q: "How is my data kept safe?",
@@ -196,10 +196,10 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: "cookies",
     title: "Cookies",
-    description: "How Nomeo uses cookies and how to control them.",
+    description: "How QuilHub uses cookies and how to control them.",
     items: [
       {
-        q: "How does Nomeo use cookies?",
+        q: "How does QuilHub use cookies?",
         a: "Cookies keep you signed in and your session secure, remember preferences like theme and language, help us understand usage so we can improve, and support core features such as reading paid content and tracking reading time for creator earnings.",
       },
       {
@@ -221,14 +221,14 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
     items: [
       {
         q: "How do I delete my account?",
-        a: "You can stop using Nomeo and delete your account at any time from your settings. When you delete it, it may be recoverable for a limited period — currently 45 days — before permanent removal.",
+        a: "You can stop using QuilHub and delete your account at any time from your settings. When you delete it, it may be recoverable for a limited period — currently 45 days — before permanent removal.",
       },
       {
         q: "What happens to my data after I delete my account?",
         a: "After the 45-day recovery window, deletion is permanent: your personal data is deleted or anonymised, and your content may be removed or anonymised. We keep some records only where we must for legal, tax, accounting, fraud-prevention, or dispute-resolution reasons.",
       },
       {
-        q: "Can Nomeo suspend or terminate my account?",
+        q: "Can QuilHub suspend or terminate my account?",
         a: "We may suspend or terminate access if you violate the Terms, create legal risk, or after prolonged inactivity. Some provisions survive termination, including those on content licences, earnings owed, disclaimers, and limitations of liability.",
       },
     ],
@@ -238,23 +238,23 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
   {
     id: "legal",
     title: "Legal & policies",
-    description: "Copyright, liability, and the law that governs Nomeo.",
+    description: "Copyright, liability, and the law that governs QuilHub.",
     items: [
       {
         q: "What if content infringes my copyright?",
-        a: "Email support@nomeo.com with enough detail to identify your work and the allegedly infringing material. We may remove infringing content and terminate repeat infringers.",
+        a: "Email support@quilhub.com with enough detail to identify your work and the allegedly infringing material. We may remove infringing content and terminate repeat infringers.",
       },
       {
-        q: "What law governs Nomeo?",
+        q: "What law governs QuilHub?",
         a: "These Terms are governed by the laws of the Federal Republic of Nigeria. Disputes are resolved in the courts of Lagos State, Nigeria, unless mandatory law provides otherwise.",
       },
       {
-        q: "What is Nomeo's liability if something goes wrong?",
-        a: "The Platform is provided \"as is\" without warranties. To the maximum extent permitted by law, Nomeo isn't liable for indirect or consequential damages, and our total liability for any claim won't exceed the greater of what you paid us in the prior 12 months or ₦20,000. Some jurisdictions don't allow certain limitations, so parts of this may not apply to you.",
+        q: "What is QuilHub's liability if something goes wrong?",
+        a: "The Platform is provided \"as is\" without warranties. To the maximum extent permitted by law, QuilHub isn't liable for indirect or consequential damages, and our total liability for any claim won't exceed the greater of what you paid us in the prior 12 months or ₦20,000. Some jurisdictions don't allow certain limitations, so parts of this may not apply to you.",
       },
       {
         q: "How will I know if the policies change?",
-        a: "We may update our Terms and policies as the Platform and applicable laws evolve. For material changes, we'll give reasonable notice by email or an in-app notice. Continuing to use Nomeo after changes take effect means you accept the updated terms.",
+        a: "We may update our Terms and policies as the Platform and applicable laws evolve. For material changes, we'll give reasonable notice by email or an in-app notice. Continuing to use QuilHub after changes take effect means you accept the updated terms.",
       },
     ],
   },
@@ -262,8 +262,8 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
 
 /** Contact details for the page's Contact section (rendered with id="contact"). */
 export const FAQ_CONTACT = {
-  supportEmail: "support@nomeo.com",
-  privacyEmail: "privacy@nomeo.com",
+  supportEmail: "support@quilhub.com",
+  privacyEmail: "privacy@quilhub.com",
   company: "Nomeo Consults Inc.",
   address: "21 Akin Soname Street, Ojokoro New Town, Owutu Estate, Ikorodu, Lagos",
 };

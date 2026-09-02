@@ -16,7 +16,7 @@ export type campaignEmailProps = {
   unsubscribeUrl: string;
 }
 
-export default function CampaignEmail({ heading = "News from Nomeo", bodyHtml = "<p>Campaign body goes here.</p>", ctaLabel, ctaUrl, unsubscribeUrl = "https://nomeo.com/unsubscribe/token" }: campaignEmailProps) {
+export default function CampaignEmail({ heading = "News from QuilHub", bodyHtml = "<p>Campaign body goes here.</p>", ctaLabel, ctaUrl, unsubscribeUrl = "https://quilhub.com/unsubscribe/token" }: campaignEmailProps) {
   return (
     <EmailLayout preview={heading} unsubscribeUrl={unsubscribeUrl}>
       <Heading>{heading}</Heading>

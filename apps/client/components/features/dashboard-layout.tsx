@@ -145,14 +145,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Link href="/" className="flex items-center gap-2.5 min-w-0">
               <Image
                 src="/images/logo.webp"
-                alt="Nomeo"
+                alt="QuilHub"
                 width={32}
                 height={32}
                 className="h-8 w-8 shrink-0 object-contain"
                 priority
               />
               <span className="font-heading text-base font-bold text-foreground truncate">
-                Nomeo
+                QuilHub
               </span>
             </Link>
           )}
@@ -160,7 +160,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Link href="/" className="flex h-8 w-8 items-center justify-center">
               <Image
                 src="/images/logo.webp"
-                alt="Nomeo"
+                alt="QuilHub"
                 width={32}
                 height={32}
                 className="h-8 w-8 object-contain"
@@ -464,7 +464,7 @@ function TopBarUserMenu({ user, initials, onSignOut }: {
               Settings
             </DropdownItem>
             <DropdownItem href="/" icon={<HugeiconsIcon icon={ArrowLeft02Icon} className="h-4 w-4" />} onClick={() => setOpen(false)}>
-              Back to Nomeo
+              Back to QuilHub
             </DropdownItem>
           </div>
           <div className="border-t border-border py-1.5">

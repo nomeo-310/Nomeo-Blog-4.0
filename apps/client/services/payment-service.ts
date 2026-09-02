@@ -12,7 +12,7 @@ import { CreatorEarning } from "@/models/creator-earning";
 import { Notification } from "@/models/notification";
 
 /**
- * PaymentService — Nomeo
+ * PaymentService — QuilHub
  * ----------------------
  * Subscription payments only. Initiates a Paystack transaction, verifies it
  * (polling safety-net), and processes the webhook (source of truth).
@@ -38,7 +38,7 @@ export const PaymentService = {
    * Paystack is called first so we fail fast before writing to the DB.
    */
   async initiate(input: InitiateSubscriptionInput) {
-    const reference = `nomeo_${nanoid(16)}`;
+    const reference = `quilhub_${nanoid(16)}`;
     const currency = input.currency ?? "NGN";
 
     const paystackData = await paystack.initializeTransaction({

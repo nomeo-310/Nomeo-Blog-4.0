@@ -171,7 +171,7 @@ export function PostsGrid({ initialPosts, initialSeries }: Props) {
           <EmptyState
             icon={<PenLine className="h-8 w-8 text-muted-foreground/30" />}
             title={query || filter !== "all" ? "No posts match this filter" : "No posts yet"}
-            desc={query || filter !== "all" ? "Try a different search or filter." : "Write your first post and share it with the Nomeo community."}
+            desc={query || filter !== "all" ? "Try a different search or filter." : "Write your first post and share it with the QuilHub community."}
             action={!query && filter === "all" ? <Link href="/dashboard/posts/new" className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90"><Plus className="h-4 w-4" />New post</Link> : undefined}
           />
         ) : (

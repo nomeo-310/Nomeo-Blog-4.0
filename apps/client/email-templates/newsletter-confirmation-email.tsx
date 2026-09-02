@@ -8,10 +8,10 @@ import { EmailLayout, Heading, Paragraph, CtaButton } from "./components";
 export default function NewsletterConfirmationEmail({ confirmUrl, unsubscribeUrl }: { confirmUrl: string; unsubscribeUrl?: string }) {
   
   return (
-    <EmailLayout preview="Confirm your Nomeo newsletter subscription" unsubscribeUrl={unsubscribeUrl}>
+    <EmailLayout preview="Confirm your QuilHub newsletter subscription" unsubscribeUrl={unsubscribeUrl}>
       <Heading>Confirm your subscription</Heading>
       <Paragraph>
-        Thanks for subscribing to the Nomeo newsletter. Tap the button below to
+        Thanks for subscribing to the QuilHub newsletter. Tap the button below to
         confirm your email — then you&apos;ll start receiving the best new
         stories and writer spotlights.
       </Paragraph>

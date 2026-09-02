@@ -1,5 +1,5 @@
 // scripts/seed-open-lounges.js
-// Creates Nomeo's open (platform-owned) lounges. Run once.
+// Creates QuilHub's open (platform-owned) lounges. Run once.
 //   node scripts/seed-open-lounges.js
 const mongoose = require('mongoose');
 require('dotenv').config({ path: '.env' });
@@ -37,18 +37,18 @@ const Lounge = mongoose.models.Lounge || mongoose.model('Lounge', LoungeSchema);
 const OPEN_LOUNGES = [
   {
     name: 'The Commons',
-    description: 'An open lounge for every Nomeo reader and writer. Say hello, share what you are reading, meet people.',
+    description: 'An open lounge for every QuilHub reader and writer. Say hello, share what you are reading, meet people.',
     rules: [
       'Be kind and respectful — treat others as you would in person.',
       'No spam, self-promotion, or repeated link-dropping.',
-      'Keep it on-topic: reading, writing, and the Nomeo community.',
+      'Keep it on-topic: reading, writing, and the QuilHub community.',
       'No harassment, hate speech, or personal attacks.',
       'Report anything that crosses the line instead of engaging.',
     ],
   },
   {
     name: 'Feedback & Ideas',
-    description: 'Tell us what is working, what is not, and what you would love to see on Nomeo.',
+    description: 'Tell us what is working, what is not, and what you would love to see on QuilHub.',
     rules: [
       'Be specific — concrete feedback helps more than vague complaints.',
       'Search before posting so we avoid repeat threads.',
@@ -57,7 +57,7 @@ const OPEN_LOUNGES = [
     ],
   },
   {
-    name: 'Nomeo Hangout',
+    name: 'QuilHub Hangout',
     description: 'A relaxed space to just hang out, chat about anything, and connect with other readers and writers.',
     rules: [
       'Keep it friendly — this is a casual space for everyone.',
@@ -68,7 +68,7 @@ const OPEN_LOUNGES = [
   },
   {
     name: 'Writers Corner',
-    description: 'For the writers of Nomeo — talk craft, share drafts, swap feedback, and find your next collaborator.',
+    description: 'For the writers of QuilHub — talk craft, share drafts, swap feedback, and find your next collaborator.',
     rules: [
       'Give feedback you would want to receive — kind, specific, useful.',
       'Credit others’ work; never repost someone’s writing as your own.',

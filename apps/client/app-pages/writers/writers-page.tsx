@@ -8,7 +8,7 @@ import { WriterCard } from "./writer-card";
 import { WriterDetailModal } from "./writer-detail-modal";
 
 /**
- * WritersPage — the /writers directory: Nomeo's top writers by followers,
+ * WritersPage — the /writers directory: QuilHub's top writers by followers,
  * each a flip card (front: identity, back: bio + paid/free counts) that
  * opens an XL detail modal with the writer's full paid and free post
  * lists, linked straight into each post.
@@ -31,7 +31,7 @@ export default function WritersPage({ writers }: { writers: TopWriter[] }) {
           Top writers
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-          The voices that make Nomeo worth reading. Hover a card for a quick look, or open it for their full paid and free stories.
+          The voices that make QuilHub worth reading. Hover a card for a quick look, or open it for their full paid and free stories.
         </p>
       </div>
 
@@ -39,7 +39,7 @@ export default function WritersPage({ writers }: { writers: TopWriter[] }) {
         <div className="mt-12 flex flex-col items-center rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
           <HugeiconsIcon icon={UserMultiple02Icon} className="h-8 w-8 text-muted-foreground/30" />
           <h3 className="mt-4 font-heading text-base font-bold text-foreground">No writers yet</h3>
-          <p className="mt-2 max-w-xs text-sm text-muted-foreground">Check back soon — new writers join Nomeo all the time.</p>
+          <p className="mt-2 max-w-xs text-sm text-muted-foreground">Check back soon — new writers join QuilHub all the time.</p>
         </div>
       ) : (
         <div className="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">

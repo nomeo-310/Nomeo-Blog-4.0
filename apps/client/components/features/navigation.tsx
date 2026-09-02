@@ -84,14 +84,14 @@ export default function Navbar({ isAuthenticated = false, user }: NavbarProps) {
           <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
             <Image
               src="/images/logo.webp"
-              alt="Nomeo"
+              alt="QuilHub"
               width={32}
               height={32}
               className="h-8 w-8 rounded-lg object-contain"
               priority
             />
             <span className="text-xl font-bold tracking-tight text-foreground">
-              Nomeo
+              QuilHub
             </span>
           </Link>
 
@@ -219,8 +219,8 @@ export default function Navbar({ isAuthenticated = false, user }: NavbarProps) {
                   ) : (
                     /* Guest — show logo + wordmark */
                     <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80" onClick={() => setMobileOpen(false)}>
-                      <Image src="/logo.webp" alt="Nomeo" width={28} height={28} className="h-7 w-7 rounded-lg object-contain" />
-                      <span className="text-lg font-bold text-foreground">Nomeo</span>
+                      <Image src="/logo.webp" alt="QuilHub" width={28} height={28} className="h-7 w-7 rounded-lg object-contain" />
+                      <span className="text-lg font-bold text-foreground">QuilHub</span>
                     </Link>
                   )}
                   <button onClick={() => setMobileOpen(false)} aria-label="Close menu"

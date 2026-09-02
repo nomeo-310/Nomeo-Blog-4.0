@@ -5,7 +5,7 @@ import { EmailLayout, Heading, Paragraph, CtaButton, BRAND } from "./components"
  * Post Newsletter Email — sent to followers when a creator publishes
  * with sendAsNewsletter = true. Also reused for new-post alerts.
  *
- * Sent as: `"<CreatorName> via Nomeo" <newsletter@nomeo.com>`
+ * Sent as: `"<CreatorName> via QuilHub" <newsletter@quilhub.com>`
  * Always includes the unsubscribe link (it toggles the recipient's
  * Setting.notifications.emailNewPost preference).
  */

@@ -8,7 +8,7 @@ import { connectDB } from "./connect-to-database";
 import { buildBaseUsername, withUsernameSuffix, isDuplicateKeyError } from "./username";
 
 /**
- * Better Auth configuration — Nomeo blog platform.
+ * Better Auth configuration — QuilHub blog platform.
  *
  * Roles (must match Profile.ts and admin-profile.ts):
  *   user, creator, moderator, admin, super_admin
@@ -81,7 +81,7 @@ async function provisionNewUser(user: { id: string; name?: string | null; email:
   await createNotification({
     recipientId: user.id,
     type: "system_announcement",
-    message: `Welcome to Nomeo, ${user.name ?? "there"}! Complete your profile to start reading, following writers, and joining the conversation.`,
+    message: `Welcome to QuilHub, ${user.name ?? "there"}! Complete your profile to start reading, following writers, and joining the conversation.`,
   });
 }
 
@@ -95,7 +95,7 @@ export function createAuth() {
     },
 
     advanced: {
-      cookiePrefix: "nomeo_client",
+      cookiePrefix: "quilhub_client",
     },
 
     // Explicit rather than relying on the isProduction default and its

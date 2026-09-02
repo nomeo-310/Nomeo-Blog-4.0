@@ -133,7 +133,7 @@ export async function GET(req: NextRequest) {
         viewsCount:   Number(p.viewsCount || 0),
         publishedAt:  p.publishedAt instanceof Date ? p.publishedAt.toISOString() : null,
         author: {
-          name:     String(profile?.displayName || profile?.username || "Nomeo writer"),
+          name:     String(profile?.displayName || profile?.username || "QuilHub writer"),
           username: String(profile?.username || ""),
           avatar:   String(profile?.profileImage?.url || ""),
         },

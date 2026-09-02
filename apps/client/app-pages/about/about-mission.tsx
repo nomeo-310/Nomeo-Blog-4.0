@@ -4,17 +4,17 @@ import {
   CircleLock02Icon, SparklesIcon, FavouriteIcon, Globe02Icon,
 } from "@hugeicons/core-free-icons";
 
-/** Mission block: what Nomeo is, the reader/writer value props, and core beliefs. */
+/** Mission block: what QuilHub is, the reader/writer value props, and core beliefs. */
 export function AboutMission() {
   return (
     <>
-      {/* ── What Nomeo is ────────────────────────────────────────────────── */}
+      {/* ── What QuilHub is ────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-3xl px-4 py-20 text-center sm:px-6 lg:px-8">
         <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground md:text-4xl">
           A home for writers and the people who read them.
         </h2>
         <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Most platforms stop at publishing. Nomeo treats the conversation as part of the work. You can follow
+          Most platforms stop at publishing. QuilHub treats the conversation as part of the work. You can follow
           a writer, connect with other readers, send a message, and join the lounge where it all keeps going —
           open rooms for everyone, and members-only lounges run by the writers themselves. Built in Lagos, for
           readers and writers everywhere.

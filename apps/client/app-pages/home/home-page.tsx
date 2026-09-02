@@ -14,7 +14,7 @@ const RECOMMENDED_LIMIT = 5;
 const HERO_LIMIT = 5;
 
 /**
- * HomePage — Nomeo blog discovery.
+ * HomePage — QuilHub blog discovery.
  *
  * Changes from previous version:
  *   1. Search bar — visible input in the blog section header. Searches
@@ -291,7 +291,7 @@ function shapePost(p: any, profileMap: Map<string, any>): HomePost {
     savesCount:   Number(p.savesCount   || 0),
     publishedAt:  p.publishedAt instanceof Date ? p.publishedAt.toISOString() : null,
     author: {
-      name:     String(profile?.displayName || profile?.username || "Nomeo writer"),
+      name:     String(profile?.displayName || profile?.username || "QuilHub writer"),
       username: String(profile?.username || ""),
       avatar:   String(profile?.profileImage?.url || ""),
     },

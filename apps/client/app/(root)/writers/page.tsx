@@ -6,7 +6,7 @@ import WritersPage from "@/app-pages/writers/writers-page";
 
 export const metadata: Metadata = {
   title: "Writers",
-  description: "Discover Nomeo's top writers and their paid and free stories.",
+  description: "Discover QuilHub's top writers and their paid and free stories.",
 };
 
 export const dynamic = "force-dynamic";

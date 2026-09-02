@@ -15,7 +15,7 @@ import { MembershipPlanDetails } from "./membership-plan-details";
 import { MembershipSkeleton } from "./membership-skeleton";
 
 /**
- * MembershipPage — Nomeo.
+ * MembershipPage — QuilHub.
  *
  * Two-column layout: plan pills on mobile, cards on desktop (left), selected plan details on the right (2/3 width).
  * Shows the paid membership plans and their benefits. Readers start with NO

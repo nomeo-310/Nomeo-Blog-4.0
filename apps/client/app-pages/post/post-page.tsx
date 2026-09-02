@@ -14,7 +14,7 @@ import PaywallGate from "./pay-wall-gate";
 import type { FullPost, RelatedPost } from "./post-types";
 
 /**
- * PostPage — Nomeo post reader.
+ * PostPage — QuilHub post reader.
  *
  * Layout (after reading):
  *   LEFT  column: article header → content → post actions → related posts
@@ -36,14 +36,14 @@ interface PostPageProps { slug: string; user: Awaited<ReturnType<typeof getCurre
 export async function generateMetadata({ params }: GenerateMetadataProps) {
   const { slug } = await params;
   const post = await getPost(slug);
-  if (!post) return { title: "Post not found — Nomeo" };
+  if (!post) return { title: "Post not found — QuilHub" };
 
   const url = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/post/${post.slug}`;
   const image = post.coverImage?.secureUrl ?? null;
-  const description = post.excerpt || `Read "${post.title}" on Nomeo — long-form writing worth your time.`;
+  const description = post.excerpt || `Read "${post.title}" on QuilHub — long-form writing worth your time.`;
 
   return {
-    title: `${post.title} — Nomeo`,
+    title: `${post.title} — QuilHub`,
     description,
 
     // Canonical URL — prevents duplicate content if the page is ever
@@ -62,7 +62,7 @@ export async function generateMetadata({ params }: GenerateMetadataProps) {
       url,
       title: post.title,
       description,
-      siteName: "Nomeo",
+      siteName: "QuilHub",
       publishedTime: post.publishedAt ?? undefined,
       authors: post.author.username
         ? [`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/profile/${post.author.username}`]
@@ -232,7 +232,7 @@ async function getPost(slug: string): Promise<FullPost | null> {
       seriesOrder: raw.seriesOrder ?? null,
       author: {
         id: authorId,
-        name: String(authorProfile?.displayName || authorProfile?.username || "Nomeo writer"),
+        name: String(authorProfile?.displayName || authorProfile?.username || "QuilHub writer"),
         username: String(authorProfile?.username || ""),
         avatar: String(authorProfile?.profileImage?.url || ""),
         bio: String(authorProfile?.bio || ""),
@@ -323,7 +323,7 @@ async function getRelatedPosts(
         viewsCount: Number(r.viewsCount || 0),
         savesCount: Number(r.savesCount || 0),
         author: {
-          name: String(p?.displayName || p?.username || "Nomeo writer"),
+          name: String(p?.displayName || p?.username || "QuilHub writer"),
           username: String(p?.username || ""),
           avatar: String(p?.profileImage?.url || ""),
         },

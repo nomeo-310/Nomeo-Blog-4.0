@@ -4,7 +4,7 @@ import { Lounge, LoungeMember } from "@/models/lounge";
 import { Subscription } from "@/models/subscription";
 
 /**
- * Lounge access resolver — Nomeo.
+ * Lounge access resolver — QuilHub.
  * -------------------------------
  * One place that answers "can this user enter / chat in this lounge?", branching
  * on the lounge kind:

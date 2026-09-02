@@ -85,7 +85,7 @@ async function getSavedPosts(userId: string) {
         access: p.access === "paid" ? "paid" : "free" as "free" | "paid",
         viewsCount: Number(p.viewsCount || 0),
         publishedAt: p.publishedAt instanceof Date ? p.publishedAt.toISOString() : null,
-        authorName: String(author?.displayName || author?.username || "Nomeo writer"),
+        authorName: String(author?.displayName || author?.username || "QuilHub writer"),
         authorUsername: String(author?.username || ""),
       };
     });

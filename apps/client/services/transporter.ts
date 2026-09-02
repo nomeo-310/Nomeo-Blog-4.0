@@ -9,8 +9,8 @@ import nodemailer from "nodemailer";
  *
  * Required env:
  *   SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
- *   MAIL_FROM_ADDRESS  e.g. "no-reply@nomeo.com"
- *   MAIL_FROM_NAME     e.g. "Nomeo"
+ *   MAIL_FROM_ADDRESS  e.g. "no-reply@quilhub.com"
+ *   MAIL_FROM_NAME     e.g. "QuilHub"
  */
 
 const globalForMail = globalThis as unknown as {
@@ -37,6 +37,6 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 export const FROM = {
-  address: process.env.SITE_MAIL_RECIEVER ?? "no-reply@nomeo.com",
-  name: process.env.SITE_NAME ?? "Nomeo",
+  address: process.env.SITE_MAIL_RECIEVER ?? "no-reply@quilhub.com",
+  name: process.env.SITE_NAME ?? "QuilHub",
 };

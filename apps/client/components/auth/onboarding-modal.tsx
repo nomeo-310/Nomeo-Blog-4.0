@@ -76,10 +76,10 @@ export default function OnboardingModal({ isOpen, onComplete, topics, initialSte
     const map: Record<Step, { image: string; sideTitle: string; sideDesc: string; eyebrow: string; title: string; desc: string }> = {
       intent: {
         image: "/images/onboarding-1.jpg",
-        sideTitle: "Welcome to Nomeo.",
+        sideTitle: "Welcome to QuilHub.",
         sideDesc: "Let's set up your space. It takes less than a minute.",
         eyebrow: "Getting started",
-        title: "How will you use Nomeo?",
+        title: "How will you use QuilHub?",
         desc: "You can always change this later.",
       },
       profile: {
@@ -88,7 +88,7 @@ export default function OnboardingModal({ isOpen, onComplete, topics, initialSte
         sideDesc: "Your handle and name are how readers will find and know you.",
         eyebrow: `Step ${stepIndex + 1} of ${totalSteps}`,
         title: "Set up your profile.",
-        desc: "Choose how you'll appear across Nomeo.",
+        desc: "Choose how you'll appear across QuilHub.",
       },
       details: {
         image: "/images/onboarding-3.jpg",
@@ -141,7 +141,7 @@ export default function OnboardingModal({ isOpen, onComplete, topics, initialSte
     setError(null);
 
     if (step === "intent") {
-      if (!intent) return setError("Choose how you'll use Nomeo.");
+      if (!intent) return setError("Choose how you'll use QuilHub.");
       return goNext();
     }
 
@@ -155,7 +155,7 @@ export default function OnboardingModal({ isOpen, onComplete, topics, initialSte
 
     if (step === "details") {
       if (dateOfBirth && ageFrom(dateOfBirth) < 13) {
-        return setError("You must be at least 13 to use Nomeo.");
+        return setError("You must be at least 13 to use QuilHub.");
       }
       return goNext();
     }
@@ -203,7 +203,7 @@ export default function OnboardingModal({ isOpen, onComplete, topics, initialSte
         setError("That username is taken. Try another.");
         setStepIndex(STEP_ORDER.indexOf("profile"));
       } else if (msg === "UNDER_MINIMUM_AGE") {
-        setError("You must be at least 13 to use Nomeo.");
+        setError("You must be at least 13 to use QuilHub.");
         setStepIndex(STEP_ORDER.indexOf("details"));
       } else {
         setError(msg);

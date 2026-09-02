@@ -5,11 +5,11 @@ Last updated: June 12, 2026
 
 1. INTRODUCTION
 
-This Privacy Policy explains how Nomeo ("we", "us", "our") collects, uses, shares, and protects your personal data when you use our website, apps, and services (the "Platform").
+This Privacy Policy explains how QuilHub ("we", "us", "our") collects, uses, shares, and protects your personal data when you use our website, apps, and services (the "Platform").
 
-Nomeo is operated by Nomeo Consults Inc. (the "data controller"), located at 21 Akin Soname Street, Ojokoro New Town, Owutu Estate, Ikorodu, Lagos. For privacy questions, contact privacy@nomeo.com.
+QuilHub is operated by Nomeo Consults Inc. (the "data controller"), located at 21 Akin Soname Street, Ojokoro New Town, Owutu Estate, Ikorodu, Lagos. For privacy questions, contact privacy@quilhub.com.
 
-By using Nomeo, you agree to this Policy. If you do not agree, do not use the Platform.
+By using QuilHub, you agree to this Policy. If you do not agree, do not use the Platform.
 
 
 2. DATA WE COLLECT
@@ -61,14 +61,14 @@ Service providers: hosting, database, email delivery, analytics, and payment pro
 
 Payment processors: Paystack to handle subscriptions and payouts, under their own privacy terms.
 
-Legal and safety: where required by law, legal process, or to protect the rights, safety, and property of Nomeo, our users, or the public.
+Legal and safety: where required by law, legal process, or to protect the rights, safety, and property of QuilHub, our users, or the public.
 
 Business transfers: in connection with a merger, acquisition, or sale of assets, subject to this Policy.
 
 
 6. EMAIL AND NEWSLETTERS
 
-Creators reach their followers through Nomeo's email systems; emails are sent from our infrastructure on a creator's behalf, not from the creator's personal mailbox. We may also send platform newsletters and admin communications. You can unsubscribe from non-essential emails at any time. Essential service emails such as security and billing cannot be opted out of while you hold an account.
+Creators reach their followers through QuilHub's email systems; emails are sent from our infrastructure on a creator's behalf, not from the creator's personal mailbox. We may also send platform newsletters and admin communications. You can unsubscribe from non-essential emails at any time. Essential service emails such as security and billing cannot be opted out of while you hold an account.
 
 
 7. DATA RETENTION
@@ -85,12 +85,12 @@ We use cookies and similar technologies to keep you signed in, remember your pre
 
 Depending on your location, you may have the right to access the personal data we hold about you; correct inaccurate or incomplete data; delete your data, subject to legal exceptions; restrict or object to certain processing; receive your data in a portable format; withdraw consent at any time where processing is based on consent; and complain to your data protection authority. In Nigeria this is the Nigeria Data Protection Commission (NDPC); in the EU or UK, your local authority.
 
-To exercise these rights, contact privacy@nomeo.com. We may need to verify your identity. You can also manage much of your data directly in your account settings.
+To exercise these rights, contact privacy@quilhub.com. We may need to verify your identity. You can also manage much of your data directly in your account settings.
 
 
 10. CHILDREN'S PRIVACY
 
-Nomeo is not intended for children under 13, and we do not knowingly collect their data. If you believe a child under 13 has provided us data, contact privacy@nomeo.com and we will delete it. Where a higher age of digital consent applies in your country, that age governs the use of features requiring consent.
+QuilHub is not intended for children under 13, and we do not knowingly collect their data. If you believe a child under 13 has provided us data, contact privacy@quilhub.com and we will delete it. Where a higher age of digital consent applies in your country, that age governs the use of features requiring consent.
 
 
 11. INTERNATIONAL DATA TRANSFERS
@@ -119,4 +119,4 @@ For privacy questions or to exercise your rights:
 
 Nomeo Consults Inc.
 21 Akin Soname Street, Ojokoro New Town, Owutu Estate, Ikorodu, Lagos
-Privacy email: privacy@nomeo.com
+Privacy email: privacy@quilhub.com

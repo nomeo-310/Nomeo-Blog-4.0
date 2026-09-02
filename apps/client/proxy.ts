@@ -4,8 +4,8 @@ import { getSessionCookie } from "better-auth/cookies";
 /**
  * Proxy (Next.js 16 middleware) — route protection + account-status enforcement.
  *
- * Adapted for Nomeo:
- *   - Cookie prefix is "nomeo" (matches advanced.cookiePrefix in auth.ts).
+ * Adapted for QuilHub:
+ *   - Cookie prefix is "quilhub" (matches advanced.cookiePrefix in auth.ts).
  *   - Account status lives on Profile.banStatus ("active" | "banned" |
  *     "shadow_banned") — NOT the old activeStatus/deactivated fields.
  *   - "shadow_banned" users are deliberately allowed through everywhere;
@@ -22,7 +22,7 @@ import { getSessionCookie } from "better-auth/cookies";
  * directly. It calls the /api/auth/check-status route (Node runtime) instead.
  */
 
-const COOKIE_PREFIX = "nomeo_client";
+const COOKIE_PREFIX = "quilhub_client";
 
 // Cookie names better-auth may set, across secure/non-secure variants.
 const AUTH_COOKIES = [

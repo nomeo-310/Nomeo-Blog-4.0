@@ -14,7 +14,7 @@ export function EmptyHero({ user }: { user?: any }) {
         <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 ring-4 ring-primary/20">
           <HugeiconsIcon icon={Edit01Icon} className="h-12 w-12 text-primary/60" />
         </div>
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary/60">Welcome to Nomeo</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary/60">Welcome to QuilHub</p>
         <h1 className="mt-4 font-heading text-4xl font-bold text-foreground sm:text-5xl md:text-6xl">
           Stories worth reading.
         </h1>

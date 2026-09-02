@@ -146,7 +146,7 @@ export async function completeOnboarding(
       recipientId: userId,
       type: "creator_upgrade_successful",
       message:
-        "You're now a creator on Nomeo! You can publish posts, build a following, and earn from the subscription pool. Write your first post to get started.",
+        "You're now a creator on QuilHub! You can publish posts, build a following, and earn from the subscription pool. Write your first post to get started.",
     });
   } else {
     // Reader completion — a friendly "you're all set" note (real-time bell).
@@ -202,7 +202,7 @@ export async function upgradeToCreator(): Promise<{
     recipientId: userId,
     type: "creator_upgrade_successful",
     message:
-      "You're now a creator on Nomeo! You can publish posts, build a following, and earn from the subscription pool.",
+      "You're now a creator on QuilHub! You can publish posts, build a following, and earn from the subscription pool.",
   });
 
   return { success: true, role: "creator", alreadyCreator: false };

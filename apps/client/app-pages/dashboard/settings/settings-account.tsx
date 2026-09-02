@@ -264,15 +264,15 @@ export function AccountSettings() {
           <ul className="space-y-2.5 text-xs text-muted-foreground">
             {isOAuth ? (
               <>
-                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Your account is secured through {provider === "google" ? "Google" : provider}. No password is stored on Nomeo.</li>
-                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Keep your {provider === "google" ? "Google" : provider} account secure — it controls access to Nomeo.</li>
+                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Your account is secured through {provider === "google" ? "Google" : provider}. No password is stored on QuilHub.</li>
+                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Keep your {provider === "google" ? "Google" : provider} account secure — it controls access to QuilHub.</li>
                 <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon}className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Enable two-factor authentication on your {provider === "google" ? "Google" : provider} account for extra protection.</li>
               </>
             ) : (
               <>
                 <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Use a unique password not shared with any other account.</li>
                 <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Include uppercase letters, numbers and symbols.</li>
-                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Nomeo will never ask for your password.</li>
+                <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />QuilHub will never ask for your password.</li>
                 <li className="flex items-start gap-1.5"><HugeiconsIcon icon={CircleLock02Icon} className="mt-0.5 h-3 w-3 shrink-0 text-primary" />Changing your password signs you out everywhere — you'll need to log in again.</li>
               </>
             )}

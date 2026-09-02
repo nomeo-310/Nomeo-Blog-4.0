@@ -121,7 +121,7 @@ export interface PaystackResolvedAccount {
 }
 
 export interface CreateTransferRecipientPayload {
-  type: 'nuban'; // Nigerian bank account — the only rail Nomeo supports today
+  type: 'nuban'; // Nigerian bank account — the only rail QuilHub supports today
   name: string;  // account holder's name, as resolved from the account number
   account_number: string;
   bank_code: string;

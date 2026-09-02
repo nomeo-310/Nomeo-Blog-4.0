@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 /**
- * Dashboard Overview — Nomeo.
+ * Dashboard Overview — QuilHub.
  * Shows role-aware stats: everyone sees their personal activity;
  * creators additionally see their content metrics.
  * Route: app/dashboard/page.tsx

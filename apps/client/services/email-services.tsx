@@ -76,7 +76,7 @@ export const mailService = {
     const unsubscribeUrl = `${base}/api/newsletter/unsubscribe?token=${encodeURIComponent(args.token)}`;
     return deliver(
       args.email,
-      "Confirm your Nomeo newsletter subscription",
+      "Confirm your QuilHub newsletter subscription",
       <NewsletterConfirmationEmail confirmUrl={confirmUrl} unsubscribeUrl={unsubscribeUrl} />,
       { unsubscribeUrl }
     );
@@ -89,7 +89,7 @@ export const mailService = {
    * email is set as reply-to so the team can respond with a normal reply.
    */
   sendContactMessage(args: { fullName: string; email: string; purpose: string; message: string }) {
-    const inbox = process.env.CONTACT_INBOX || "support@nomeo.com";
+    const inbox = process.env.CONTACT_INBOX || "support@quilhub.com";
     return deliver(
       inbox,
       `Contact form: ${args.purpose} — ${args.fullName}`,

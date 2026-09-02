@@ -9,7 +9,7 @@ import { Profile } from "@/models/profile";
 import { Subscription } from "@/models/subscription";
 
 /**
- * Post access resolver — Nomeo.
+ * Post access resolver — QuilHub.
  * -----------------------------
  * Single source of truth for "can this viewer read this post?". Reading and
  * writing are SEPARATE concerns: being a creator grants no reading privilege.

@@ -108,7 +108,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
         sideTitle: "Welcome back.",
         sideDesc: "Pick up exactly where you left off. Your library is waiting.",
         eyebrow: "Welcome back",
-        title: "Sign in to Nomeo.",
+        title: "Sign in to QuilHub.",
         desc: "Continue your journey into long-form stories.",
       },
       "sign-up": {
@@ -116,7 +116,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
         sideTitle: "Join the fold.",
         sideDesc: "Where ideas find their readers. Long-form writing, worth your time.",
         eyebrow: "Create your account",
-        title: "Join Nomeo.",
+        title: "Join QuilHub.",
         desc: "Read, write, and support the writers you love.",
       },
       "forgot-password": {
@@ -245,7 +245,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
     if (res.success) {
       const signedIn = await auth.signIn({ email, password });
       if (signedIn.success) {
-        toast.success("Welcome to Nomeo!");
+        toast.success("Welcome to QuilHub!");
         handleClose();
         window.location.assign("/");
       } else {
@@ -346,13 +346,13 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
             <div className="flex items-center gap-2.5">
               <Image
                 src="/images/logo.webp"
-                alt="Nomeo"
+                alt="QuilHub"
                 width={32}
                 height={32}
                 className="h-8 w-8 rounded-lg object-contain"
                 priority
               />
-              <span className="text-lg font-bold tracking-tight text-white">Nomeo</span>
+              <span className="text-lg font-bold tracking-tight text-white">QuilHub</span>
             </div>
             {/* Tagline */}
             <div>
@@ -528,7 +528,7 @@ export default function AuthModal({ isOpen, onClose, mode, onSwitchMode, onOpenL
                   </Button>
 
                   <p className="mt-6 text-center text-sm text-muted-foreground">
-                    {isSignUp ? "Already have an account?" : "New to Nomeo?"}{" "}
+                    {isSignUp ? "Already have an account?" : "New to QuilHub?"}{" "}
                     <button
                       type="button"
                       onClick={() => onSwitchMode(isSignUp ? "sign-in" : "sign-up")}

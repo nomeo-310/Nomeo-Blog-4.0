@@ -1,12 +1,12 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 /**
- * Payment Model — Nomeo
+ * Payment Model — QuilHub
  * ---------------------
  * Records inbound payments for platform membership subscriptions, processed
  * through Paystack. Amounts are in kobo (NGN smallest unit).
  *
- * Nomeo's only payment purpose right now is "subscription" — a reader paying
+ * QuilHub's only payment purpose right now is "subscription" — a reader paying
  * for membership. (Creator payouts are a separate outbound flow, not modelled
  * here.) No coupons, no event-registration context — those were event-platform
  * concepts and don't apply.

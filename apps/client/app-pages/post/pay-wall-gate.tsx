@@ -16,8 +16,8 @@ function PaywallGate({ needsMembership, isGuest, freeReadsRemaining }: { needsMe
       {/* Blurred preview */}
       <div className="relative overflow-hidden rounded-2xl">
         <div className="pointer-events-none select-none space-y-3 px-1 text-sm leading-relaxed text-foreground opacity-50 blur-sm">
-          <p>This is where the rest of the story continues. The full post is available to members of the Nomeo platform.</p>
-          <p>Join thousands of readers who follow the best writers on Nomeo and engage in the conversation that lives alongside every piece.</p>
+          <p>This is where the rest of the story continues. The full post is available to members of the QuilHub platform.</p>
+          <p>Join thousands of readers who follow the best writers on QuilHub and engage in the conversation that lives alongside every piece.</p>
           <p>Members get unlimited access to all paid posts, plus the ability to join members-only lounges run by their favourite creators.</p>
           <p>The platform brings together voices from across the globe, united by a shared love of the written word and the ideas behind it.</p>
         </div>
@@ -50,7 +50,7 @@ function PaywallGate({ needsMembership, isGuest, freeReadsRemaining }: { needsMe
           {isGuest
             ? "Create a free account or sign in to read this post in full, like and save posts, and join the conversation."
             : needsMembership
-              ? "This is a members-only post. Get a Nomeo membership for unlimited access to all paid posts and members-only lounges."
+              ? "This is a members-only post. Get a QuilHub membership for unlimited access to all paid posts and members-only lounges."
               : `You have ${freeReadsRemaining} free ${freeReadsRemaining === 1 ? "read" : "reads"} remaining this month. Upgrade for unlimited access.`}
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

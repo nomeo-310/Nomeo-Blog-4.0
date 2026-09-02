@@ -22,7 +22,7 @@ export function EmptyState({ tab, query }: { tab: Tab; query: string }) {
       </h3>
       <p className="mt-2 max-w-xs text-sm text-muted-foreground">
         {tab === "following"
-          ? "Discover writers and readers on Nomeo and send a follow request."
+          ? "Discover writers and readers on QuilHub and send a follow request."
           : "When people follow you, they'll appear here."}
       </p>
       {tab === "following" && (

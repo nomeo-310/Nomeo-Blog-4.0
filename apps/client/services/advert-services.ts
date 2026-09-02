@@ -4,7 +4,7 @@ import { AdvertImpression } from "@/models/advert-impression";
 import { Subscription } from "@/models/subscription";
 
 /**
- * Advert delivery — Nomeo.
+ * Advert delivery — QuilHub.
  * ------------------------
  * Single source of truth for "which advert (if any) should this viewer see
  * in this slot?" and for recording what happened once they saw it. Mirrors

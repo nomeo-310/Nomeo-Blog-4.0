@@ -35,7 +35,7 @@ export function SearchHeader({
         "text-center select-none overflow-hidden transition-all duration-500 ease-out",
         isActive ? "max-h-0 opacity-0 mb-0" : "max-h-40 opacity-100 mb-1"
       )}>
-        <h1 className="font-heading text-3xl md:text-4xl font-bold tracking-tight text-foreground">Nomeo</h1>
+        <h1 className="font-heading text-3xl md:text-4xl font-bold tracking-tight text-foreground">QuilHub</h1>
         <p className="mt-1 text-xs md:text-sm text-muted-foreground">Search stories, writers, and topics.</p>
       </div>
 

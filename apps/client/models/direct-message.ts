@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 /**
- * Direct Messages — Nomeo.
+ * Direct Messages — QuilHub.
  * ------------------------
  * One-to-one private chat between two CONNECTED users (an accepted
  * ConnectionRequest must exist between them). This is separate from the Lounge

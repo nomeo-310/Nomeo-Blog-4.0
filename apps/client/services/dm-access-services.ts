@@ -4,7 +4,7 @@ import { ConnectionRequest } from "@/models/connection-request";
 import { connectDB } from "@/lib/connect-to-database";
 
 /**
- * Direct-message access resolver — Nomeo.
+ * Direct-message access resolver — QuilHub.
  * ---------------------------------------
  * Decides whether two users may DM, and gets/creates their conversation.
  *

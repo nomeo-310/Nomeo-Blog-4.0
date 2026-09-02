@@ -17,7 +17,7 @@ export function BlogSearchHeader({
       <div>
         <h2 className="font-heading text-2xl font-bold text-foreground">Blog</h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Stories, ideas, and perspectives from Nomeo writers.
+          Stories, ideas, and perspectives from QuilHub writers.
         </p>
       </div>
 

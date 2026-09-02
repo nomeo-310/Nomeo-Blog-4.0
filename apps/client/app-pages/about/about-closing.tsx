@@ -9,7 +9,7 @@ export function AboutClosing() {
       {/* ── Origin note ──────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-3xl px-4 pb-8 text-center sm:px-6 lg:px-8">
         <p className="text-lg font-medium leading-relaxed text-foreground">
-          Nomeo started with a simple frustration: the best part of reading something good is talking about
+          QuilHub started with a simple frustration: the best part of reading something good is talking about
           it — and almost nowhere lets you do both in the same place. So we built a home where the writing
           and the conversation sit side by side.
         </p>

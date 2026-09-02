@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 /**
  * Advert Model
  * ------------
- * A single, flexible model for every kind of promotion on Nomeo. Rather than
+ * A single, flexible model for every kind of promotion on QuilHub. Rather than
  * four separate collections, one Advert carries a `type` and the union of
  * fields each type needs — they share ~80% of their shape (placement, schedule,
  * targeting, metrics) and differ mainly in who's behind them and what they
@@ -12,13 +12,13 @@ import mongoose, { Schema, Document } from "mongoose";
  * Types:
  *   - sponsored      External brand pays for a slot. Billable. Restricted to
  *                    free readers by default to protect the ad-free promise.
- *   - house          Nomeo's own promo (e.g. "Go yearly", announcements).
+ *   - house          QuilHub's own promo (e.g. "Go yearly", announcements).
  *                    Not billable. Can show to everyone.
  *   - promoted_post  Boosts an existing Post in feeds/discovery. Billable.
  *   - creator_promo  A creator pays to promote their own post or profile.
  *                    Billable, attributed to the creator.
  *
- * Placements (industry-standard slots, mapped to Nomeo surfaces):
+ * Placements (industry-standard slots, mapped to QuilHub surfaces):
  *   - hero                 Home page hero carousel slide — the single most
  *                          valuable slot on the site. Admin/staff only (never
  *                          creator-selectable in the "promote a post" flow);

@@ -60,7 +60,7 @@ export default function PaymentsPage() {
         <div>
           <h2 className="font-heading text-2xl font-bold text-foreground">Payments</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Your subscription payment history on Nomeo.
+            Your subscription payment history on QuilHub.
           </p>
         </div>
         <button

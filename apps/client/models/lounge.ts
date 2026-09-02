@@ -9,7 +9,7 @@ import mongoose, { Schema, Document } from "mongoose";
  *       Access: active subscription to that creator + accepted membership +
  *       not banned. This is the original, monetised lounge.
  *
- *   kind "platform" → owned by Nomeo (no creatorId), an OPEN lounge. Any
+ *   kind "platform" → owned by QuilHub (no creatorId), an OPEN lounge. Any
  *       authenticated user — free readers included — can join. No subscription
  *       required. Join is lightweight + auto-accepted (a LoungeMember record is
  *       still created so bans, member counts, and last-read cursors work), but
@@ -61,11 +61,11 @@ export interface ILounge extends Document {
 
   /**
    * The creator who owns this lounge. Set for kind "creator", absent for
-   * kind "platform" (Nomeo-owned open lounges).
+   * kind "platform" (QuilHub-owned open lounges).
    */
   creatorId?: mongoose.Types.ObjectId;
 
-  /** "creator" = subscriber-gated; "platform" = open, Nomeo-owned */
+  /** "creator" = subscriber-gated; "platform" = open, QuilHub-owned */
   kind: LoungeKind;
 
   /** Entry rule: "subscribers" (creator lounges) | "authenticated" (open) */

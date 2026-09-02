@@ -8,7 +8,7 @@ import { AboutTeam } from "./about-team";
 import { AboutClosing } from "./about-closing";
 
 /**
- * AboutPage — Nomeo's "about" marketing page.
+ * AboutPage — QuilHub's "about" marketing page.
  *
  * Mostly-static sections composed from sibling sub-components in this same
  * folder (about-hero, about-how-it-works, about-mission,

@@ -7,9 +7,9 @@ import { Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 
 /**
- * Footer — Nomeo.
+ * Footer — QuilHub.
  *
- * Matches the Navbar's design: "Nomeo" wordmark, forest-green tokens,
+ * Matches the Navbar's design: "QuilHub" wordmark, forest-green tokens,
  * Quicksand body + Urbanist headings. Full-width band, contained inner.
  *
  * Layout:
@@ -61,7 +61,7 @@ export default function Footer() {
               href="/"
               className="text-xl font-bold tracking-tight text-foreground transition-opacity hover:opacity-80"
             >
-              Nomeo
+              QuilHub
             </Link>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
               A home for long-form writing. Read the voices you love, support
@@ -69,9 +69,9 @@ export default function Footer() {
             </p>
 
             <div className="mt-5 flex items-center gap-2">
-              <SocialLink href="https://x.com/nomeo" label="X (Twitter)"><XIcon /></SocialLink>
-              <SocialLink href="https://instagram.com/nomeo" label="Instagram"><InstagramIcon /></SocialLink>
-              <SocialLink href="https://linkedin.com/company/nomeo" label="LinkedIn"><LinkedInIcon /></SocialLink>
+              <SocialLink href="https://x.com/quilhub" label="X (Twitter)"><XIcon /></SocialLink>
+              <SocialLink href="https://instagram.com/quilhub" label="Instagram"><InstagramIcon /></SocialLink>
+              <SocialLink href="https://linkedin.com/company/quilhub" label="LinkedIn"><LinkedInIcon /></SocialLink>
             </div>
           </div>
 

@@ -3,7 +3,7 @@
 import type * as Ably from "ably";
 
 /**
- * Ably client registry — Nomeo.
+ * Ably client registry — QuilHub.
  * -----------------------------
  * A tiny module-level set of every live Ably Realtime client (lounge chat, DM,
  * activity bell). Each chat hook registers its client on connect and removes it

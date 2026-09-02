@@ -8,7 +8,7 @@ import { useAdvertSlot, type AdvertPlacement } from "@/hooks/use-advert";
 import { cn } from "@/lib/utils";
 
 /**
- * Advert rendering — Nomeo.
+ * Advert rendering — QuilHub.
  * -------------------------
  * One component per placement (models/advert.ts's AdvertPlacement enum).
  * All of them are self-contained: mount one, it fetches its own ad via
@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
  *   - External (sponsored brand links, most house promos): a real
  *     `<a href="/api/adverts/[id]/click" target="_blank">` — click tracking
  *     survives new-tab opens, JS failures, and middle-clicks. Opening a new
- *     tab is correct here — we don't want to navigate a reader off Nomeo.
+ *     tab is correct here — we don't want to navigate a reader off QuilHub.
  *   - Internal (creator_promo/promoted_post → /post/[slug], or a house promo
  *     linking to e.g. /membership): a same-tab Next.js <Link>, exactly like
  *     every other post card, tracked with a fire-and-forget POST beacon
@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 function AdLabel({ isHouse }: { isHouse: boolean }) {
   return (
     <span className="rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-semibold text-foreground backdrop-blur">
-      {isHouse ? "Nomeo" : "Sponsored"}
+      {isHouse ? "QuilHub" : "Sponsored"}
     </span>
   );
 }
@@ -187,7 +187,7 @@ export function AdvertCard({
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-            <span className="text-xs font-semibold text-primary/40">{advert.type === "house" ? "Nomeo" : "Ad"}</span>
+            <span className="text-xs font-semibold text-primary/40">{advert.type === "house" ? "QuilHub" : "Ad"}</span>
           </div>
         )}
         <span className="absolute left-3 top-3">

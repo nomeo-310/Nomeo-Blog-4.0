@@ -10,7 +10,7 @@ Cookies are small text files stored on your device when you visit a website. Sim
 
 2. HOW WE USE COOKIES
 
-Nomeo uses cookies to keep you signed in and maintain your session securely; remember your preferences, such as theme and language; understand usage, so we can improve the Platform; and support core features, such as reading paid content and tracking reading time for creator earnings.
+QuilHub uses cookies to keep you signed in and maintain your session securely; remember your preferences, such as theme and language; understand usage, so we can improve the Platform; and support core features, such as reading paid content and tracking reading time for creator earnings.
 
 
 3. TYPES OF COOKIES WE USE
@@ -38,4 +38,4 @@ We may update this Cookie Policy from time to time. Material changes will be com
 
 6. CONTACT
 
-Questions about cookies? Contact privacy@nomeo.com.
+Questions about cookies? Contact privacy@quilhub.com.

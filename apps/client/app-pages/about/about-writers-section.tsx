@@ -37,7 +37,7 @@ export function AboutWritersSection() {
           Meet the writers
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted-foreground">
-          The voices that make Nomeo worth reading. Hover a card to learn more,
+          The voices that make QuilHub worth reading. Hover a card to learn more,
           click to visit their profile.
         </p>
       </div>

@@ -19,7 +19,7 @@ export type notificationEmailProps = {
   unsubscribeUrl?: string;
 }
 
-export default function NotificationEmail({ name = "there", heading = "You have a new follower", body = "Someone just followed you on Nomeo.", ctaLabel, ctaUrl, warning, unsubscribeUrl }: notificationEmailProps) {
+export default function NotificationEmail({ name = "there", heading = "You have a new follower", body = "Someone just followed you on QuilHub.", ctaLabel, ctaUrl, warning, unsubscribeUrl }: notificationEmailProps) {
   return (
     <EmailLayout preview={heading} unsubscribeUrl={unsubscribeUrl}>
       <Heading>{heading}</Heading>

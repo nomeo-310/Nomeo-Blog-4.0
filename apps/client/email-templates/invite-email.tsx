@@ -15,7 +15,7 @@ export type inviteEmailProps = {
   expiresInDays?: number;
 }
 
-export default function InviteEmail({ inviterName = "Someone", inviteType = "admin", roleOrContext = "moderator", personalMessage, acceptUrl = "https://nomeo.com/invite/token", expiresInDays = 7 }: inviteEmailProps) {
+export default function InviteEmail({ inviterName = "Someone", inviteType = "admin", roleOrContext = "moderator", personalMessage, acceptUrl = "https://quilhub.com/invite/token", expiresInDays = 7 }: inviteEmailProps) {
 
   const heading = inviteType === "admin" ? "You're Invited to the Team" : "Co-author Invitation";
 

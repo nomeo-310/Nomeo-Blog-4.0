@@ -66,7 +66,7 @@ export async function GET() {
         createdAt:  r.createdAt,
         requester: {
           id:       String(r.requesterId),
-          name:     String(p?.displayName || p?.username || "Nomeo user"),
+          name:     String(p?.displayName || p?.username || "QuilHub user"),
           username: String(p?.username || ""),
           avatar:   String(p?.profileImage?.url || ""),
           bio:      String(p?.bio || ""),

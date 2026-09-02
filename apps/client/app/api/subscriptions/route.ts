@@ -9,7 +9,7 @@ import { connectDB } from "@/lib/connect-to-database";
 import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 /**
- * Subscriptions API — Nomeo.
+ * Subscriptions API — QuilHub.
  *
  *   GET  /api/subscriptions   → the caller's active/trialing subscription (or null)
  *   POST /api/subscriptions   → activate a subscription after a verified payment
@@ -18,7 +18,7 @@ import { getClientIp, rateLimit, rateLimitResponse } from "@/lib/rate-limit";
  * then POSTs { planId, paystackReference } here. We confirm the payment is
  * SUCCESS, create the subscription, and link the payment to it.
  *
- * No coupons, no plan limits/tiers — Nomeo membership is flat platform access.
+ * No coupons, no plan limits/tiers — QuilHub membership is flat platform access.
  */
 
 const MONTHS_PER_INTERVAL: Record<string, number> = {

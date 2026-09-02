@@ -27,7 +27,7 @@ export default async function Earnings() {
       <div className="space-y-8 w-full max-w-5xl">
         <div>
           <h2 className="font-heading text-2xl font-bold text-foreground">Earnings</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Your share of Nomeo's monthly revenue pool.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Your share of QuilHub's monthly revenue pool.</p>
         </div>
 
         {/* Summary cards */}
@@ -50,11 +50,11 @@ export default async function Earnings() {
           <div className="text-sm leading-relaxed text-muted-foreground">
             {payoutModel === "fixed_rate" ? (
               <p>
-                You earn <strong className="text-foreground">{formatMoney(ratePerCompletedReadKobo)}</strong> every time a subscriber reads one of your paid posts all the way to the end — partial reads earn nothing. Nomeo keeps {platformCutPercent}% of subscription revenue to run the platform; the rest funds payouts. If total completed reads in a month would cost more than that month&apos;s pool, every writer&apos;s payout for that month is scaled down by the same percentage — you&apos;ll see it noted on the period if it happens.
+                You earn <strong className="text-foreground">{formatMoney(ratePerCompletedReadKobo)}</strong> every time a subscriber reads one of your paid posts all the way to the end — partial reads earn nothing. QuilHub keeps {platformCutPercent}% of subscription revenue to run the platform; the rest funds payouts. If total completed reads in a month would cost more than that month&apos;s pool, every writer&apos;s payout for that month is scaled down by the same percentage — you&apos;ll see it noted on the period if it happens.
               </p>
             ) : (
               <p>
-                Each month, Nomeo pools everyone&apos;s subscription payments, keeps {platformCutPercent}% to run the platform, and splits the rest across creators by their share of total subscriber read-minutes — a fully-read paid post counts {completedReadWeight}× a partially-read one. The more your paid posts are read by members, the larger your slice.
+                Each month, QuilHub pools everyone&apos;s subscription payments, keeps {platformCutPercent}% to run the platform, and splits the rest across creators by their share of total subscriber read-minutes — a fully-read paid post counts {completedReadWeight}× a partially-read one. The more your paid posts are read by members, the larger your slice.
               </p>
             )}
             <p className="mt-2">
@@ -71,7 +71,7 @@ export default async function Earnings() {
           <div className="flex flex-col items-center rounded-2xl border border-dashed border-border bg-muted/20 px-6 py-16 text-center">
             <DollarSign className="h-8 w-8 text-muted-foreground/30" />
             <h3 className="mt-4 font-heading text-base font-bold text-foreground">No earnings yet</h3>
-            <p className="mt-2 max-w-xs text-sm text-muted-foreground">Publish paid posts and build an audience to start earning from the Nomeo revenue pool.</p>
+            <p className="mt-2 max-w-xs text-sm text-muted-foreground">Publish paid posts and build an audience to start earning from the QuilHub revenue pool.</p>
           </div>
         ) : (
           <div>

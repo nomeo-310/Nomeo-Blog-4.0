@@ -4,7 +4,7 @@ import { bumpUserActivity } from "@/lib/server/ably";
 import { connectDB } from "./connect-to-database";
 
 /**
- * createNotification — Nomeo.
+ * createNotification — QuilHub.
  * ---------------------------
  * One place to create an in-app notification. It writes the Notification doc
  * AND pushes a real-time activity bump to the recipient's Ably channel, so the

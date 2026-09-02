@@ -19,7 +19,7 @@ import { MembershipPaymentStatus } from "./membership-payment-status";
  *
  * The subscription record is created only AFTER payment verifies (POST
  * /api/subscriptions), mirroring the proven flow. No coupons, no free path —
- * every Nomeo plan is paid.
+ * every QuilHub plan is paid.
  */
 
 interface Props {
@@ -104,7 +104,7 @@ export default function MembershipPaymentModal({ plan, userEmail, userName, onCl
     setIsConfirming(true);
     try {
       await subscribe({ planId: plan.id, paystackReference: reference });
-      toast.success("Welcome to Nomeo membership!");
+      toast.success("Welcome to QuilHub membership!");
       onSuccess();
     } catch {
       toast.error("Payment confirmed but activation failed. Please contact support.");

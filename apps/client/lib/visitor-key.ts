@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
  * so it can't be read/tampered with from the client; long-lived like a
  * standard ad-tech visitor cookie.
  */
-const COOKIE_NAME = "nomeo_vk";
+const COOKIE_NAME = "quilhub_vk";
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 
 /** Read the visitor key without creating one (safe in Server Components). */

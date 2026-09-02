@@ -7,12 +7,12 @@ export function AboutHero() {
   return (
     <section className="relative overflow-hidden">
       <div className="relative mx-auto max-w-5xl px-4 pt-20 pb-16 text-center sm:px-6 lg:px-8 md:pt-28 md:pb-24">
-        <p className="text-xs font-semibold uppercase tracking-widest text-primary">About Nomeo</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-primary">About QuilHub</p>
         <h1 className="mx-auto mt-6 max-w-3xl font-heading text-4xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl md:text-6xl">
           The story doesn&apos;t end at the last paragraph.
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-          Nomeo is where writing and conversation live together. Read a piece,
+          QuilHub is where writing and conversation live together. Read a piece,
           then step into the lounge beside it — where the people who care about
           the same things are already talking.
         </p>

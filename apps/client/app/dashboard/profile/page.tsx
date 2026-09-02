@@ -41,7 +41,7 @@ export default async function DashboardProfilePage() {
             </p>
           )}
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Your public profile is visible to everyone on Nomeo. It shows your bio,
+            Your public profile is visible to everyone on QuilHub. It shows your bio,
             posts{user.role === "creator" ? ", your members-only lounge," : ""} and
             social links.
           </p>

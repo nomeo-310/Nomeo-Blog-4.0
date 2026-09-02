@@ -1,7 +1,7 @@
 import { create } from "zustand";
  
 /**
- * Activity panel store — Nomeo.
+ * Activity panel store — QuilHub.
  * -----------------------------
  * Controls the slide-in panel that holds Notifications + Connections. Kept in a
  * store so ANY component (the navbar bell, a toast action, a deep link, etc.)

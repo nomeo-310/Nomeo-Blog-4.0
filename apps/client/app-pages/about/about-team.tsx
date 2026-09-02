@@ -1,7 +1,7 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Location01Icon } from "@hugeicons/core-free-icons";
 
-/** "The people behind Nomeo" — static team grid. */
+/** "The people behind QuilHub" — static team grid. */
 export function AboutTeam() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-20">
@@ -11,7 +11,7 @@ export function AboutTeam() {
         </span>
       </div>
       <h2 className="text-center font-heading text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-        The people behind Nomeo
+        The people behind QuilHub
       </h2>
       <p className="mx-auto mt-6 mb-8 max-w-2xl text-center text-base leading-relaxed text-muted-foreground">
         A small, independent team building from Lagos under Nomeo Consults Inc. — shipping carefully, and
@@ -27,9 +27,9 @@ export function AboutTeam() {
 }
 
 const TEAM: { name: string; role: string; blurb: string; lead?: boolean }[] = [
-  { name: "Salomi Onome",    role: "Founder & Developer", blurb: "Started Nomeo to put writing and conversation in the same room. Builds the platform end to end.", lead: true },
+  { name: "Salomi Onome",    role: "Founder & Developer", blurb: "Started QuilHub to put writing and conversation in the same room. Builds the platform end to end.", lead: true },
   { name: "Chidinma Okafor", role: "Product Manager",     blurb: "Shapes what gets built and why, keeping the writer and reader experience at the centre." },
-  { name: "Adebayo Ogunleye",role: "UI/UX Designer",      blurb: "Designs the calm, warm spaces where Nomeo's conversations happen." },
+  { name: "Adebayo Ogunleye",role: "UI/UX Designer",      blurb: "Designs the calm, warm spaces where QuilHub's conversations happen." },
   { name: "Ngozi Eze",       role: "Assistant Developer",  blurb: "Builds and ships features across the stack, from lounges to messages." },
 ];
 

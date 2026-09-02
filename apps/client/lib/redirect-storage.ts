@@ -1,7 +1,7 @@
 // lib/redirect-storage.ts
 "use client";
 
-const STORAGE_KEY = "nomeo:redirect-after-login";
+const STORAGE_KEY = "quilhub:redirect-after-login";
 const MAX_AGE_MS = 30 * 60 * 1000; // 30 minutes — older saves are ignored, not acted on
 
 /**

@@ -1,7 +1,7 @@
 import { Topic, type ITopic } from "@/models/topic";
 
 /**
- * Topic normalization — Nomeo.
+ * Topic normalization — QuilHub.
  * ----------------------------
  * Post tags are free text as typed by a creator; this is the layer that
  * reconciles them against the canonical Topic vocabulary (see

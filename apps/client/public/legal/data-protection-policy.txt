@@ -2,9 +2,9 @@ DATA PROTECTION POLICY
 
 Last updated: June 12, 2026
 
-Nomeo ("we", "us", "our") is committed to protecting your personal data and respecting your privacy. This Data Protection Policy explains the principles we follow when handling your data and the rights you have. It works alongside our Privacy Policy, which describes in more detail what data we collect and why.
+QuilHub ("we", "us", "our") is committed to protecting your personal data and respecting your privacy. This Data Protection Policy explains the principles we follow when handling your data and the rights you have. It works alongside our Privacy Policy, which describes in more detail what data we collect and why.
 
-This policy is reviewed periodically and applies to everyone who uses Nomeo.
+This policy is reviewed periodically and applies to everyone who uses QuilHub.
 
 
 1. OUR COMMITMENT
@@ -55,7 +55,7 @@ Your data may be processed in countries other than your own. Where this happens,
 
 Depending on where you live, you have rights over your personal data, including the right to access it, correct it, delete it, restrict or object to its use, receive a copy in a portable format, and withdraw consent where processing is based on consent. You also have the right to complain to your data protection authority. In Nigeria, this is the Nigeria Data Protection Commission (NDPC).
 
-You can exercise most of these rights directly in your account settings, or by contacting us at privacy@nomeo.com.
+You can exercise most of these rights directly in your account settings, or by contacting us at privacy@quilhub.com.
 
 
 8. DATA BREACHES
@@ -65,12 +65,12 @@ If a security incident affects your personal data, we will act promptly to conta
 
 9. CHILDREN
 
-Nomeo is not intended for children under 13. We do not knowingly collect data from children under that age. If we learn that we have, we will delete it.
+QuilHub is not intended for children under 13. We do not knowingly collect data from children under that age. If we learn that we have, we will delete it.
 
 
 10. CHANGES TO THIS POLICY
 
-We may update this policy as the Platform and applicable laws evolve. If we make material changes, we will let you know through the Platform or by email. Continuing to use Nomeo after changes take effect means you accept the updated policy.
+We may update this policy as the Platform and applicable laws evolve. If we make material changes, we will let you know through the Platform or by email. Continuing to use QuilHub after changes take effect means you accept the updated policy.
 
 
 11. CONTACT US
@@ -79,6 +79,6 @@ If you have questions about how we protect your data, or wish to exercise your r
 
 Nomeo Consults Inc.
 21 Akin Soname Street, Ojokoro New Town, Owutu Estate, Ikorodu, Lagos
-Email: privacy@nomeo.com
+Email: privacy@quilhub.com
 
 This Data Protection Policy should be read together with our Privacy Policy and Terms of Service.

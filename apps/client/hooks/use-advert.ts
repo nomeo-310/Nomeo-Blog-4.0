@@ -20,7 +20,7 @@ export interface AdvertPayload {
   popupDelaySeconds: number;
 }
 
-const SESSION_DISMISS_PREFIX = "nomeo_ad_dismissed_";
+const SESSION_DISMISS_PREFIX = "quilhub_ad_dismissed_";
 
 function isDismissedThisSession(id: string): boolean {
   if (typeof window === "undefined") return false;
@@ -108,7 +108,7 @@ export function useAdvertSlot(placement: AdvertPlacement, options?: { topics?: s
     setHiddenId(advert.id);
   }, [advert]);
 
-  // Internal destinations (another Nomeo page) navigate same-tab via <Link>
+  // Internal destinations (another QuilHub page) navigate same-tab via <Link>
   // and track the click with this fire-and-forget beacon instead of routing
   // through the redirect endpoint — see components/features/advert-slot.tsx.
   const trackClick = useCallback(() => {
@@ -121,7 +121,7 @@ export function useAdvertSlot(placement: AdvertPlacement, options?: { topics?: s
     isLoading: query.isLoading,
     /** External destinations only: <a href={clickUrl} target="_blank"> — records the click server-side, then redirects. */
     clickUrl: advert ? `/api/adverts/${advert.id}/click` : "#",
-    /** True when advert.ctaUrl points within Nomeo (same-tab <Link> territory). */
+    /** True when advert.ctaUrl points within QuilHub (same-tab <Link> territory). */
     isInternal: advert ? isInternalUrl(advert.ctaUrl) : false,
     trackClick,
     dismiss,
