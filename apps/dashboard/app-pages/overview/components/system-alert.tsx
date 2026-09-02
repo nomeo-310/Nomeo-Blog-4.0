@@ -9,7 +9,7 @@ export function SystemAlert({ unresolvedErrors }: { unresolvedErrors: number }) 
 
   return (
     <Link
-      href="/dashboard/errors"
+      href="/errors"
       className="flex items-center gap-3 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive transition-colors hover:bg-destructive/10"
     >
       <HugeiconsIcon icon={BugIcon} className="h-4 w-4 shrink-0" />

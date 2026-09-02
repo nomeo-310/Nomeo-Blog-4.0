@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table, TableHeader, TableBody, TableRow, TableHead, TableCell,
 } from "@/components/ui/table";
@@ -10,8 +11,9 @@ import { SubscriptionStatusBadge } from "./subscription-badges";
 import { formatMoney, formatDate } from "../utils";
 import type { SubscriptionsListResponse } from "../types";
 
-const COLUMN_COUNT = 6;
+const COLUMN_COUNT = 7;
 const SKELETON_COLUMNS: SkeletonColumn[] = [
+  { width: "w-6" },
   { width: "w-40", lines: 2 },
   { width: "w-24" },
   { width: "w-20" },
@@ -21,21 +23,33 @@ const SKELETON_COLUMNS: SkeletonColumn[] = [
 ];
 
 export function SubscriptionsTable({
-  data, isLoading, isFetching, onSelectSubscription, onPageChange,
+  data, isLoading, isFetching, selectable, selected, onToggle, onToggleAll, onSelectSubscription, onPageChange,
 }: {
   data?: SubscriptionsListResponse;
   isLoading: boolean;
   isFetching: boolean;
+  /** Only offered when there's more than one cancellable subscription in the current view. */
+  selectable: boolean;
+  selected: Set<string>;
+  onToggle: (id: string) => void;
+  onToggleAll: (ids: string[]) => void;
   onSelectSubscription: (subscriptionId: string) => void;
   onPageChange: (page: number) => void;
 }) {
   const isEmpty = !isLoading && !data?.subscriptions.length;
+  const cancellableIds = (data?.subscriptions ?? []).filter((s) => s.status !== "cancelled").map((s) => s.id);
+  const allSelected = cancellableIds.length > 0 && cancellableIds.every((id) => selected.has(id));
 
   return (
     <>
       <Table>
         <TableHeader>
           <TableRow>
+            {selectable && (
+              <TableHead className="w-6">
+                <Checkbox checked={allSelected} onCheckedChange={() => onToggleAll(cancellableIds)} disabled={cancellableIds.length === 0} aria-label="Select all" />
+              </TableHead>
+            )}
             <TableHead>Subscriber</TableHead>
             <TableHead>Plan</TableHead>
             <TableHead>Status</TableHead>
@@ -46,16 +60,23 @@ export function SubscriptionsTable({
         </TableHeader>
         <TableBody className={isFetching && !isLoading ? "opacity-60 transition-opacity" : ""}>
           {isLoading ? (
-            <TableRowsSkeleton columns={SKELETON_COLUMNS} rows={8} />
+            <TableRowsSkeleton columns={selectable ? SKELETON_COLUMNS : SKELETON_COLUMNS.slice(1)} rows={8} />
           ) : isEmpty ? (
             <TableRow className="hover:bg-transparent">
-              <TableCell colSpan={COLUMN_COUNT} className="py-14 text-center text-sm text-muted-foreground">
+              <TableCell colSpan={selectable ? COLUMN_COUNT : COLUMN_COUNT - 1} className="py-14 text-center text-sm text-muted-foreground">
                 No subscriptions match these filters.
               </TableCell>
             </TableRow>
           ) : (
             data!.subscriptions.map((s) => (
               <TableRow key={s.id} className="cursor-pointer" onClick={() => onSelectSubscription(s.id)}>
+                {selectable && (
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    {s.status !== "cancelled" && (
+                      <Checkbox checked={selected.has(s.id)} onCheckedChange={() => onToggle(s.id)} aria-label="Select row" />
+                    )}
+                  </TableCell>
+                )}
                 <TableCell className="max-w-56 whitespace-normal">
                   <p className="truncate font-medium text-foreground">{s.subscriber.name}</p>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">{s.subscriber.email}</p>

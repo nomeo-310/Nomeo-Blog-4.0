@@ -21,3 +21,19 @@ export function useCancelSubscription(subscriptionId: string) {
     onError: (error: unknown) => toast.error(apiErrorMessage(error, "Failed to cancel subscription.")),
   });
 }
+
+export function useBulkCancelSubscriptions(onDone: () => void) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: { ids: string[]; reason: string }) => {
+      const { data } = await api.post<{ requested: number; updated: number }>("/api/admin/subscriptions/bulk", { ids: input.ids, action: "cancel", reason: input.reason });
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(`Cancelled ${data.updated} subscription(s).`);
+      queryClient.invalidateQueries({ queryKey: ["admin-subscriptions-list"] });
+      onDone();
+    },
+    onError: (error: unknown) => toast.error(apiErrorMessage(error, "Failed to process bulk action.")),
+  });
+}

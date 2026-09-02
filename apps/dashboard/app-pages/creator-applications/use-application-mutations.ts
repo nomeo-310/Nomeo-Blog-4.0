@@ -28,3 +28,30 @@ export function useReviewApplication(applicationId: string) {
     onError: (error: unknown) => toast.error(apiErrorMessage(error, "Failed to review application.")),
   });
 }
+
+export interface BulkReviewApplicationsInput {
+  ids: string[];
+  action: ReviewAction;
+  note?: string;
+}
+
+export function useBulkReviewApplications(onDone: () => void) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: BulkReviewApplicationsInput) => {
+      const { data } = await api.post<{ requested: number; updated: number }>("/api/admin/creators/applications/bulk", input);
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      toast.success(
+        variables.action === "approve"
+          ? `Approved ${data.updated} application(s) — the applicants are now creators.`
+          : `Rejected ${data.updated} application(s).`
+      );
+      queryClient.invalidateQueries({ queryKey: ["admin-applications-list"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-creators-list"] });
+      onDone();
+    },
+    onError: (error: unknown) => toast.error(apiErrorMessage(error, "Failed to process bulk action.")),
+  });
+}

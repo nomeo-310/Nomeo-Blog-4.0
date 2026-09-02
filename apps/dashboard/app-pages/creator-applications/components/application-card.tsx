@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ReasonActionButton } from "@/components/features/reason-action-button";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { useReviewApplication } from "../use-application-mutations";
 import type { ApplicationListItem } from "../types";
@@ -18,16 +19,35 @@ function formatDateTime(value?: string): string {
   return new Date(value).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
-export function ApplicationCard({ application, canReview }: { application: ApplicationListItem; canReview: boolean }) {
+export function ApplicationCard({
+  application, canReview, selectable = false, selected = false, onToggle,
+}: {
+  application: ApplicationListItem;
+  canReview: boolean;
+  /** Only offered when there's more than one reviewable application in the list. */
+  selectable?: boolean;
+  selected?: boolean;
+  onToggle?: (id: string) => void;
+}) {
   const [expanded, setExpanded] = useState(false);
   const review = useReviewApplication(application.id);
 
   return (
-    <li className="rounded-xl border border-border p-4">
+    <li className={cn("rounded-xl border border-border p-4", selectable && selected && "border-primary/40 bg-primary/5")}>
       <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <p className="font-medium text-foreground">{application.applicant.name}</p>
-          <p className="text-xs text-muted-foreground">{application.applicant.email}</p>
+        <div className="flex items-start gap-3">
+          {selectable && (
+            <Checkbox
+              checked={selected}
+              onCheckedChange={() => onToggle?.(application.id)}
+              aria-label={`Select application from ${application.applicant.name}`}
+              className="mt-0.5"
+            />
+          )}
+          <div>
+            <p className="font-medium text-foreground">{application.applicant.name}</p>
+            <p className="text-xs text-muted-foreground">{application.applicant.email}</p>
+          </div>
         </div>
         <span className={cn("rounded-full px-2.5 py-1 text-xs font-medium capitalize", STATUS_STYLES[application.status] ?? "bg-muted text-muted-foreground")}>
           {application.status}

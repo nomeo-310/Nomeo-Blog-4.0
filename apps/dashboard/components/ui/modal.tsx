@@ -219,14 +219,14 @@ const Modal: React.FC<EnhancedModalProps> = ({
                 stickyActions === 'top' && "sticky top-0 bg-card z-10",
                 customHeaderClassName
               )}>
-                <div className="flex-1">
+                <div className="min-w-0 flex-1">
                   {title && (
-                    <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-card-foreground">
+                    <h2 className="wrap-break-word text-xl md:text-2xl font-semibold tracking-tight text-card-foreground">
                       {title}
                     </h2>
                   )}
                   {description && (
-                    <p className="mt-1.5 text-sm text-muted-foreground">{description}</p>
+                    <p className="mt-1.5 wrap-break-word text-sm text-muted-foreground">{description}</p>
                   )}
                 </div>
                 {showCloseButton && (
@@ -235,7 +235,7 @@ const Modal: React.FC<EnhancedModalProps> = ({
                     onClick={handleClose}
                     disabled={isLoading}
                     className={cn(
-                      "ml-4 p-1 rounded-md transition-colors",
+                      "ml-4 shrink-0 p-1 rounded-md transition-colors",
                       "text-muted-foreground hover:text-foreground hover:bg-accent/50",
                       "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
                       "disabled:opacity-50 disabled:cursor-not-allowed"

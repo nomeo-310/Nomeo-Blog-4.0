@@ -29,6 +29,8 @@ import {
   Globe02Icon as Globe01Icon,
   SparklesIcon,
   AdvertisimentIcon,
+  BugIcon,
+  PreferenceHorizontalIcon,
 } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
@@ -89,9 +91,10 @@ const NAV_GROUPS: NavGroup[] = [
     group: "System",
     items: [
       { href: "/audit-log",  label: "Audit log",   icon: Eye01Icon          },
+      { href: "/errors",     label: "Error log",   icon: BugIcon            },
       { href: "/admins",     label: "Admins",       icon: ShieldUserIcon,     superAdminOnly: true },
       { href: "/settings",   label: "Settings",     icon: Settings01Icon     },
-      { href: "/account",    label: "My account",   icon: Settings01Icon     },
+      { href: "/account",    label: "My account",   icon: PreferenceHorizontalIcon    },
     ],
   },
 ];
@@ -111,6 +114,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   newsletter:    "Newsletter subscribers",
   campaigns:     "Campaigns",
   "audit-log":   "Audit log",
+  errors:        "Error log",
   admins:        "Admin accounts",
   settings:      "Settings",
   account:       "My account",

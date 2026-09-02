@@ -116,6 +116,8 @@ export enum AdminAction {
   SEND_ANNOUNCEMENT       = "send_announcement",
   BLOCK_IP                = "block_ip",
   UNBLOCK_IP              = "unblock_ip",
+  RESOLVE_ERROR           = "resolve_error",
+  REOPEN_ERROR            = "reopen_error",
 
   // Admin management (super_admin only)
   CREATE_ADMIN            = "create_admin",
@@ -351,6 +353,8 @@ function getActionCategory(action: AdminAction): ActionCategory {
     [AdminAction.UPDATE_SETTINGS]:      "system_settings",
     [AdminAction.EXPORT_DATA]:          "system_settings",
     [AdminAction.SEND_ANNOUNCEMENT]:    "system_settings",
+    [AdminAction.RESOLVE_ERROR]:        "system_settings",
+    [AdminAction.REOPEN_ERROR]:         "system_settings",
 
     // Security
     [AdminAction.BLOCK_IP]:             "security",

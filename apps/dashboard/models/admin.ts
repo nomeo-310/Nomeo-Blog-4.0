@@ -310,7 +310,6 @@ const AdminSchema = new Schema<IAdmin>(
 /* ── Indexes ────────────────────────────────────────────────────────────── */
 
 AdminSchema.index({ role: 1, adminStatus: 1 });
-AdminSchema.index({ email: 1 });
 
 /* ── Export ─────────────────────────────────────────────────────────────── */
 

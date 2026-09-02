@@ -393,6 +393,83 @@ async function createSuperAdmin({ auth, db, email, name, displayName, password, 
   return { success: true, userId, email: normalizedEmail, name, displayName, password, seedPhrase };
 }
 
+/* ── Seed phrase reset ───────────────────────────────────────────────────────
+   For when the super admin (or another admin) forgets/loses their seed
+   phrase, or it's been locked out after 5 failed attempts (see
+   app/api/auth/login's INVALID_SEED_PHRASE handling). Doesn't touch the
+   user/account/password — only replaces the Seedphrase document, so it's
+   safe to run against a live, already-onboarded admin.
+   ────────────────────────────────────────────────────────────────────────── */
+
+async function resetSeedPhrase({ db, email, seedPhrase }) {
+  const normalizedEmail = email.toLowerCase();
+
+  const user = await db.collection('user').findOne({ email: normalizedEmail });
+  if (!user) throw new Error(`No user found with email: ${normalizedEmail}`);
+
+  const admin = await Admin.findOne({ userId: user._id });
+  if (!admin) throw new Error(`No Admin document found for ${normalizedEmail} — this account isn't a dashboard admin`);
+
+  const hashedSeedPhrase = await bcrypt.hash(seedPhrase, 12);
+  const now = new Date();
+
+  await Seedphrase.findOneAndUpdate(
+    { userId: user._id },
+    {
+      $set: {
+        seedphrase:     hashedSeedPhrase,
+        isActive:       true,
+        failedAttempts: 0,
+        expiresAt:      new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000),
+        lastUsedAt:     null,
+        updatedAt:      now,
+      },
+      $setOnInsert: { userId: user._id, createdAt: now },
+    },
+    { upsert: true }
+  );
+
+  return { success: true, userId: user._id, email: normalizedEmail, role: admin.role, seedPhrase };
+}
+
+async function verifySeedPhraseReset(db, email, seedPhrase) {
+  console.log('\n🔍 Verifying seed phrase reset...');
+
+  const user = await db.collection('user').findOne({ email: email.toLowerCase() });
+  if (!user) return fail('User not found in DB');
+
+  const seed = await Seedphrase.findOne({ userId: user._id }).select('+seedphrase');
+  if (!seed) return fail('Seedphrase document not found');
+  if (!seed.isActive) return fail('Seedphrase is not active after reset');
+
+  const matches = await bcrypt.compare(seedPhrase, seed.seedphrase);
+  if (!matches) return fail('New seed phrase does not verify against the stored hash');
+
+  console.log('✅ Seed phrase verified:');
+  console.log(`   Seedphrase → active: ${seed.isActive}, failedAttempts: ${seed.failedAttempts}, expires: ${seed.expiresAt?.toDateString()}`);
+
+  return true;
+}
+
+function displaySeedPhraseReset(creds) {
+  const line = '═'.repeat(70);
+  const dash = '─'.repeat(70);
+  console.log(`\n${line}`);
+  console.log('🔐  SEED PHRASE RESET SUCCESSFULLY');
+  console.log(`${line}\n`);
+  console.log(`   📧  Email:       ${creds.email}`);
+  console.log(`   🏷️   Role:        ${creds.role}`);
+  console.log(`   🎫  Seed Phrase: ${creds.seedPhrase}`);
+  console.log(`\n${dash}`);
+  console.log('⚠️   SECURITY NOTES:');
+  console.log(`${dash}`);
+  console.log('   • This is shown only once — save it in a password manager now');
+  console.log('   • Any previous seed phrase for this admin no longer works');
+  console.log('   • Failed-attempt lockout has been cleared');
+  console.log('   • Seed phrase expires in 1 year');
+  console.log(`${line}\n`);
+}
+
 /* ── Verification ────────────────────────────────────────────────────────── */
 
 async function verifySetup(db, email, password) {
@@ -465,17 +542,43 @@ function displayEnvHint(creds) {
   console.log(`   SUPERADMIN_SEED_PHRASE="${creds.seedPhrase}"\n`);
 }
 
+/* ── Usage ───────────────────────────────────────────────────────────────── */
+
+function printUsage() {
+  console.log(`
+Usage:
+  node scripts/seed-superadmin.js [--force] [--email=...] [--name=...] [--display-name=...] [--password=...] [--seed=...] [--words=16]
+      Creates the super admin. Fails if one already exists unless --force
+      (which deletes and recreates the user, account, admin doc, and
+      seed phrase entirely).
+
+  node scripts/seed-superadmin.js --reset-seed [--email=...] [--seed=...] [--words=16]
+      Replaces ONLY the seed phrase for an existing admin — use this when
+      the super admin (or any admin) forgot their seed phrase or got
+      locked out after 5 failed attempts. Leaves the user, password, and
+      role untouched. Defaults --email to SUPERADMIN_EMAIL / the existing
+      super admin, same as the create flow.
+
+  node scripts/seed-superadmin.js --help
+      Shows this message.
+`);
+}
+
 /* ── Main ────────────────────────────────────────────────────────────────── */
 
 async function main() {
-  console.log('\n🚀  Seeding Super Admin for Nomeo Blog\n');
-
   const args = process.argv.slice(2);
   const flag = (n)   => args.includes(n);
   const opt  = (n)   => args.find((a) => a.startsWith(`${n}=`))?.split('=').slice(1).join('=');
 
+  if (flag('--help') || flag('-h')) {
+    printUsage();
+    return;
+  }
+
   const options = {
     force:       flag('--force'),
+    resetSeed:   flag('--reset-seed'),
     email:       opt('--email'),
     name:        opt('--name'),
     displayName: opt('--display-name'),
@@ -483,6 +586,45 @@ async function main() {
     seedPhrase:  opt('--seed'),
     wordCount:   parseInt(opt('--words') || '16', 10),
   };
+
+  if (options.resetSeed) {
+    console.log('\n🔄  Resetting admin seed phrase for Nomeo Blog\n');
+
+    try {
+      await mongoose.connect(MONGODB_URI);
+      console.log('✅  Connected to MongoDB');
+
+      const db = mongoose.connection.db;
+
+      let email = options.email || process.env.SUPERADMIN_EMAIL;
+      if (!email) {
+        const existing = await superadminExists(db);
+        if (!existing) throw new Error('No email given (--email=...) and no existing super admin found to default to');
+        email = existing.email;
+      }
+
+      const seedPhrase = options.seedPhrase || generateSeedPhrase(options.wordCount);
+      if (seedPhrase.trim().split(/\s+/).length < 12) throw new Error('Seed phrase must have at least 12 words');
+
+      const result = await resetSeedPhrase({ db, email, seedPhrase });
+
+      displaySeedPhraseReset(result);
+      await verifySeedPhraseReset(db, email, seedPhrase);
+
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      console.log(`\n🔗  Login at: ${baseUrl}/admin/login`);
+      console.log('✅  Done!\n');
+    } catch (err) {
+      console.error('\n❌  Seed phrase reset failed:', err.message);
+      if (process.env.DEBUG) console.error(err.stack);
+      process.exit(1);
+    } finally {
+      await mongoose.disconnect();
+    }
+    return;
+  }
+
+  console.log('\n🚀  Seeding Super Admin for Nomeo Blog\n');
 
   try {
     await mongoose.connect(MONGODB_URI);
@@ -545,4 +687,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { createSuperAdmin, superadminExists, generateSeedPhrase, generateSecurePassword };
+module.exports = { createSuperAdmin, resetSeedPhrase, superadminExists, generateSeedPhrase, generateSecurePassword };
