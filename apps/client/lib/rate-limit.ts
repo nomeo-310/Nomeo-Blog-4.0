@@ -43,7 +43,7 @@ export async function rateLimit({
       $inc: { count: 1 },
       $setOnInsert: { expiresAt: new Date(windowEnd + windowMs) },
     },
-    { upsert: true, new: true }
+    { upsert: true, returnDocument: "after" }
   );
 
   const retryAfterSeconds = Math.max(1, Math.ceil((windowEnd - Date.now()) / 1000));

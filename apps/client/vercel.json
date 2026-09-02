@@ -1,13 +1,8 @@
-
 {
   "crons": [
     {
       "path": "/api/cron/expire-subscriptions",
       "schedule": "0 0 * * *"
-    },
-    {
-      "path": "/api/cron/calculate-earnings",
-      "schedule": "0 2 1 * *"
     }
   ]
 }
