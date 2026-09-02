@@ -14,7 +14,7 @@
  *
  * Required env vars once you have a Termii account:
  *   SMS_API_KEY     — Termii API key
- *   SMS_SENDER_ID   — registered sender ID (max 11 chars, e.g. "Nomeo")
+ *   SMS_SENDER_ID   — registered sender ID (max 11 chars, e.g. "QuilHub")
  */
 
 export interface SendSmsResult {
@@ -40,7 +40,7 @@ export function normalizePhoneNumber(raw: string): string {
 
 export async function sendSms(to: string, message: string): Promise<SendSmsResult> {
   const apiKey = process.env.SMS_API_KEY;
-  const senderId = process.env.SMS_SENDER_ID || "Nomeo";
+  const senderId = process.env.SMS_SENDER_ID || "QuilHub";
 
   if (!apiKey) {
     return { success: false, error: "SMS provider not configured — set SMS_API_KEY in .env" };

@@ -34,8 +34,8 @@ export default function AdminLoginPage() {
 
           {/* Mobile logo */}
           <div className="flex items-center gap-2 mb-8 lg:hidden">
-            <Image src={Logo} alt="Nomeo_Logo" width={32} height={32} className="rounded-lg" />
-            <span className="font-heading text-lg font-bold text-foreground">Nomeo Admin</span>
+            <Image src={Logo} alt="QuilHub_Logo" width={32} height={32} className="rounded-lg" />
+            <span className="font-heading text-lg font-bold text-foreground">QuilHub Admin</span>
           </div>
 
           <StepIndicator step={step} />

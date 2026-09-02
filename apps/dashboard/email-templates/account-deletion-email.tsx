@@ -14,7 +14,7 @@ export default function AccountDeletionEmail({
   reason = "policy violation",
   deletionType = "soft",
   scheduledDeletionDate,
-  initiatedBy = "the Nomeo moderation team",
+  initiatedBy = "the QuilHub moderation team",
 }: {
   name?: string;
   reason?: string;
@@ -25,7 +25,7 @@ export default function AccountDeletionEmail({
 }) {
   const isSoft  = deletionType === "soft";
   const title   = isSoft ? "Your account is scheduled for deletion" : "Your account has been permanently deleted";
-  const preview = isSoft ? "Account scheduled for deletion — you have 30 days" : "Your Nomeo account has been deleted";
+  const preview = isSoft ? "Account scheduled for deletion — you have 30 days" : "Your QuilHub account has been deleted";
 
   return (
     <EmailLayout preview={preview}>
@@ -34,8 +34,8 @@ export default function AccountDeletionEmail({
       <Paragraph>Hi {name},</Paragraph>
       <Paragraph>
         {isSoft
-          ? "Your Nomeo account has been scheduled for deletion due to a policy violation. You have a 30-day grace period before all data is permanently erased."
-          : "Your Nomeo account has been permanently deleted. All associated data has been removed from our systems."}
+          ? "Your QuilHub account has been scheduled for deletion due to a policy violation. You have a 30-day grace period before all data is permanently erased."
+          : "Your QuilHub account has been permanently deleted. All associated data has been removed from our systems."}
       </Paragraph>
 
       <SectionTitle>Details</SectionTitle>

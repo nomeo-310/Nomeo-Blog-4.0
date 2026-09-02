@@ -106,7 +106,7 @@ export async function PATCH(
       type:        action === "approve" ? "creator_upgrade_successful" : "creator_application_rejected",
       actorId:     new mongoose.Types.ObjectId(admin.id),
       message:     action === "approve"
-        ? "Your creator application was approved. You can now publish posts on Nomeo."
+        ? "Your creator application was approved. You can now publish posts on QuilHub."
         : `Your creator application was not approved${note ? `: ${note.trim()}` : "."}`,
       entityType:  "user",
       entityId:    application.userId,

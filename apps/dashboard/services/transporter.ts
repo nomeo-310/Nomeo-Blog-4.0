@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 /**
  * Shared Nodemailer transporter for the admin dashboard.
  * Uses the same SMTP credentials as the main webapp — both apps
- * send from the same Nomeo email address.
+ * send from the same QuilHub email address.
  *
  * Required env vars (in admin dashboard's .env):
  *   SMTP_SERVER_HOST
@@ -12,8 +12,8 @@ import nodemailer from "nodemailer";
  *   SMTP_SECURE       (optional — defaults to true when SMTP_PORT is 465)
  *   SMTP_SERVER_USERNAME
  *   SMTP_SERVER_PASSWORD
- *   SITE_NAME           (default: "Nomeo")
- *   SITE_MAIL_RECIEVER  (default: "noreply@nomeo.com")
+ *   SITE_NAME           (default: "QuilHub")
+ *   SITE_MAIL_RECIEVER  (default: "noreply@quilhub.com")
  */
 
 export const transporter = nodemailer.createTransport({
@@ -30,6 +30,6 @@ export const transporter = nodemailer.createTransport({
 });
 
 export const FROM = {
-  name:    process.env.SITE_NAME          || "Nomeo",
-  address: process.env.SITE_MAIL_RECIEVER || "noreply@nomeo.com",
+  name:    process.env.SITE_NAME          || "QuilHub",
+  address: process.env.SITE_MAIL_RECIEVER || "noreply@quilhub.com",
 };

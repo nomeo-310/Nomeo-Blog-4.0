@@ -268,7 +268,7 @@ export function CreateAdvertModal({ isOpen, onClose }: { isOpen: boolean; onClos
               <SelectTrigger id="advert-type" className="w-full"><SelectValue /></SelectTrigger>
               <SelectContent className="p-1">
                 <SelectItem value="promoted_post">Promoted post (feature a blog post)</SelectItem>
-                <SelectItem value="house">House (Nomeo promo)</SelectItem>
+                <SelectItem value="house">House (QuilHub promo)</SelectItem>
                 <SelectItem value="sponsored">Sponsored (on a brand&apos;s behalf)</SelectItem>
               </SelectContent>
             </Select>

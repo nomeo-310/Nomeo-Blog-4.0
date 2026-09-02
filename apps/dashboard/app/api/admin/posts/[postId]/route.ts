@@ -187,7 +187,7 @@ export async function PATCH(
       case "feature":
         post.isFeatured = true;
         adminAction = AdminAction.FEATURE_POST;
-        notification = { type: "post_featured", message: `Your post "${post.title}" was featured by the Nomeo team.` };
+        notification = { type: "post_featured", message: `Your post "${post.title}" was featured by the QuilHub team.` };
         break;
       case "unfeature":
         post.isFeatured = false;

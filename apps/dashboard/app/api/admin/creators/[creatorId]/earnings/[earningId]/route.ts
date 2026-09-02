@@ -118,7 +118,7 @@ export async function PATCH(
             amount: earning.netAmount,
             recipient: recipientCode,
             reference: `payout_${earning._id}`,
-            reason: `Nomeo earnings payout — ${earning.billingPeriod}`,
+            reason: `QuilHub earnings payout — ${earning.billingPeriod}`,
           });
         } catch (transferError) {
           console.error("[admin/creators/:creatorId/earnings/:earningId] Paystack transfer failed:", transferError);

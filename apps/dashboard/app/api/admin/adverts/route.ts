@@ -146,7 +146,7 @@ export async function GET(req: Request) {
 }
 
 /**
- * Creates an admin-authored advert — "house" (Nomeo's own promos) or "sponsored"
+ * Creates an admin-authored advert — "house" (QuilHub's own promos) or "sponsored"
  * (an admin setting one up on a brand's behalf). "promoted_post" and
  * "creator_promo" are creator-initiated elsewhere and aren't created here.
  *

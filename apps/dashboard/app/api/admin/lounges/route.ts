@@ -144,7 +144,7 @@ export async function GET(req: Request) {
 
 /**
  * Creates a platform-owned lounge (kind "platform", no creatorId) — the open,
- * Nomeo-run community spaces (e.g. "The Commons", "Feedback & Ideas"). This is
+ * QuilHub-run community spaces (e.g. "The Commons", "Feedback & Ideas"). This is
  * the dashboard equivalent of the one-off seed script: creator lounges are
  * still only created by creators from the main app.
  *

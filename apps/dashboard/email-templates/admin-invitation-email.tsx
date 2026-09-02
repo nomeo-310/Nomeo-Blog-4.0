@@ -16,10 +16,10 @@ export default function AdminInvitationEmail({
   name          = "Admin",
   displayName   = "Admin",
   role          = "admin",
-  email         = "admin@nomeo.com",
+  email         = "admin@quilhub.com",
   tempPassword  = "TempPass123!",
   seedPhrase    = "apple mountain ocean star thunder forest crystal phoenix dragon shadow light ember",
-  loginUrl      = "https://nomeo.com/admin/login",
+  loginUrl      = "https://quilhub.com/admin/login",
   expiresAt     = "one year from now",
   personalMessage,
 }: {

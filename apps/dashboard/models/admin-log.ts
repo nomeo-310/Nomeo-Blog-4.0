@@ -2,7 +2,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 /**
- * AdminLog — audit trail for all admin actions on the Nomeo platform.
+ * AdminLog — audit trail for all admin actions on the QuilHub platform.
  *
  * Every action an admin takes is recorded here with full context:
  * who did it, what they did, what was affected, from where, and whether

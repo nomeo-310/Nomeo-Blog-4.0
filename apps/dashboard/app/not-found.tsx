@@ -2,7 +2,7 @@ import NotFoundContent from "@/components/features/not-found-content";
 import type { Metadata } from "next";
 
 /**
- * app/not-found.tsx — Nomeo's custom 404.
+ * app/not-found.tsx — QuilHub's custom 404.
  *
  * A thin Server Component wrapper. The auth-aware behaviour (logged-in users
  * get a "Back to dashboard" action, everyone else "Back home") lives in the

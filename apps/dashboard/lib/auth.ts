@@ -31,7 +31,7 @@ export function createAuth() {
     },
 
     advanced: {
-      cookiePrefix: "nomeo_dashboard",
+      cookiePrefix: "quilhub_dashboard",
       // Ensure cookies are not scoped to a specific port
       // so localhost:3000 and localhost:3001 share the same cookie domain
       defaultCookieAttributes: {

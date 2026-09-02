@@ -24,9 +24,9 @@ export function SecurityPanel() {
           transition={{ duration: 0.6 }}
           className="mb-16 flex items-center gap-3"
         >
-          <Image src={Logo} alt="Nomeo_Logo" width={40} height={40} className="rounded-xl" />
+          <Image src={Logo} alt="QuilHub_Logo" width={40} height={40} className="rounded-xl" />
           <div>
-            <span className="text-white text-xl font-bold tracking-tight font-heading">Nomeo</span>
+            <span className="text-white text-xl font-bold tracking-tight font-heading">QuilHub</span>
             <span className="block text-white/60 text-xs tracking-widest uppercase">Admin Console</span>
           </div>
         </motion.div>

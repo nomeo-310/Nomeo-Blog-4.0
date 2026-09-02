@@ -199,7 +199,7 @@ export async function PATCH(
         break;
       case "warn":
         adminAction = AdminAction.WARN_USER;
-        notification = { type: "account_warned", message: `You received a warning from the Nomeo team: ${reason!.trim()}` };
+        notification = { type: "account_warned", message: `You received a warning from the QuilHub team: ${reason!.trim()}` };
         break;
       case "verify_email":
         user.emailVerified = true;

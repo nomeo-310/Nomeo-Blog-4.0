@@ -92,7 +92,7 @@ export function CreateLoungeModal({ isOpen, onClose }: { isOpen: boolean; onClos
           </span>
           <p className="text-xs leading-relaxed text-muted-foreground">
             <span className="font-semibold text-foreground">Open to everyone.</span>{" "}
-            This is a Nomeo-owned space any authenticated user can join — not a creator&apos;s lounge.
+            This is a QuilHub-owned space any authenticated user can join — not a creator&apos;s lounge.
           </p>
         </div>
 

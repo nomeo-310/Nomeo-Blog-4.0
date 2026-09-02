@@ -15,7 +15,7 @@ export default function SeedPhraseRenewalEmail({
   displayName   = "Admin",
   newSeedPhrase = "apple mountain ocean star thunder forest crystal phoenix dragon shadow light ember",
   expiryDate    = "one year from now",
-  loginUrl      = "https://nomeo.com/admin/login",
+  loginUrl      = "https://quilhub.com/admin/login",
 }: {
   name?:          string;
   displayName?:   string;
@@ -72,7 +72,7 @@ export default function SeedPhraseRenewalEmail({
 
       <SectionTitle>Security reminders</SectionTitle>
       <IconRow icon="🔒">Store this seed phrase somewhere only you can access.</IconRow>
-      <IconRow icon="🚫">Never share it with anyone — including Nomeo staff.</IconRow>
+      <IconRow icon="🚫">Never share it with anyone — including QuilHub staff.</IconRow>
       <IconRow icon="🔑">You will need it to complete your next login.</IconRow>
       <IconRow icon="📅">It will expire on {expiryDate} and be automatically renewed.</IconRow>
 

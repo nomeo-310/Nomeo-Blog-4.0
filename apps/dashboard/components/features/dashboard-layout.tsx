@@ -197,18 +197,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         )}>
           {!collapsed && (
             <Link href="/dashboard" className="flex items-center gap-2.5 min-w-0">
-              <Image src={Logo} alt="Nomeo" width={32} height={32}
+              <Image src={Logo} alt="QuilHub" width={32} height={32}
                 className="h-8 w-8 shrink-0 object-contain" priority />
               <div className="min-w-0">
                 <span className="font-heading text-sm font-bold text-foreground truncate block">
-                  Nomeo
+                  QuilHub
                 </span>
               </div>
             </Link>
           )}
           {collapsed && (
             <Link href="/dashboard" className="flex h-8 w-8 items-center justify-center">
-              <Image src={Logo} alt="Nomeo" width={32} height={32}
+              <Image src={Logo} alt="QuilHub" width={32} height={32}
                 className="h-8 w-8 object-contain" priority />
             </Link>
           )}
@@ -487,7 +487,7 @@ function TopBarUserMenu({ user, initials, onSignOut }: {
               onClick={() => setOpen(false)}
               external
             >
-              Back to Nomeo
+              Back to QuilHub
             </DropdownItem>
           </div>
           <div className="border-t border-border py-1.5">

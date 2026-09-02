@@ -10,7 +10,7 @@ export default function UserBanEmail({
   reason = "violation of community guidelines",
   isPermanent = false,
   durationDays,
-  bannedBy = "the Nomeo moderation team",
+  bannedBy = "the QuilHub moderation team",
   appealDeadline,
 }: {
   name?: string;
@@ -30,7 +30,7 @@ export default function UserBanEmail({
       <Paragraph>
         Following a review of your account activity, we have{" "}
         {isPermanent ? "permanently banned" : `temporarily banned (${durationDays ? `${durationDays} days` : "duration pending review"})`}{" "}
-        your Nomeo account.
+        your QuilHub account.
       </Paragraph>
 
       <SectionTitle>Reason</SectionTitle>

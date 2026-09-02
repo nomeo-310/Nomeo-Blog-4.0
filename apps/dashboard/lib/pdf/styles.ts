@@ -106,7 +106,7 @@ export const pdfStyles = StyleSheet.create({
   },
 });
 
-export const BRAND = { name: "Nomeo" };
+export const BRAND = { name: "QuilHub" };
 
 export function formatMoney(amountInKobo: number, currency = "NGN"): string {
   const symbol = currency === "NGN" ? "₦" : `${currency} `;

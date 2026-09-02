@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
 
-const COOKIE_PREFIX = "nomeo_dashboard";
+const COOKIE_PREFIX = "quilhub_dashboard";
 
 const AUTH_COOKIES = [
   `${COOKIE_PREFIX}.session_token`,

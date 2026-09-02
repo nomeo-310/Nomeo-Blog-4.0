@@ -18,7 +18,7 @@ export default function AdminActionEmail({
   action        = "activate",
   details       = "Your admin account has been updated.",
   performedBy   = "Super Admin",
-  performedByEmail = "superadmin@nomeo.com",
+  performedByEmail = "superadmin@quilhub.com",
   oldRole,
   newRole,
   reason,
@@ -119,7 +119,7 @@ export default function AdminActionEmail({
 
       {action === "remove" && (
         <Callout>
-          Your admin dashboard access has been permanently removed. Your regular Nomeo platform account, if any, is unaffected.
+          Your admin dashboard access has been permanently removed. Your regular QuilHub platform account, if any, is unaffected.
         </Callout>
       )}
 

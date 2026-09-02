@@ -7,19 +7,19 @@ import { EmailLayout, Heading, Paragraph, Callout, SectionTitle, HelpBlock, BRAN
 export default function UserWarningEmail({
   name    = "there",
   reason  = "a violation of our community guidelines",
-  warnedBy = "the Nomeo moderation team",
+  warnedBy = "the QuilHub moderation team",
 }: {
   name?: string;
   reason?: string;
   warnedBy?: string;
 }) {
   return (
-    <EmailLayout preview="You've received a warning from the Nomeo team">
+    <EmailLayout preview="You've received a warning from the QuilHub team">
       <Heading>You&apos;ve received a warning</Heading>
 
       <Paragraph>Hi {name},</Paragraph>
       <Paragraph>
-        {warnedBy} has issued you a warning regarding your recent activity on Nomeo. Your account
+        {warnedBy} has issued you a warning regarding your recent activity on QuilHub. Your account
         remains active — no action is required beyond reviewing the note below.
       </Paragraph>
 

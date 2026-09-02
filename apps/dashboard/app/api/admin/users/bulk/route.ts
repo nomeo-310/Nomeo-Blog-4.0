@@ -203,7 +203,7 @@ export async function POST(req: Request) {
           emailJobs.push(() => mailService.unbanUser({ to: user.email, name: user.name, unbannedBy: admin.displayName || admin.name, note: reason }));
           break;
         case "warn":
-          notifications.push({ recipientId: user._id, type: "account_warned", message: `You received a warning from the Nomeo team: ${reason!.trim()}` });
+          notifications.push({ recipientId: user._id, type: "account_warned", message: `You received a warning from the QuilHub team: ${reason!.trim()}` });
           emailJobs.push(() => mailService.warnUser({ to: user.email, name: user.name, reason: reason!.trim(), warnedBy: admin.displayName || admin.name }));
           break;
         case "verify_email":

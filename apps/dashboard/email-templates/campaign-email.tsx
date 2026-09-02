@@ -9,7 +9,7 @@ import { Section, Text, Html } from "@react-email/components";
  * bodyHtml is sanitised server-side before being passed here.
  */
 export default function CampaignEmail({
-  heading        = "A message from Nomeo",
+  heading        = "A message from QuilHub",
   bodyHtml       = "",
   ctaLabel,
   ctaUrl,
@@ -47,7 +47,7 @@ export default function CampaignEmail({
       <Divider />
 
       <Text style={{ fontSize: 12, color: "#9ca3af", textAlign: "center" as const }}>
-        You received this because you subscribed to Nomeo updates.{" "}
+        You received this because you subscribed to QuilHub updates.{" "}
         <a href={unsubscribeUrl} style={{ color: "#6b7280" }}>
           Unsubscribe
         </a>

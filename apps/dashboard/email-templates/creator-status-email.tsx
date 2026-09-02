@@ -13,7 +13,7 @@ export default function CreatorStatusEmail({
   name        = "there",
   action      = "suspend",
   reason,
-  performedBy = "the Nomeo moderation team",
+  performedBy = "the QuilHub moderation team",
 }: {
   name?:        string;
   action?:      CreatorStatusAction;

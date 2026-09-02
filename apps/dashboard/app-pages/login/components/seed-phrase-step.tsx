@@ -33,7 +33,7 @@ export function SeedPhraseStep({
         <div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
           <p className="text-xs text-primary leading-relaxed">
             <strong>Three-factor authentication:</strong> Your seed phrase is the final security layer.
-            Never share it with anyone — Nomeo will never ask for it via email or chat.
+            Never share it with anyone — QuilHub will never ask for it via email or chat.
           </p>
         </div>
       </div>

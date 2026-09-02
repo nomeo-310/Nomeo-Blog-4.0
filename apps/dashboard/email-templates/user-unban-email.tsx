@@ -6,7 +6,7 @@ import { EmailLayout, Heading, Paragraph, CtaButton, SectionTitle, HelpBlock, BR
  */
 export default function UserUnbanEmail({
   name = "there",
-  unbannedBy = "the Nomeo moderation team",
+  unbannedBy = "the QuilHub moderation team",
   note,
 }: {
   name?: string;
@@ -15,12 +15,12 @@ export default function UserUnbanEmail({
   note?: string;
 }) {
   return (
-    <EmailLayout preview="Your Nomeo account has been reinstated">
+    <EmailLayout preview="Your QuilHub account has been reinstated">
       <Heading>Your account has been reinstated</Heading>
 
       <Paragraph>Hi {name},</Paragraph>
       <Paragraph>
-        Good news — your Nomeo account has been reinstated by {unbannedBy}. You can now sign in
+        Good news — your QuilHub account has been reinstated by {unbannedBy}. You can now sign in
         and access all features as normal.
       </Paragraph>
 

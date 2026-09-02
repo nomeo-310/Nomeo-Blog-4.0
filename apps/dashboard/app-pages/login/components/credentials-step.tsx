@@ -49,7 +49,7 @@ export function CredentialsStep({
               id="email" type="email" value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="pl-10 h-11"
-              placeholder="admin@nomeo.com"
+              placeholder="admin@quilhub.com"
               autoComplete="email"
             />
           </div>

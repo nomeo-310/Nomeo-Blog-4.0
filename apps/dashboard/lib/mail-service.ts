@@ -45,7 +45,7 @@ export const mailService = {
     bannedBy?: string;
     appealDeadline?: string;
   }) {
-    const subject = props.isPermanent ? "Your Nomeo account has been permanently banned" : "Your Nomeo account has been temporarily banned";
+    const subject = props.isPermanent ? "Your QuilHub account has been permanently banned" : "Your QuilHub account has been temporarily banned";
     return deliver(to, subject, React.createElement(UserBanEmail, props));
   },
 
@@ -55,7 +55,7 @@ export const mailService = {
     unbannedBy?: string;
     note?: string;
   }) {
-    return deliver(to, "Your Nomeo account has been reinstated", React.createElement(UserUnbanEmail, props));
+    return deliver(to, "Your QuilHub account has been reinstated", React.createElement(UserUnbanEmail, props));
   },
 
   warnUser({ to, ...props }: {
@@ -64,7 +64,7 @@ export const mailService = {
     reason: string;
     warnedBy?: string;
   }) {
-    return deliver(to, "You've received a warning from the Nomeo team", React.createElement(UserWarningEmail, props));
+    return deliver(to, "You've received a warning from the QuilHub team", React.createElement(UserWarningEmail, props));
   },
 
   deleteUser({ to, ...props }: {
@@ -76,8 +76,8 @@ export const mailService = {
     initiatedBy?: string;
   }) {
     const subject = props.deletionType === "soft"
-      ? "Your Nomeo account is scheduled for deletion"
-      : "Your Nomeo account has been permanently deleted";
+      ? "Your QuilHub account is scheduled for deletion"
+      : "Your QuilHub account has been permanently deleted";
     return deliver(
       to,
       subject,
@@ -94,7 +94,7 @@ export const mailService = {
   }) {
     const subject = props.approved
       ? "Congratulations — your creator application has been approved!"
-      : "Update on your Nomeo creator application";
+      : "Update on your QuilHub creator application";
     return deliver(to, subject, React.createElement(CreatorApprovalEmail, props));
   },
 
