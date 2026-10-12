@@ -43,7 +43,13 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
+  // Excludes all of /api — every API route (including the CRON_SECRET-gated
+  // /api/cron/* routes hit by an external scheduler with no session cookie)
+  // already enforces its own auth server-side via requireAdminUserFromRequest
+  // or a bearer-token check. Without this exclusion, this middleware saw no
+  // session cookie on those requests and redirected them to /login before
+  // the route handler — and its own auth check — ever ran.
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|api/auth).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
